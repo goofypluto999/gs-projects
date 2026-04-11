@@ -2,12 +2,53 @@
 
 import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ExternalLink } from "lucide-react";
+import { X, ExternalLink, ArrowUpRight } from "lucide-react";
 import type { Project } from "@/data/projects";
 
 interface ProjectDetailProps {
   project: Project | null;
   onClose: () => void;
+}
+
+function BlockedPreview({ project }: { project: Project }) {
+  return (
+    <div
+      className="absolute inset-0 flex flex-col items-center justify-center gap-4"
+      style={{
+        background: `radial-gradient(ellipse at center, ${project.accent}12 0%, transparent 60%)`,
+      }}
+    >
+      <div
+        className="w-16 h-16 rounded-lg flex items-center justify-center"
+        style={{ backgroundColor: `${project.accent}20` }}
+      >
+        <span
+          className="font-heading text-2xl font-700"
+          style={{ color: project.accent }}
+        >
+          {project.name.charAt(0)}
+        </span>
+      </div>
+      <span className="font-heading text-lg font-500 text-text-secondary">
+        {project.name}
+      </span>
+      <a
+        href={project.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-2 mt-2 px-5 py-2.5 text-sm font-body rounded-md transition-colors duration-150 cursor-pointer"
+        style={{
+          backgroundColor: `${project.accent}18`,
+          color: project.accent,
+          border: `1px solid ${project.accent}30`,
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        Open live site
+        <ArrowUpRight size={14} />
+      </a>
+    </div>
+  );
 }
 
 export function ProjectDetail({ project, onClose }: ProjectDetailProps) {
@@ -58,14 +99,18 @@ export function ProjectDetail({ project, onClose }: ProjectDetailProps) {
               <X size={18} />
             </button>
 
-            {/* Live preview */}
+            {/* Preview area */}
             <div className="relative w-full aspect-[16/9] overflow-hidden rounded-t-lg border-b border-border bg-bg">
-              <iframe
-                src={project.url}
-                title={`${project.name} preview`}
-                className="absolute inset-0 w-full h-full"
-                sandbox="allow-scripts allow-same-origin"
-              />
+              {project.iframeBlocked ? (
+                <BlockedPreview project={project} />
+              ) : (
+                <iframe
+                  src={project.url}
+                  title={`${project.name} preview`}
+                  className="absolute inset-0 w-full h-[140%]"
+                  sandbox={project.sandboxPolicy || "allow-scripts allow-same-origin"}
+                />
+              )}
             </div>
 
             {/* Content */}

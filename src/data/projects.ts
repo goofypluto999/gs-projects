@@ -15,6 +15,8 @@ export interface Project {
   tags: string[];
   accent: string;
   year: number;
+  /** If true, iframe embedding is blocked — use styled fallback everywhere */
+  iframeBlocked?: boolean;
 }
 
 export const projects: Project[] = [
@@ -28,6 +30,7 @@ export const projects: Project[] = [
       "Businesses make high-stakes decisions with incomplete information. Traditional forecasting looks backward. Foresay looks sideways — across multiple possible futures simultaneously.",
     url: "https://foresay-labs-live.vercel.app/",
     previewUrl: null,
+    iframeBlocked: true,
     status: "live",
     tags: ["AI", "Simulation", "Strategy", "Multi-Agent"],
     accent: "#6366F1",

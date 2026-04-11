@@ -16,6 +16,43 @@ const statusStyles: Record<string, string> = {
   development: "text-text-tertiary border-border",
 };
 
+function CardFallback({ project }: { project: Project }) {
+  return (
+    <div
+      className="absolute inset-0 flex flex-col items-center justify-center gap-3"
+      style={{
+        background: `radial-gradient(ellipse at 50% 40%, ${project.accent}10 0%, transparent 60%)`,
+      }}
+    >
+      <div
+        className="w-14 h-14 rounded-lg flex items-center justify-center"
+        style={{ backgroundColor: `${project.accent}18` }}
+      >
+        <span
+          className="font-heading text-xl font-700"
+          style={{ color: project.accent }}
+        >
+          {project.name.charAt(0)}
+        </span>
+      </div>
+      <span className="font-heading text-sm font-500 text-text-tertiary/50">
+        {project.name}
+      </span>
+      {/* Decorative bars */}
+      <div className="flex flex-col items-center gap-1.5 mt-1">
+        <div
+          className="h-[3px] rounded-full w-24"
+          style={{ backgroundColor: `${project.accent}15` }}
+        />
+        <div
+          className="h-[3px] rounded-full w-16"
+          style={{ backgroundColor: `${project.accent}10` }}
+        />
+      </div>
+    </div>
+  );
+}
+
 export function ProjectCard({ project, onSelect }: ProjectCardProps) {
   return (
     <SpotlightCard
@@ -26,38 +63,10 @@ export function ProjectCard({ project, onSelect }: ProjectCardProps) {
 
       {/* Preview thumbnail */}
       <div className="relative w-full aspect-[16/10] overflow-hidden rounded-t-lg border-b border-border bg-bg">
-        {/* Styled fallback — always visible behind iframe */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
-          <div
-            className="w-12 h-12 rounded-lg flex items-center justify-center"
-            style={{ backgroundColor: `${project.accent}20` }}
-          >
-            <span
-              className="font-heading text-lg font-700"
-              style={{ color: project.accent }}
-            >
-              {project.name.charAt(0)}
-            </span>
-          </div>
-          <span className="font-heading text-sm font-500 text-text-tertiary/60">
-            {project.name}
-          </span>
-          <div className="flex gap-1">
-            {[...Array(3)].map((_, i) => (
-              <div
-                key={i}
-                className="h-1 rounded-full"
-                style={{
-                  width: `${20 + i * 12}px`,
-                  backgroundColor: `${project.accent}${15 + i * 8}`,
-                }}
-              />
-            ))}
-          </div>
-        </div>
+        <CardFallback project={project} />
 
-        {/* Iframe — loads on top of fallback */}
-        {project.previewUrl && (
+        {/* Iframe — only render if not blocked */}
+        {project.previewUrl && !project.iframeBlocked && (
           <iframe
             src={project.previewUrl}
             title={`${project.name} preview`}
