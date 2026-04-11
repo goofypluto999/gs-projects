@@ -23,28 +23,52 @@ export function ProjectCard({ project, onSelect }: ProjectCardProps) {
       className="group flex flex-col"
     >
       <BorderBeam duration={4} size={60} color={`${project.accent}40`} />
-      {/* Live preview thumbnail */}
+
+      {/* Preview thumbnail */}
       <div className="relative w-full aspect-[16/10] overflow-hidden rounded-t-lg border-b border-border bg-bg">
-        {/* Fallback: project accent + name shown behind iframe */}
-        <div
-          className="absolute inset-0 flex items-center justify-center"
-          style={{
-            background: `radial-gradient(ellipse at center, ${project.accent}15 0%, transparent 70%)`,
-          }}
-        >
-          <span className="font-heading text-xl font-600 text-text-tertiary/40">
+        {/* Styled fallback — always visible behind iframe */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
+          <div
+            className="w-12 h-12 rounded-lg flex items-center justify-center"
+            style={{ backgroundColor: `${project.accent}20` }}
+          >
+            <span
+              className="font-heading text-lg font-700"
+              style={{ color: project.accent }}
+            >
+              {project.name.charAt(0)}
+            </span>
+          </div>
+          <span className="font-heading text-sm font-500 text-text-tertiary/60">
             {project.name}
           </span>
+          <div className="flex gap-1">
+            {[...Array(3)].map((_, i) => (
+              <div
+                key={i}
+                className="h-1 rounded-full"
+                style={{
+                  width: `${20 + i * 12}px`,
+                  backgroundColor: `${project.accent}${15 + i * 8}`,
+                }}
+              />
+            ))}
+          </div>
         </div>
-        <iframe
-          src={project.url}
-          title={`${project.name} preview`}
-          className="absolute inset-0 w-[200%] h-[200%] origin-top-left pointer-events-none"
-          style={{ transform: "scale(0.5)" }}
-          loading="lazy"
-          sandbox="allow-scripts allow-same-origin"
-          tabIndex={-1}
-        />
+
+        {/* Iframe — loads on top of fallback */}
+        {project.previewUrl && (
+          <iframe
+            src={project.previewUrl}
+            title={`${project.name} preview`}
+            className="absolute inset-0 w-[200%] h-[280%] origin-top-left pointer-events-none"
+            style={{ transform: "scale(0.5)" }}
+            loading="lazy"
+            sandbox={project.sandboxPolicy || "allow-scripts"}
+            tabIndex={-1}
+          />
+        )}
+
         <div className="absolute inset-0 bg-gradient-to-t from-surface/60 to-transparent pointer-events-none" />
       </div>
 

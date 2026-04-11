@@ -7,6 +7,10 @@ export interface Project {
   description: string;
   problem: string;
   url: string;
+  /** URL used for iframe preview — may differ from main url to avoid popups/blocks */
+  previewUrl: string | null;
+  /** iframe sandbox policy — strip allow-same-origin to prevent cookie popups */
+  sandboxPolicy?: string;
   status: ProjectStatus;
   tags: string[];
   accent: string;
@@ -23,6 +27,7 @@ export const projects: Project[] = [
     problem:
       "Businesses make high-stakes decisions with incomplete information. Traditional forecasting looks backward. Foresay looks sideways — across multiple possible futures simultaneously.",
     url: "https://foresay-labs-live.vercel.app/",
+    previewUrl: null,
     status: "live",
     tags: ["AI", "Simulation", "Strategy", "Multi-Agent"],
     accent: "#6366F1",
@@ -37,6 +42,8 @@ export const projects: Project[] = [
     problem:
       "Planning a stag do, group trip, or big event means endless WhatsApp threads, spreadsheets, and someone always out of the loop. StagPlanner puts everything in one place.",
     url: "https://stagplanner.vercel.app/#demo",
+    previewUrl: "https://stagplanner.vercel.app/#demo",
+    sandboxPolicy: "allow-scripts allow-same-origin",
     status: "live",
     tags: ["Events", "Planning", "Groups", "Coordination"],
     accent: "#10B981",
@@ -51,6 +58,8 @@ export const projects: Project[] = [
     problem:
       "Job seekers spend hours guessing what interviewers want. Vantage uses AI to simulate real interview conditions and give targeted feedback — before the real thing.",
     url: "https://vantage-livid.vercel.app/",
+    previewUrl: "https://vantage-livid.vercel.app/",
+    sandboxPolicy: "allow-scripts allow-same-origin",
     status: "live",
     tags: ["AI", "Career", "Interviews", "SaaS"],
     accent: "#F59E0B",
