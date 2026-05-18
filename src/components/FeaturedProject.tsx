@@ -6,6 +6,7 @@ import { BorderBeam } from "./BorderBeam";
 import { PreviewImage } from "./PreviewImage";
 import { Halftone } from "./Halftone";
 import { MagneticWrap } from "./MagneticWrap";
+import { WindowChrome } from "./WindowChrome";
 import type { Project } from "@/data/projects";
 
 interface FeaturedProjectProps {
@@ -66,6 +67,10 @@ export function FeaturedProject({ project, onSelect }: FeaturedProjectProps) {
       <div className="grid md:grid-cols-[1.1fr_1fr]">
         {/* Preview pane */}
         <div className="relative aspect-[4/3] md:aspect-auto overflow-hidden bg-bg border-b md:border-b-0 md:border-r border-border">
+          <WindowChrome
+            url={project.url.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+          />
+          <div className="absolute inset-0 pt-7">
           <PreviewImage
             src={project.previewImage}
             alt={`${project.name} preview`}
@@ -95,6 +100,8 @@ export function FeaturedProject({ project, onSelect }: FeaturedProjectProps) {
               </div>
             }
           />
+
+          </div>
 
           <div className="absolute inset-0 bg-gradient-to-t from-surface/70 via-transparent to-transparent pointer-events-none" />
 

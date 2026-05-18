@@ -5,6 +5,7 @@ import { ExternalLink, ArrowUpRight } from "lucide-react";
 import { SpotlightCard } from "./SpotlightCard";
 import { BorderBeam } from "./BorderBeam";
 import { PreviewImage } from "./PreviewImage";
+import { WindowChrome } from "./WindowChrome";
 import type { Project } from "@/data/projects";
 
 interface ProjectCardProps {
@@ -92,17 +93,23 @@ export function ProjectCard({ project, onSelect, index = 0 }: ProjectCardProps) 
         <BorderBeam duration={4 + index * 0.5} size={70} color={`${project.accent}55`} />
 
         <div className="relative w-full aspect-[16/10] overflow-hidden rounded-t-lg border-b border-border bg-bg">
-          <PreviewImage
-            src={project.previewImage}
-            alt={`${project.name} preview`}
-            accent={project.accent}
-            fallback={<CardFallback project={project} />}
+          <WindowChrome
+            url={project.url.replace(/^https?:\/\//, "").replace(/\/$/, "")}
           />
+
+          <div className="absolute inset-0 pt-7">
+            <PreviewImage
+              src={project.previewImage}
+              alt={`${project.name} preview`}
+              accent={project.accent}
+              fallback={<CardFallback project={project} />}
+            />
+          </div>
 
           <div className="absolute inset-0 bg-gradient-to-t from-surface/80 via-transparent to-transparent pointer-events-none" />
 
           {/* Hover description overlay */}
-          <div className="absolute inset-0 p-5 flex items-end opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-t from-bg/90 via-bg/40 to-transparent pointer-events-none">
+          <div className="absolute inset-0 p-5 pt-12 flex items-end opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-t from-bg/90 via-bg/40 to-transparent pointer-events-none">
             <p className="text-[12px] text-text-primary leading-relaxed line-clamp-3">
               {project.description}
             </p>
