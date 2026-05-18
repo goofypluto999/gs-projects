@@ -6,11 +6,11 @@ import { GridPattern } from "./GridPattern";
 import { ScrollIndicator } from "./ScrollIndicator";
 import { TextRotate } from "./TextRotate";
 import { Aurora } from "./Aurora";
-import { OrbitSphere } from "./OrbitSphere";
 import { LiveStatus } from "./LiveStatus";
 import { AnimatedCounter } from "./AnimatedCounter";
 import { NowPlaying } from "./NowPlaying";
-import { InteractiveCanvas } from "./InteractiveCanvas";
+import { FlowField } from "./FlowField";
+import { MagneticName } from "./MagneticName";
 
 const rotatingWords = [
   "scenario intelligence",
@@ -164,9 +164,9 @@ export function Hero() {
       ref={sectionRef}
       className="relative flex flex-col justify-center min-h-[92vh] px-6 pt-14 overflow-hidden"
     >
-      <Aurora />
-      <GridPattern className="opacity-25" />
-      <InteractiveCanvas density={0.00015} />
+      <Aurora className="opacity-70" />
+      <GridPattern className="opacity-20" />
+      <FlowField density={0.00018} repelRadius={170} />
 
       {/* Cursor-driven ambient glow */}
       <div
@@ -177,16 +177,6 @@ export function Hero() {
             "radial-gradient(600px circle at 30% 40%, rgba(37,99,235,0.08) 0%, transparent 60%)",
         }}
       />
-
-      {/* Floating orbit sphere — desktop right side */}
-      <div className="absolute inset-y-0 right-0 hidden lg:flex items-center pointer-events-none">
-        <OrbitSphere className="w-[420px] h-[420px] xl:w-[540px] xl:h-[540px] opacity-90 -mr-28 xl:-mr-16" />
-      </div>
-
-      {/* Smaller orbit on mobile — top-right corner */}
-      <div className="absolute top-20 right-0 lg:hidden pointer-events-none">
-        <OrbitSphere className="w-[200px] h-[200px] sm:w-[260px] sm:h-[260px] opacity-50 -mr-12" />
-      </div>
 
       <div className="relative mx-auto max-w-[1280px] w-full">
         {/* Live status pill + Now playing */}
@@ -199,10 +189,13 @@ export function Hero() {
           <NowPlaying />
         </div>
 
-        {/* Name — editorial wordmark treatment */}
+        {/* Name — desktop gets the MagneticName particle canvas,
+            mobile keeps the static editorial wordmark for readability. */}
+
+        {/* Mobile: static editorial */}
         <h1
           ref={nameRef}
-          className="font-heading leading-[0.9] tracking-tight text-text-primary"
+          className="lg:hidden font-heading leading-[0.9] tracking-tight text-text-primary"
           style={{ fontSize: "clamp(2.5rem, 7.2vw, 6.2rem)" }}
         >
           <span data-word className="font-800">
@@ -223,6 +216,25 @@ export function Hero() {
             .
           </span>
         </h1>
+
+        {/* Desktop: particle-cluster name that disperses on cursor */}
+        <div
+          className="hidden lg:block w-full"
+          style={{ height: "clamp(280px, 32vh, 380px)" }}
+        >
+          <MagneticName
+            lines={[
+              { text: "Giovanni Sizino", weight: 800, color: "#FAFAFA" },
+              { text: "Ennes.", weight: 300, italic: true, color: "#A1A1AA" },
+            ]}
+            samplingStep={3}
+          />
+        </div>
+
+        {/* Visible aria-label sourced from the canvas; sighted users see
+            either the mobile h1 or the desktop canvas. Add a sr-only h1
+            for SEO + screen readers regardless. */}
+        <h1 className="sr-only">Giovanni Sizino Ennes</h1>
 
         {/* Subtitle */}
         <p
