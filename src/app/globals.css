@@ -16,6 +16,7 @@
 
   --font-heading: "Archivo", system-ui, sans-serif;
   --font-body: "Space Grotesk", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", monospace;
 
   --radius-sm: 4px;
   --radius-md: 6px;
@@ -27,17 +28,52 @@
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   body {
     background-color: var(--color-bg);
     color: var(--color-text-primary);
     font-family: var(--font-body);
+    font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv11";
+  }
+
+  /* Tabular numerals for stat displays */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Display headings get a touch more letter-spacing tightening at large sizes */
+  h1, h2 {
+    font-feature-settings: "ss01", "ss02";
+    letter-spacing: -0.025em;
+  }
+
+  /* Smooth fade for hover targets */
+  a, button {
+    -webkit-tap-highlight-color: transparent;
   }
 
   ::selection {
     background-color: var(--color-accent);
     color: white;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-bg);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 6px;
+    border: 2px solid var(--color-bg);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-border-hover);
   }
 
   /* Reduced motion */
@@ -48,5 +84,23 @@
       transition-duration: 0.01ms !important;
       scroll-behavior: auto !important;
     }
+  }
+
+  /* Mobile-first refinement: reduce all section paddings on tiny screens */
+  @media (max-width: 480px) {
+    section {
+      padding-left: 1rem !important;
+      padding-right: 1rem !important;
+    }
+  }
+}
+
+@layer utilities {
+  /* Used for the editorial wordmark */
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
   }
 }
