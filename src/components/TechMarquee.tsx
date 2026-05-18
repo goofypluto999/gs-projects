@@ -1,59 +1,80 @@
 "use client";
 
-const technologies = [
-  "Next.js",
-  "TypeScript",
-  "React",
-  "Tailwind",
-  "GSAP",
-  "anime.js",
-  "Framer Motion",
-  "Python",
-  "FastAPI",
-  "PostgreSQL",
-  "Supabase",
-  "OpenAI",
-  "Anthropic",
-  "Vercel",
-  "Railway",
-  "Hetzner",
-  "Stripe",
-  "MCP",
-  "shadcn/ui",
-  "Lenis",
+interface TechRow {
+  category: string;
+  items: string[];
+}
+
+const rows: TechRow[] = [
+  {
+    category: "Web",
+    items: ["Next.js", "TypeScript", "React", "Tailwind", "shadcn/ui"],
+  },
+  {
+    category: "Motion",
+    items: ["GSAP", "anime.js", "Framer Motion", "Lenis"],
+  },
+  {
+    category: "AI",
+    items: ["Anthropic", "OpenAI", "MCP", "Claude Code"],
+  },
+  {
+    category: "Data",
+    items: ["PostgreSQL", "Supabase", "Neon", "LightRAG"],
+  },
+  {
+    category: "Infra",
+    items: ["Vercel", "Railway", "Hetzner", "Stripe", "Cloudflare"],
+  },
 ];
 
 /**
- * Subtle horizontal marquee of tech stack — adds credibility without taking
- * up vertical real estate. Pauses on hover.
+ * Tech stack marquee — paused on hover. Categorised dotted strip.
+ * Premium "what I work with" signal without screaming it.
  */
 export function TechMarquee() {
+  // Flatten with category separators for the marquee
+  const flat = rows.flatMap((row) => [
+    { kind: "category" as const, text: row.category },
+    ...row.items.map((item) => ({ kind: "item" as const, text: item })),
+  ]);
+
   return (
-    <section className="relative py-10 border-y border-border overflow-hidden bg-bg/40">
-      <div className="absolute inset-y-0 left-0 w-32 z-10 bg-gradient-to-r from-bg to-transparent pointer-events-none" />
-      <div className="absolute inset-y-0 right-0 w-32 z-10 bg-gradient-to-l from-bg to-transparent pointer-events-none" />
+    <section className="relative py-8 border-y border-border overflow-hidden bg-bg/40">
+      <div className="absolute inset-y-0 left-0 w-40 z-10 bg-gradient-to-r from-bg via-bg to-transparent pointer-events-none" />
+      <div className="absolute inset-y-0 right-0 w-40 z-10 bg-gradient-to-l from-bg via-bg to-transparent pointer-events-none" />
 
       <div className="relative flex group">
-        <ul className="flex animate-marquee gap-12 pr-12 shrink-0">
-          {technologies.map((t) => (
+        <ul className="flex animate-marquee items-center gap-6 pr-6 shrink-0">
+          {flat.map((entry, i) => (
             <li
-              key={t}
-              className="font-heading text-base md:text-lg font-500 text-text-tertiary/70 hover:text-text-primary transition-colors duration-200 cursor-default whitespace-nowrap tracking-tight"
+              key={`a-${i}`}
+              className={`flex items-center gap-6 whitespace-nowrap ${
+                entry.kind === "category"
+                  ? "text-text-tertiary text-[10.5px] uppercase tracking-[0.3em]"
+                  : "text-text-secondary hover:text-text-primary transition-colors duration-200 cursor-default font-heading text-base md:text-lg font-500 tracking-tight"
+              }`}
             >
-              {t}
+              <span>{entry.text}</span>
+              <span className="w-1 h-1 rounded-full bg-border" />
             </li>
           ))}
         </ul>
         <ul
           aria-hidden="true"
-          className="flex animate-marquee gap-12 pr-12 shrink-0"
+          className="flex animate-marquee items-center gap-6 pr-6 shrink-0"
         >
-          {technologies.map((t) => (
+          {flat.map((entry, i) => (
             <li
-              key={`dup-${t}`}
-              className="font-heading text-base md:text-lg font-500 text-text-tertiary/70 hover:text-text-primary transition-colors duration-200 cursor-default whitespace-nowrap tracking-tight"
+              key={`b-${i}`}
+              className={`flex items-center gap-6 whitespace-nowrap ${
+                entry.kind === "category"
+                  ? "text-text-tertiary text-[10.5px] uppercase tracking-[0.3em]"
+                  : "text-text-secondary hover:text-text-primary transition-colors duration-200 cursor-default font-heading text-base md:text-lg font-500 tracking-tight"
+              }`}
             >
-              {t}
+              <span>{entry.text}</span>
+              <span className="w-1 h-1 rounded-full bg-border" />
             </li>
           ))}
         </ul>
@@ -65,7 +86,7 @@ export function TechMarquee() {
           100% { transform: translateX(-100%); }
         }
         .animate-marquee {
-          animation: marquee 40s linear infinite;
+          animation: marquee 55s linear infinite;
         }
         .group:hover .animate-marquee {
           animation-play-state: paused;
