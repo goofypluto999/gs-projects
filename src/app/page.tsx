@@ -11,6 +11,7 @@ import { AvailabilityStrip } from "@/components/AvailabilityStrip";
 import { Process } from "@/components/Process";
 import { Highlights } from "@/components/Highlights";
 import { ActivityFeed } from "@/components/ActivityFeed";
+import { Testimonials } from "@/components/Testimonials";
 
 export default function Home() {
   return (
@@ -22,6 +23,7 @@ export default function Home() {
         <SectionDivider label="01 · The Work" />
         <ProjectGrid />
         <Highlights />
+        <Testimonials />
         <SectionDivider label="02 · What's next" />
         <Workshop />
         <ActivityFeed />
