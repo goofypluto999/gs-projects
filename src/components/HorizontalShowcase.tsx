@@ -31,19 +31,24 @@ export function HorizontalShowcase() {
     const track = trackRef.current;
     if (!section || !track) return;
 
-    const ctx = gsap.context(() => {
-      const totalScrollWidth = track.scrollWidth - window.innerWidth;
+    let trigger: ScrollTrigger | null = null;
 
-      const trigger = ScrollTrigger.create({
+    const ctx = gsap.context(() => {
+      trigger = ScrollTrigger.create({
         trigger: section,
         start: "top top",
-        end: () => `+=${totalScrollWidth + 200}`,
+        // Recompute on refresh — invalidateOnRefresh forces this to re-read
+        end: () => {
+          const total = track.scrollWidth - window.innerWidth;
+          return `+=${total + 200}`;
+        },
         pin: true,
-        scrub: 0.6,
+        scrub: 0.7,
         anticipatePin: 1,
         invalidateOnRefresh: true,
         onUpdate: (self) => {
-          const x = -totalScrollWidth * self.progress;
+          const total = track.scrollWidth - window.innerWidth;
+          const x = -total * self.progress;
           gsap.set(track, { x });
           if (progressBarRef.current) {
             gsap.set(progressBarRef.current, { scaleX: self.progress });
@@ -57,11 +62,43 @@ export function HorizontalShowcase() {
           }
         },
       });
-
-      return () => trigger.kill();
     });
 
-    return () => ctx.revert();
+    // After mount, wait for images to load then refresh ScrollTrigger so the
+    // pin math uses the real track width (not 0 on first render).
+    const imgs = Array.from(track.querySelectorAll("img")) as HTMLImageElement[];
+    let loadedCount = 0;
+    function checkAndRefresh() {
+      loadedCount += 1;
+      if (loadedCount >= imgs.length) {
+        ScrollTrigger.refresh();
+      }
+    }
+    if (imgs.length === 0) {
+      ScrollTrigger.refresh();
+    } else {
+      imgs.forEach((img) => {
+        if (img.complete && img.naturalHeight !== 0) {
+          checkAndRefresh();
+        } else {
+          img.addEventListener("load", checkAndRefresh, { once: true });
+          img.addEventListener("error", checkAndRefresh, { once: true });
+        }
+      });
+    }
+
+    // Also refresh on window resize / font load
+    const onResize = () => ScrollTrigger.refresh();
+    window.addEventListener("resize", onResize);
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(() => ScrollTrigger.refresh());
+    }
+
+    return () => {
+      window.removeEventListener("resize", onResize);
+      ctx.revert();
+      trigger?.kill();
+    };
   }, []);
 
   return (
