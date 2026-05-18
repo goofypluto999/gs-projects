@@ -2,6 +2,11 @@
 
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 /**
  * Animated wireframe sphere with orbital rings — sits in the negative space
@@ -9,6 +14,7 @@ import gsap from "gsap";
  * crisp at any size. Linear/Vercel/Shader.se territory.
  */
 export function OrbitSphere({ className = "" }: { className?: string }) {
+  const wrapRef = useRef<SVGSVGElement>(null);
   const sphereRef = useRef<SVGGElement>(null);
   const ring1Ref = useRef<SVGEllipseElement>(null);
   const ring2Ref = useRef<SVGEllipseElement>(null);
@@ -66,6 +72,19 @@ export function OrbitSphere({ className = "" }: { className?: string }) {
         ease: "none",
         transformOrigin: "100px 100px",
       });
+
+      // Scroll parallax — drift slowly + fade as user scrolls past hero
+      gsap.to(wrapRef.current, {
+        y: 220,
+        opacity: 0.15,
+        ease: "none",
+        scrollTrigger: {
+          trigger: wrapRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: 0.8,
+        },
+      });
     });
 
     return () => ctx.revert();
@@ -73,6 +92,7 @@ export function OrbitSphere({ className = "" }: { className?: string }) {
 
   return (
     <svg
+      ref={wrapRef}
       viewBox="0 0 200 200"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

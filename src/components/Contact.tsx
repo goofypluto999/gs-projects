@@ -1,26 +1,58 @@
 "use client";
 
+import { ArrowUpRight } from "lucide-react";
 import { SectionReveal } from "./SectionReveal";
+import { Aurora } from "./Aurora";
+import { Socials } from "./Socials";
 
 export function Contact() {
   return (
-    <section id="contact" className="px-6 py-24 scroll-mt-16">
-      <div className="mx-auto max-w-[1200px]">
+    <section
+      id="contact"
+      className="relative px-6 py-32 scroll-mt-16 overflow-hidden"
+    >
+      <Aurora className="opacity-50" />
+
+      <div className="relative mx-auto max-w-[1280px]">
         <SectionReveal>
-          <h2 className="font-heading text-2xl font-700 text-text-primary mb-4">
-            Let&apos;s talk
+          <div className="flex items-center gap-2 mb-6">
+            <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+            <span className="text-[11px] uppercase tracking-[0.25em] text-text-tertiary">
+              Open inbox
+            </span>
+          </div>
+
+          <h2 className="font-heading text-4xl md:text-6xl lg:text-7xl font-800 text-text-primary leading-[0.95] tracking-tight">
+            Have a product
+            <br />
+            <span className="text-text-secondary">worth shipping?</span>
           </h2>
-          <p className="text-[15px] text-text-secondary leading-relaxed max-w-[480px] mb-6">
-            Interested in working together, exploring a partnership, or want
-            to learn more about any of these projects? I am always open to
-            the right conversation.
+
+          <p className="mt-8 max-w-[560px] text-base md:text-lg text-text-secondary leading-relaxed">
+            Strategic partnerships, white-label builds, or interest in
+            acquiring one of the products outright. Short notes only — I read
+            everything.
           </p>
-          <a
-            href="mailto:giovanni.sizino.ennes@hotmail.co.uk"
-            className="inline-block text-[15px] text-accent hover:text-accent-hover transition-colors duration-150 underline underline-offset-4 decoration-accent/30 hover:decoration-accent cursor-pointer"
-          >
-            giovanni.sizino.ennes@hotmail.co.uk
-          </a>
+
+          <div className="mt-10 flex flex-wrap items-center gap-4">
+            <a
+              href="mailto:giovanni.sizino.ennes@hotmail.co.uk"
+              className="group inline-flex items-center gap-3 px-6 py-4 rounded-md bg-text-primary text-bg hover:bg-text-secondary transition-colors duration-200 cursor-pointer"
+            >
+              <span className="font-heading text-sm font-600">
+                giovanni.sizino.ennes@hotmail.co.uk
+              </span>
+              <ArrowUpRight
+                size={16}
+                className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              />
+            </a>
+            <Socials />
+          </div>
+
+          <p className="mt-12 text-xs text-text-tertiary tracking-wider">
+            Typically reply within 24 hours · UK + Brazil time zones
+          </p>
         </SectionReveal>
       </div>
     </section>
