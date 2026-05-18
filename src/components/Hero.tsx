@@ -177,9 +177,14 @@ export function Hero() {
         }}
       />
 
-      {/* Floating orbit sphere — desktop only */}
+      {/* Floating orbit sphere — desktop right side */}
       <div className="absolute inset-y-0 right-0 hidden lg:flex items-center pointer-events-none">
         <OrbitSphere className="w-[420px] h-[420px] xl:w-[540px] xl:h-[540px] opacity-90 -mr-28 xl:-mr-16" />
+      </div>
+
+      {/* Smaller orbit on mobile — top-right corner */}
+      <div className="absolute top-20 right-0 lg:hidden pointer-events-none">
+        <OrbitSphere className="w-[200px] h-[200px] sm:w-[260px] sm:h-[260px] opacity-50 -mr-12" />
       </div>
 
       <div className="relative mx-auto max-w-[1280px] w-full">
