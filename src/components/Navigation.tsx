@@ -50,7 +50,7 @@ export function Navigation() {
       <nav
         className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
           scrolled || mobileOpen
-            ? "bg-bg/80 backdrop-blur-xl border-b border-border"
+            ? "bg-bg/85 backdrop-blur-xl border-b border-border"
             : "bg-transparent"
         }`}
       >
@@ -60,33 +60,41 @@ export function Navigation() {
             className="flex items-center gap-2.5 cursor-pointer group"
             aria-label="Home"
           >
-            <span className="relative w-7 h-7 rounded-md bg-accent flex items-center justify-center">
+            <span className="relative w-7 h-7 rounded-md bg-accent flex items-center justify-center overflow-hidden">
               <span className="font-heading text-[11px] font-800 text-white">
                 GS
               </span>
+              <span className="absolute inset-0 bg-white/0 group-hover:bg-white/15 transition-colors duration-200" />
             </span>
             <span className="font-heading text-[13px] font-600 text-text-primary tracking-tight hidden sm:inline">
               Sizino Ennes
             </span>
           </a>
 
-          <div className="hidden md:flex items-center gap-1">
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className={`relative px-3 py-1.5 text-[13px] font-body transition-colors duration-150 cursor-pointer ${
-                  active === link.href.slice(1)
-                    ? "text-text-primary"
-                    : "text-text-secondary hover:text-text-primary"
-                }`}
-              >
-                {link.label}
-                {active === link.href.slice(1) && (
-                  <span className="absolute bottom-0 left-3 right-3 h-px bg-accent" />
-                )}
-              </a>
-            ))}
+          {/* Center: nav links with elegant underline */}
+          <div className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
+            {navLinks.map((link) => {
+              const isActive = active === link.href.slice(1);
+              return (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className={`relative group px-3 py-1.5 text-[13px] font-body transition-colors duration-200 cursor-pointer ${
+                    isActive
+                      ? "text-text-primary"
+                      : "text-text-secondary hover:text-text-primary"
+                  }`}
+                >
+                  {link.label}
+                  {/* hover underline — slides in from left */}
+                  <span
+                    className={`absolute left-3 right-3 bottom-1 h-px transition-transform duration-300 origin-left ${
+                      isActive ? "bg-accent scale-x-100" : "bg-text-primary scale-x-0 group-hover:scale-x-100"
+                    }`}
+                  />
+                </a>
+              );
+            })}
           </div>
 
           <div className="hidden md:block">
@@ -111,13 +119,24 @@ export function Navigation() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileOpen(false)}
-                className="font-heading text-3xl font-700 text-text-primary cursor-pointer"
+                className="font-heading text-4xl font-800 text-text-primary cursor-pointer tracking-tight"
               >
                 {link.label}
               </a>
             ))}
             <div className="pt-6">
               <Socials />
+            </div>
+            <div className="absolute bottom-12 left-6 right-6 pt-6 border-t border-border">
+              <p className="text-xs text-text-tertiary leading-relaxed">
+                Reach out anytime —
+              </p>
+              <a
+                href="mailto:giovanni.sizino.ennes@hotmail.co.uk"
+                className="block mt-1 text-sm text-text-secondary hover:text-text-primary transition-colors duration-150"
+              >
+                giovanni.sizino.ennes@hotmail.co.uk
+              </a>
             </div>
           </div>
         </div>
