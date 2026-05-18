@@ -10,6 +10,7 @@ import { Aurora } from "./Aurora";
 import { OrbitSphere } from "./OrbitSphere";
 import { LiveStatus } from "./LiveStatus";
 import { AnimatedCounter } from "./AnimatedCounter";
+import { NowPlaying } from "./NowPlaying";
 
 const rotatingWords = [
   "scenario intelligence",
@@ -188,13 +189,14 @@ export function Hero() {
       </div>
 
       <div className="relative mx-auto max-w-[1280px] w-full">
-        {/* Live status pill */}
+        {/* Live status pill + Now playing */}
         <div
           ref={eyebrowRef}
-          className="mb-7 opacity-0"
+          className="mb-7 flex flex-wrap items-center gap-3 opacity-0"
           style={{ transform: "translateY(8px)" }}
         >
           <LiveStatus />
+          <NowPlaying />
         </div>
 
         {/* Name — editorial wordmark treatment */}
