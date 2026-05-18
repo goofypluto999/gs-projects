@@ -6,6 +6,7 @@ import { Workshop } from "@/components/Workshop";
 import { About } from "@/components/About";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
+import { SectionDivider } from "@/components/SectionDivider";
 
 export default function Home() {
   return (
@@ -14,8 +15,11 @@ export default function Home() {
       <main>
         <Hero />
         <TechMarquee />
+        <SectionDivider label="01 · The Work" />
         <ProjectGrid />
+        <SectionDivider label="02 · What's next" />
         <Workshop />
+        <SectionDivider label="03 · Who" />
         <About />
         <Contact />
       </main>

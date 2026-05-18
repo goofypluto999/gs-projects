@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Preloader } from "@/components/Preloader";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { ScrollProgress } from "@/components/ScrollProgress";
+import { Grain } from "@/components/Grain";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -42,6 +43,7 @@ export default function RootLayout({
         <Preloader />
         <SmoothScroll />
         <ScrollProgress />
+        <Grain />
         {children}
       </body>
     </html>
