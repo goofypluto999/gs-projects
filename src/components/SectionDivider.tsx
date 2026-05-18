@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ScrambleText } from "./ScrambleText";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -73,7 +74,7 @@ export function SectionDivider({ label }: SectionDividerProps) {
             ref={labelRef}
             className="text-[10px] uppercase tracking-[0.3em] text-text-tertiary whitespace-nowrap"
           >
-            {label}
+            <ScrambleText text={label} duration={800} />
           </span>
         )}
         <div className="flex-1 h-px bg-border" style={{ transform: "scaleX(0)", transformOrigin: "right center" }} />
