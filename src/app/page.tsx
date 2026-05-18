@@ -13,6 +13,7 @@ import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 import { SectionDivider } from "@/components/SectionDivider";
 import { BrandMarquee } from "@/components/BrandMarquee";
+import { Manifesto } from "@/components/Manifesto";
 
 /**
  * Page composition — tightened. Two SectionDividers max, redundant
@@ -34,6 +35,7 @@ export default function Home() {
       <Navigation />
       <main>
         <Hero />
+        <Manifesto />
         <TechMarquee />
 
         <SectionDivider label="01 · The Work" />
