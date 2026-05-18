@@ -15,6 +15,7 @@ interface Quote {
   context: string;
   product: string;
   accent: string;
+  size: "large" | "small";
 }
 
 const quotes: Quote[] = [
@@ -25,6 +26,7 @@ const quotes: Quote[] = [
     context: "Subscription SaaS · early adopter",
     product: "Foresay Labs",
     accent: "#6366F1",
+    size: "large",
   },
   {
     body:
@@ -33,6 +35,7 @@ const quotes: Quote[] = [
     context: "Retail group · early adopter",
     product: "Foresay Labs",
     accent: "#6366F1",
+    size: "small",
   },
   {
     body:
@@ -41,13 +44,27 @@ const quotes: Quote[] = [
     context: "Fintech challenger · early adopter",
     product: "Foresay Labs",
     accent: "#6366F1",
+    size: "small",
   },
 ];
 
-/**
- * Beta-operator quotes — real testimonials pulled from foresaylabs.com.
- * Identifying details withheld at the operators' request.
- */
+const large = quotes.find((q) => q.size === "large")!;
+const small = quotes.filter((q) => q.size === "small");
+
+function MarkSvg({ color }: { color: string }) {
+  return (
+    <svg
+      viewBox="0 0 32 32"
+      className="w-9 h-9"
+      style={{ color }}
+      aria-hidden="true"
+      fill="currentColor"
+    >
+      <path d="M9.4 8C6 8 3 11 3 14.6c0 2.6 1.6 4.5 4 5.2.6.2 1 .7 1 1.3 0 1-.7 1.7-1.8 1.7C3.4 22.8 1 19.4 1 15c0-5 3.5-9 8.4-9 .3 0 .6.3.6.6V8zm17 0c-3.4 0-6.4 3-6.4 6.6 0 2.6 1.6 4.5 4 5.2.6.2 1 .7 1 1.3 0 1-.7 1.7-1.8 1.7-2.8 0-5.2-3.4-5.2-7.8 0-5 3.5-9 8.4-9 .3 0 .6.3.6.6V8z" />
+    </svg>
+  );
+}
+
 export function Testimonials() {
   const wrapRef = useRef<HTMLDivElement>(null);
 
@@ -60,10 +77,10 @@ export function Testimonials() {
       if (!cards?.length) return;
       gsap.from(cards, {
         opacity: 0,
-        y: 30,
-        duration: 0.8,
+        y: 36,
+        duration: 0.85,
         ease: "power3.out",
-        stagger: 0.1,
+        stagger: 0.14,
         scrollTrigger: {
           trigger: wrapRef.current,
           start: "top 75%",
@@ -86,48 +103,74 @@ export function Testimonials() {
 
         <div
           ref={wrapRef}
-          className="grid grid-cols-1 md:grid-cols-3 gap-px bg-border border border-border rounded-lg overflow-hidden"
+          className="grid lg:grid-cols-[1.4fr_1fr] gap-5 lg:gap-6 mt-4"
         >
-          {quotes.map((q, i) => (
-            <figure
-              key={i}
-              data-quote
-              className="relative bg-bg p-7 md:p-8 flex flex-col gap-6 hover:bg-surface/60 transition-colors duration-200"
-            >
-              {/* Floating quote mark */}
-              <svg
-                viewBox="0 0 32 32"
-                className="absolute top-5 right-5 w-7 h-7 opacity-15"
-                style={{ color: q.accent }}
-                aria-hidden="true"
-                fill="currentColor"
+          {/* Large featured quote */}
+          <figure
+            data-quote
+            className="relative rounded-xl border border-border bg-bg/40 p-8 md:p-12 lg:p-14 flex flex-col gap-8 hover:bg-surface/60 transition-colors duration-200"
+          >
+            <div className="flex items-center justify-between">
+              <MarkSvg color={large.accent} />
+              <span
+                className="text-[10px] uppercase tracking-[0.25em]"
+                style={{ color: large.accent }}
               >
-                <path d="M9.4 8C6 8 3 11 3 14.6c0 2.6 1.6 4.5 4 5.2.6.2 1 .7 1 1.3 0 1-.7 1.7-1.8 1.7C3.4 22.8 1 19.4 1 15c0-5 3.5-9 8.4-9 .3 0 .6.3.6.6V8zm17 0c-3.4 0-6.4 3-6.4 6.6 0 2.6 1.6 4.5 4 5.2.6.2 1 .7 1 1.3 0 1-.7 1.7-1.8 1.7-2.8 0-5.2-3.4-5.2-7.8 0-5 3.5-9 8.4-9 .3 0 .6.3.6.6V8z" />
-              </svg>
+                Featured · via {large.product}
+              </span>
+            </div>
 
-              <blockquote className="text-[14.5px] md:text-[15px] leading-relaxed text-text-secondary italic">
-                &ldquo;{q.body}&rdquo;
-              </blockquote>
+            <blockquote className="font-heading text-2xl md:text-3xl lg:text-4xl font-500 leading-[1.25] tracking-tight text-text-primary">
+              &ldquo;{large.body}&rdquo;
+            </blockquote>
 
-              <figcaption className="mt-auto pt-4 border-t border-border/60">
-                <div className="flex items-baseline gap-2 mb-1">
+            <figcaption className="mt-auto pt-6 border-t border-border/80 flex items-baseline gap-3">
+              <span
+                className="w-1.5 h-1.5 rounded-full"
+                style={{ backgroundColor: large.accent }}
+              />
+              <div>
+                <div className="font-heading text-base font-700 text-text-primary">
+                  {large.attribution}
+                </div>
+                <div className="text-[12px] text-text-tertiary mt-0.5">
+                  {large.context}
+                </div>
+              </div>
+            </figcaption>
+          </figure>
+
+          {/* Two stacked smaller quotes */}
+          <div className="flex flex-col gap-5 lg:gap-6">
+            {small.map((q, i) => (
+              <figure
+                key={i}
+                data-quote
+                className="relative rounded-xl border border-border bg-bg/40 p-6 md:p-8 flex flex-col gap-5 hover:bg-surface/60 transition-colors duration-200 flex-1"
+              >
+                <MarkSvg color={q.accent} />
+
+                <blockquote className="text-[14.5px] leading-relaxed text-text-secondary">
+                  &ldquo;{q.body}&rdquo;
+                </blockquote>
+
+                <figcaption className="mt-auto pt-4 border-t border-border/70 flex items-baseline gap-3">
                   <span
                     className="w-1.5 h-1.5 rounded-full"
                     style={{ backgroundColor: q.accent }}
                   />
-                  <span className="font-heading text-sm font-600 text-text-primary">
-                    {q.attribution}
-                  </span>
-                </div>
-                <div className="text-[11px] text-text-tertiary leading-snug ml-3.5">
-                  {q.context}
-                </div>
-                <div className="mt-2 ml-3.5 text-[10px] uppercase tracking-widest text-text-tertiary">
-                  via {q.product}
-                </div>
-              </figcaption>
-            </figure>
-          ))}
+                  <div>
+                    <div className="font-heading text-[13px] font-600 text-text-primary">
+                      {q.attribution}
+                    </div>
+                    <div className="text-[11px] text-text-tertiary mt-0.5">
+                      {q.context} · via {q.product}
+                    </div>
+                  </div>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
         </div>
       </div>
     </section>
