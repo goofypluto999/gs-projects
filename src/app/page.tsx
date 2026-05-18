@@ -7,6 +7,7 @@ import { About } from "@/components/About";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 import { SectionDivider } from "@/components/SectionDivider";
+import { AvailabilityStrip } from "@/components/AvailabilityStrip";
 
 export default function Home() {
   return (
@@ -19,6 +20,7 @@ export default function Home() {
         <ProjectGrid />
         <SectionDivider label="02 · What's next" />
         <Workshop />
+        <AvailabilityStrip />
         <SectionDivider label="03 · Who" />
         <About />
         <Contact />
