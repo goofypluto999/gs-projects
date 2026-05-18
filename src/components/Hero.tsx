@@ -5,12 +5,12 @@ import gsap from "gsap";
 import { GridPattern } from "./GridPattern";
 import { ScrollIndicator } from "./ScrollIndicator";
 import { TextRotate } from "./TextRotate";
-import { Meteors } from "./Meteors";
 import { Aurora } from "./Aurora";
 import { OrbitSphere } from "./OrbitSphere";
 import { LiveStatus } from "./LiveStatus";
 import { AnimatedCounter } from "./AnimatedCounter";
 import { NowPlaying } from "./NowPlaying";
+import { InteractiveCanvas } from "./InteractiveCanvas";
 
 const rotatingWords = [
   "scenario intelligence",
@@ -165,8 +165,8 @@ export function Hero() {
       className="relative flex flex-col justify-center min-h-[92vh] px-6 pt-14 overflow-hidden"
     >
       <Aurora />
-      <GridPattern className="opacity-40" />
-      <Meteors number={10} />
+      <GridPattern className="opacity-25" />
+      <InteractiveCanvas density={0.00015} />
 
       {/* Cursor-driven ambient glow */}
       <div

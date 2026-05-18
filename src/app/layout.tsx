@@ -6,6 +6,7 @@ import { Grain } from "@/components/Grain";
 import { BackToTop } from "@/components/BackToTop";
 import { KeyboardHint } from "@/components/KeyboardHint";
 import { SectionRail } from "@/components/SectionRail";
+import { CursorTrail } from "@/components/CursorTrail";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -61,6 +62,7 @@ export default function RootLayout({
         <SectionRail />
         <BackToTop />
         <KeyboardHint />
+        <CursorTrail />
       </body>
     </html>
   );
