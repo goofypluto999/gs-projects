@@ -257,51 +257,48 @@ export function Hero() {
           style={{ width: 0 }}
         />
 
-        {/* Stats line */}
+        {/* Stats grid */}
         <div
           ref={statsRef}
-          className="mt-7 flex flex-wrap items-center gap-x-8 gap-y-4 opacity-0"
+          className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-5 max-w-[640px] opacity-0"
           style={{ transform: "translateY(8px)" }}
         >
-          <div>
+          <div className="border-l border-border pl-3">
             <AnimatedCounter
               target={5}
-              className="font-heading text-2xl font-700 text-text-primary"
+              className="font-heading text-3xl md:text-4xl font-800 text-text-primary block leading-none"
               format={(n) => String(n).padStart(2, "0")}
             />
-            <span className="ml-2 text-xs text-text-tertiary">
+            <span className="block mt-2 text-[10px] uppercase tracking-[0.18em] text-text-tertiary leading-snug">
               live products
             </span>
           </div>
-          <div className="h-4 w-px bg-border" />
-          <div>
+          <div className="border-l border-border pl-3">
             <AnimatedCounter
               target={228}
-              className="font-heading text-2xl font-700 text-text-primary"
+              className="font-heading text-3xl md:text-4xl font-800 text-text-primary block leading-none"
               suffix="K+"
             />
-            <span className="ml-2 text-xs text-text-tertiary">
+            <span className="block mt-2 text-[10px] uppercase tracking-[0.18em] text-text-tertiary leading-snug">
               records indexed
             </span>
           </div>
-          <div className="h-4 w-px bg-border" />
-          <div>
+          <div className="border-l pl-3" style={{ borderColor: "var(--color-accent)" }}>
             <AnimatedCounter
               target={500}
-              className="font-heading text-2xl font-700 text-text-primary"
+              className="font-heading text-3xl md:text-4xl font-800 text-text-primary block leading-none"
               suffix="K"
             />
-            <span className="ml-2 text-xs text-text-tertiary">
+            <span className="block mt-2 text-[10px] uppercase tracking-[0.18em] text-text-tertiary leading-snug">
               agent simulations
             </span>
           </div>
-          <div className="h-4 w-px bg-border" />
-          <div>
-            <span className="font-heading text-2xl font-700 text-text-primary">
+          <div className="border-l border-border pl-3">
+            <span className="font-heading text-3xl md:text-4xl font-800 text-text-primary block leading-none">
               Free
             </span>
-            <span className="ml-2 text-xs text-text-tertiary">
-              tools shipped open-source
+            <span className="block mt-2 text-[10px] uppercase tracking-[0.18em] text-text-tertiary leading-snug">
+              open-source tools
             </span>
           </div>
         </div>
