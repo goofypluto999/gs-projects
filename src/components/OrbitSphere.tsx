@@ -87,7 +87,28 @@ export function OrbitSphere({ className = "" }: { className?: string }) {
       });
     });
 
-    return () => ctx.revert();
+    // Mouse parallax tilt — sphere rotates toward cursor for 3D depth
+    function onMove(e: MouseEvent) {
+      if (!wrapRef.current) return;
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const x = (e.clientX / w - 0.5) * 14;
+      const y = (e.clientY / h - 0.5) * 10;
+      gsap.to(wrapRef.current, {
+        rotateY: x,
+        rotateX: -y,
+        duration: 0.8,
+        ease: "power3.out",
+        transformPerspective: 1200,
+        transformOrigin: "50% 50%",
+      });
+    }
+    window.addEventListener("mousemove", onMove, { passive: true });
+
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      ctx.revert();
+    };
   }, []);
 
   return (
