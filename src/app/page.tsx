@@ -8,6 +8,7 @@ import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 import { SectionDivider } from "@/components/SectionDivider";
 import { AvailabilityStrip } from "@/components/AvailabilityStrip";
+import { Process } from "@/components/Process";
 
 export default function Home() {
   return (
@@ -21,7 +22,9 @@ export default function Home() {
         <SectionDivider label="02 · What's next" />
         <Workshop />
         <AvailabilityStrip />
-        <SectionDivider label="03 · Who" />
+        <SectionDivider label="03 · The process" />
+        <Process />
+        <SectionDivider label="04 · Who" />
         <About />
         <Contact />
       </main>
