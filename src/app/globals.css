@@ -122,4 +122,23 @@
   .text-pretty {
     text-wrap: pretty;
   }
+
+  /* Slow Ken Burns zoom on static screenshots — applied to PreviewImage img */
+  .ken-burns {
+    animation: ken-burns 24s ease-in-out infinite alternate;
+    transform-origin: center 30%;
+  }
+  @keyframes ken-burns {
+    0% {
+      transform: scale(1);
+    }
+    100% {
+      transform: scale(1.06);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ken-burns {
+      animation: none;
+    }
+  }
 }

@@ -83,21 +83,6 @@ export function PreviewImage({
           onError={() => setErrored(true)}
         />
       )}
-
-      {/* Slow Ken Burns zoom — adds subtle motion to static screenshots */}
-      <style jsx>{`
-        .ken-burns {
-          animation: ken-burns 24s ease-in-out infinite alternate;
-          transform-origin: center 30%;
-        }
-        @keyframes ken-burns {
-          0% { transform: scale(1.0); }
-          100% { transform: scale(1.06); }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .ken-burns { animation: none; }
-        }
-      `}</style>
     </div>
   );
 }
