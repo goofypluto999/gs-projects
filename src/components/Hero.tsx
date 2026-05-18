@@ -6,6 +6,7 @@ import { GridPattern } from "./GridPattern";
 import { ScrollIndicator } from "./ScrollIndicator";
 import { TextRotate } from "./TextRotate";
 import { Meteors } from "./Meteors";
+import { Aurora } from "./Aurora";
 import { AnimatedCounter } from "./AnimatedCounter";
 
 const rotatingWords = [
@@ -170,8 +171,9 @@ export function Hero() {
       ref={sectionRef}
       className="relative flex flex-col justify-center min-h-[92vh] px-6 pt-14 overflow-hidden"
     >
+      <Aurora />
       <GridPattern className="opacity-40" />
-      <Meteors number={18} />
+      <Meteors number={10} />
 
       {/* Cursor-driven ambient glow */}
       <div
