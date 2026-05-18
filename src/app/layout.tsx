@@ -11,15 +11,25 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Giovanni Sizino Ennes — Digital Products & Tools",
   description:
-    "Portfolio of Giovanni Sizino Ennes. Five live digital products — scenario intelligence, ATS-grade CV tooling, AI job preparation, game discovery, and agent journalism.",
+    "Five live digital products. Scenario intelligence, ATS-grade CV tooling, AI job preparation, game discovery, and agent journalism. Built end-to-end by one operator.",
   openGraph: {
-    title: "Giovanni Sizino Ennes — Digital Products & Tools",
+    title: "Giovanni Sizino Ennes — Five live products",
     description:
-      "Five live digital products, end-to-end built. Open to strategic partnerships.",
+      "Built end-to-end. Open for strategic partnerships and acquisitions.",
     type: "website",
     locale: "en_GB",
+    siteName: "Giovanni Sizino Ennes",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Giovanni Sizino Ennes — Five live products",
+    description:
+      "Scenario intelligence, ATS CV tooling, AI job prep, game discovery, agent journalism.",
   },
   metadataBase: new URL("https://gs-projects.vercel.app"),
+  alternates: {
+    canonical: "/",
+  },
 };
 
 export default function RootLayout({
