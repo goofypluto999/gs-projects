@@ -5,6 +5,7 @@ import { ScrollProgress } from "@/components/ScrollProgress";
 import { Grain } from "@/components/Grain";
 import { BackToTop } from "@/components/BackToTop";
 import { KeyboardHint } from "@/components/KeyboardHint";
+import { SectionRail } from "@/components/SectionRail";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -47,6 +48,7 @@ export default function RootLayout({
         <ScrollProgress />
         <Grain />
         {children}
+        <SectionRail />
         <BackToTop />
         <KeyboardHint />
       </body>
