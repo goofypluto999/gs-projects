@@ -78,16 +78,35 @@ export function MagneticName({
 
     function paintStatic(c: CanvasRenderingContext2D, w: number, h: number) {
       c.clearRect(0, 0, w, h);
-      const fontSize = Math.min(w / 6.5, 180);
-      const lineHeight = fontSize * 0.92;
-      let y = fontSize;
+      function fitLine(
+        text: string,
+        weight: number,
+        italic: boolean,
+        maxFont: number,
+        maxWidth: number
+      ): number {
+        let size = maxFont;
+        while (size > 24) {
+          c.font = `${italic ? "italic" : "normal"} ${weight} ${size}px Archivo, system-ui, sans-serif`;
+          const tw = c.measureText(text).width;
+          if (tw <= maxWidth) return size;
+          size -= 4;
+        }
+        return size;
+      }
+
+      const maxFontCap = Math.min(w / 5, 220);
+      let y = 0;
       for (const line of lines) {
-        c.fillStyle = line.color || "#FAFAFA";
         const weight = line.weight ?? 800;
-        const italic = line.italic ? "italic" : "normal";
-        c.font = `${italic} ${weight} ${fontSize}px Archivo, system-ui, sans-serif`;
+        const italic = !!line.italic;
+        const size = fitLine(line.text, weight, italic, maxFontCap, w);
+        const lineHeight = size * 0.95;
+        c.fillStyle = line.color || "#FAFAFA";
+        c.font = `${italic ? "italic" : "normal"} ${weight} ${size}px Archivo, system-ui, sans-serif`;
+        y += size;
         c.fillText(line.text, 0, y);
-        y += lineHeight;
+        y += lineHeight - size;
       }
     }
 
@@ -108,26 +127,58 @@ export function MagneticName({
       const oc = off.getContext("2d");
       if (!oc) return;
 
-      const fontSize = Math.min(width / 6.5, 180);
-      const lineHeight = fontSize * 0.92;
-      let yCursor = fontSize;
+      // Per-line autosize — measure each line at a large size and shrink
+      // until it fits the canvas width. Bigger lines get more height.
+      function fitLine(
+        text: string,
+        weight: number,
+        italic: boolean,
+        maxFont: number,
+        maxWidth: number
+      ): number {
+        let size = maxFont;
+        while (size > 24) {
+          oc!.font = `${italic ? "italic" : "normal"} ${weight} ${size}px Archivo, system-ui, sans-serif`;
+          const w = oc!.measureText(text).width;
+          if (w <= maxWidth) return size;
+          size -= 4;
+        }
+        return size;
+      }
 
-      // Track per-line colour so we can pick it up per particle below.
+      const maxFontCap = Math.min(width / 5, 220);
+      let yCursor = 0;
       const lineMeta: Array<{ y: number; h: number; color: string }> = [];
+      const lineSizes: number[] = [];
 
+      // First pass: figure out sizes
       for (const line of lines) {
         const weight = line.weight ?? 800;
-        const italic = line.italic ? "italic" : "normal";
+        const italic = !!line.italic;
+        const size = fitLine(line.text, weight, italic, maxFontCap, width);
+        lineSizes.push(size);
+      }
+
+      // Second pass: render
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        const size = lineSizes[i];
+        const weight = line.weight ?? 800;
+        const italic = !!line.italic;
+        const lineHeight = size * 0.95;
+
         oc.fillStyle = line.color || "#FAFAFA";
-        oc.font = `${italic} ${weight} ${fontSize}px Archivo, system-ui, sans-serif`;
-        const startY = yCursor - fontSize;
+        oc.font = `${italic ? "italic" : "normal"} ${weight} ${size}px Archivo, system-ui, sans-serif`;
+
+        const startY = yCursor;
+        yCursor += size; // baseline
         oc.fillText(line.text, 0, yCursor);
         lineMeta.push({
           y: startY,
           h: lineHeight,
           color: line.color || "#FAFAFA",
         });
-        yCursor += lineHeight;
+        yCursor += lineHeight - size;
       }
 
       // Sample the offscreen canvas — every lit pixel above alpha
