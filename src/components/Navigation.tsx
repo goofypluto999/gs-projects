@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Socials } from "./Socials";
+import { LiveClock } from "./LiveClock";
 
 const navLinks = [
   { label: "Work", href: "#projects" },
@@ -97,7 +98,8 @@ export function Navigation() {
             })}
           </div>
 
-          <div className="hidden md:block">
+          <div className="hidden md:flex items-center gap-3">
+            <LiveClock />
             <Socials size="sm" />
           </div>
 

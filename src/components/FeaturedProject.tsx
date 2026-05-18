@@ -4,6 +4,7 @@ import { useRef, useEffect } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { BorderBeam } from "./BorderBeam";
 import { PreviewImage } from "./PreviewImage";
+import { Halftone } from "./Halftone";
 import type { Project } from "@/data/projects";
 
 interface FeaturedProjectProps {
@@ -59,6 +60,7 @@ export function FeaturedProject({ project, onSelect }: FeaturedProjectProps) {
       style={{ transformStyle: "preserve-3d" }}
     >
       <BorderBeam duration={5} size={120} color={`${project.accent}88`} />
+      <Halftone dotColor={project.accent} density={0.4} className="opacity-50" />
 
       <div className="grid md:grid-cols-[1.1fr_1fr]">
         {/* Preview pane */}
