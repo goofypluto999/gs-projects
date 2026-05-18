@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { BorderBeam } from "./BorderBeam";
+import { PreviewImage } from "./PreviewImage";
 import type { Project } from "@/data/projects";
 
 interface FeaturedProjectProps {
@@ -16,8 +17,6 @@ interface FeaturedProjectProps {
  */
 export function FeaturedProject({ project, onSelect }: FeaturedProjectProps) {
   const cardRef = useRef<HTMLDivElement>(null);
-  const [imgError, setImgError] = useState(false);
-  const [imgLoaded, setImgLoaded] = useState(false);
 
   useEffect(() => {
     const card = cardRef.current;
@@ -64,45 +63,38 @@ export function FeaturedProject({ project, onSelect }: FeaturedProjectProps) {
       <div className="grid md:grid-cols-[1.1fr_1fr]">
         {/* Preview pane */}
         <div className="relative aspect-[4/3] md:aspect-auto overflow-hidden bg-bg border-b md:border-b-0 md:border-r border-border">
-          {/* Branded fallback always visible */}
-          <div
-            className="absolute inset-0 flex flex-col items-center justify-center gap-4"
-            style={{
-              background: `radial-gradient(ellipse at 50% 40%, ${project.accent}18 0%, transparent 65%)`,
-            }}
-          >
-            <div
-              className="w-20 h-20 rounded-2xl flex items-center justify-center"
-              style={{ backgroundColor: `${project.accent}22` }}
-            >
-              <span
-                className="font-heading text-3xl font-800"
-                style={{ color: project.accent }}
+          <PreviewImage
+            src={project.previewImage}
+            alt={`${project.name} preview`}
+            accent={project.accent}
+            eager
+            fallback={
+              <div
+                className="absolute inset-0 flex flex-col items-center justify-center gap-4"
+                style={{
+                  background: `radial-gradient(ellipse at 50% 40%, ${project.accent}18 0%, transparent 65%)`,
+                }}
               >
-                {project.name.charAt(0)}
-              </span>
-            </div>
-            <span className="font-heading text-base font-500 text-text-tertiary/50">
-              {project.name}
-            </span>
-          </div>
-
-          {!imgError && (
-            <img
-              src={project.previewImage}
-              alt={`${project.name} preview`}
-              className={`absolute inset-0 w-full h-full object-cover object-top transition-opacity duration-700 ${
-                imgLoaded ? "opacity-100" : "opacity-0"
-              }`}
-              loading="eager"
-              onLoad={() => setImgLoaded(true)}
-              onError={() => setImgError(true)}
-            />
-          )}
+                <div
+                  className="w-20 h-20 rounded-2xl flex items-center justify-center"
+                  style={{ backgroundColor: `${project.accent}22` }}
+                >
+                  <span
+                    className="font-heading text-3xl font-800"
+                    style={{ color: project.accent }}
+                  >
+                    {project.name.charAt(0)}
+                  </span>
+                </div>
+                <span className="font-heading text-base font-500 text-text-tertiary/50">
+                  {project.name}
+                </span>
+              </div>
+            }
+          />
 
           <div className="absolute inset-0 bg-gradient-to-t from-surface/70 via-transparent to-transparent pointer-events-none" />
 
-          {/* Featured ribbon */}
           <div className="absolute top-4 left-4 z-10">
             <div
               className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full backdrop-blur-md text-[10.5px] uppercase tracking-widest font-600"

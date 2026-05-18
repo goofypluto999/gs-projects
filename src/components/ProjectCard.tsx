@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { ExternalLink, ArrowUpRight } from "lucide-react";
 import { SpotlightCard } from "./SpotlightCard";
 import { BorderBeam } from "./BorderBeam";
+import { PreviewImage } from "./PreviewImage";
 import type { Project } from "@/data/projects";
 
 interface ProjectCardProps {
@@ -45,17 +45,6 @@ function CardFallback({ project }: { project: Project }) {
 }
 
 export function ProjectCard({ project, onSelect, index = 0 }: ProjectCardProps) {
-  const [imgLoaded, setImgLoaded] = useState(false);
-  const [imgError, setImgError] = useState(false);
-  const imgRef = useRef<HTMLImageElement>(null);
-
-  // Trigger load check
-  useEffect(() => {
-    if (imgRef.current?.complete && imgRef.current?.naturalHeight !== 0) {
-      setImgLoaded(true);
-    }
-  }, []);
-
   return (
     <SpotlightCard
       onClick={() => onSelect(project)}
@@ -65,27 +54,15 @@ export function ProjectCard({ project, onSelect, index = 0 }: ProjectCardProps) 
 
       {/* Preview thumbnail */}
       <div className="relative w-full aspect-[16/10] overflow-hidden rounded-t-lg border-b border-border bg-bg">
-        <CardFallback project={project} />
+        <PreviewImage
+          src={project.previewImage}
+          alt={`${project.name} preview`}
+          accent={project.accent}
+          fallback={<CardFallback project={project} />}
+        />
 
-        {/* Static screenshot — thum.io */}
-        {!imgError && (
-          <img
-            ref={imgRef}
-            src={project.previewImage}
-            alt={`${project.name} preview`}
-            className={`absolute inset-0 w-full h-full object-cover object-top transition-opacity duration-700 ${
-              imgLoaded ? "opacity-100" : "opacity-0"
-            }`}
-            loading="lazy"
-            onLoad={() => setImgLoaded(true)}
-            onError={() => setImgError(true)}
-          />
-        )}
-
-        {/* Subtle vignette */}
         <div className="absolute inset-0 bg-gradient-to-t from-surface/80 via-transparent to-transparent pointer-events-none" />
 
-        {/* Hover-reveal corner badge */}
         <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           <div
             className="w-7 h-7 rounded-full flex items-center justify-center backdrop-blur-sm"
@@ -96,7 +73,6 @@ export function ProjectCard({ project, onSelect, index = 0 }: ProjectCardProps) 
         </div>
       </div>
 
-      {/* Content */}
       <div className="flex flex-col flex-1 p-5">
         <div className="flex items-center justify-between mb-2">
           <h3 className="font-heading text-lg font-600 text-text-primary">
@@ -113,7 +89,6 @@ export function ProjectCard({ project, onSelect, index = 0 }: ProjectCardProps) 
           {project.tagline}
         </p>
 
-        {/* Tags */}
         <div className="flex flex-wrap gap-1.5 mt-auto mb-4">
           {project.tags.slice(0, 4).map((tag) => (
             <span
@@ -125,7 +100,6 @@ export function ProjectCard({ project, onSelect, index = 0 }: ProjectCardProps) 
           ))}
         </div>
 
-        {/* Link */}
         <a
           href={project.url}
           target="_blank"
