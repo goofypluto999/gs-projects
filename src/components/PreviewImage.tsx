@@ -76,13 +76,28 @@ export function PreviewImage({
           src={src}
           alt={alt}
           loading={eager ? "eager" : "lazy"}
-          className={`absolute inset-0 w-full h-full object-cover object-top transition-opacity duration-700 ${
+          className={`ken-burns absolute inset-0 w-full h-full object-cover object-top transition-opacity duration-700 ${
             loaded ? "opacity-100" : "opacity-0"
           }`}
           onLoad={() => setLoaded(true)}
           onError={() => setErrored(true)}
         />
       )}
+
+      {/* Slow Ken Burns zoom — adds subtle motion to static screenshots */}
+      <style jsx>{`
+        .ken-burns {
+          animation: ken-burns 24s ease-in-out infinite alternate;
+          transform-origin: center 30%;
+        }
+        @keyframes ken-burns {
+          0% { transform: scale(1.0); }
+          100% { transform: scale(1.06); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .ken-burns { animation: none; }
+        }
+      `}</style>
     </div>
   );
 }
