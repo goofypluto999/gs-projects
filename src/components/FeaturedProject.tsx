@@ -7,6 +7,7 @@ import { PreviewImage } from "./PreviewImage";
 import { Halftone } from "./Halftone";
 import { MagneticWrap } from "./MagneticWrap";
 import { WindowChrome } from "./WindowChrome";
+import { AppleIntelligenceBorder } from "./AppleIntelligenceBorder";
 import type { Project } from "@/data/projects";
 
 interface FeaturedProjectProps {
@@ -58,9 +59,30 @@ export function FeaturedProject({ project, onSelect }: FeaturedProjectProps) {
     <div
       ref={cardRef}
       onClick={() => onSelect(project)}
-      className="relative group cursor-pointer rounded-xl overflow-hidden border border-border bg-surface transition-transform duration-300 will-change-transform"
+      className="featured-card relative group cursor-pointer rounded-xl overflow-hidden border border-border bg-surface transition-transform duration-300 will-change-transform"
       style={{ transformStyle: "preserve-3d" }}
     >
+      <style jsx>{`
+        .featured-card .ai-hover-rim {
+          opacity: 0;
+          transition: opacity 420ms ease;
+        }
+        .featured-card:hover .ai-hover-rim {
+          opacity: 1;
+        }
+      `}</style>
+
+      {/* Apple Intelligence rim — visible on hover only. Sits above
+          the regular BorderBeam for a "premium awakens" feel. */}
+      <div className="ai-hover-rim absolute inset-0 pointer-events-none rounded-xl overflow-hidden z-[2]">
+        <AppleIntelligenceBorder
+          thickness={2}
+          intensity="lg"
+          speed={4}
+          radius={12}
+        />
+      </div>
+
       <BorderBeam duration={5} size={120} color={`${project.accent}88`} />
       <Halftone dotColor={project.accent} density={0.4} className="opacity-50" />
 
