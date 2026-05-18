@@ -37,6 +37,11 @@ const principles = [
   },
 ];
 
+const locations = [
+  { city: "London", tz: "GMT", flag: "🇬🇧" },
+  { city: "São Paulo", tz: "BRT", flag: "🇧🇷" },
+];
+
 export function About() {
   const wrapRef = useRef<HTMLDivElement>(null);
 
@@ -74,35 +79,80 @@ export function About() {
         />
 
         <SectionReveal>
-          <div className="mt-12 grid md:grid-cols-2 gap-12 max-w-[920px]">
-            <p className="text-[15px] leading-relaxed text-text-secondary">
-              I&apos;m Giovanni — based between the UK and Brazil. I build digital
-              products end-to-end: idea, design, code, infra, billing, deploy.
-              Every project on this page is live, paid for out of pocket, and
-              used by someone other than me.
-            </p>
-            <p className="text-[15px] leading-relaxed text-text-secondary">
-              My work sits where product thinking meets engineering. Tight
-              interfaces, fast performance, architecture that holds up as it
-              scales. I care about the details that make software feel
-              considered — which is why most of what I ship looks expensive and
-              isn&apos;t.
-            </p>
+          <div className="grid lg:grid-cols-[1.4fr_1fr] gap-12 lg:gap-20 items-start">
+            {/* Bio text */}
+            <div className="grid md:grid-cols-2 gap-10">
+              <p className="text-[15px] leading-relaxed text-text-secondary">
+                I&apos;m Giovanni — based between the UK and Brazil. I build
+                digital products end-to-end: idea, design, code, infra,
+                billing, deploy. Every project on this page is live, paid for
+                out of pocket, and used by someone other than me.
+              </p>
+              <p className="text-[15px] leading-relaxed text-text-secondary">
+                My work sits where product thinking meets engineering. Tight
+                interfaces, fast performance, architecture that holds up as
+                it scales. I care about the details that make software feel
+                considered — which is why most of what I ship looks expensive
+                and isn&apos;t.
+              </p>
+            </div>
+
+            {/* Side card with location + meta */}
+            <div className="border border-border rounded-lg bg-surface/30 p-6">
+              <div className="text-[10px] uppercase tracking-[0.3em] text-text-tertiary mb-5">
+                Operating from
+              </div>
+              <ul className="space-y-4">
+                {locations.map((loc) => (
+                  <li
+                    key={loc.city}
+                    className="flex items-center justify-between"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-base">{loc.flag}</span>
+                      <span className="font-heading text-base font-600 text-text-primary">
+                        {loc.city}
+                      </span>
+                    </div>
+                    <span className="text-[11px] text-text-tertiary tabular-nums tracking-wider">
+                      {loc.tz}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-5 pt-5 border-t border-border">
+                <div className="text-[10px] uppercase tracking-[0.3em] text-text-tertiary mb-2">
+                  Mode
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-50" />
+                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400" />
+                  </span>
+                  <span className="text-sm text-text-secondary">
+                    Open for new engagements
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </SectionReveal>
 
-        <div ref={wrapRef} className="mt-20 grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-border rounded-lg overflow-hidden border border-border">
+        <div
+          ref={wrapRef}
+          className="mt-20 grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-border rounded-lg overflow-hidden border border-border"
+        >
           {principles.map((p) => (
             <div
               key={p.n}
               data-principle
-              className="p-6 bg-bg flex flex-col gap-3 hover:bg-surface transition-colors duration-200"
+              className="p-6 md:p-7 bg-bg flex flex-col gap-3 hover:bg-surface transition-colors duration-200"
             >
               <div className="flex items-baseline gap-3">
                 <span className="font-heading text-xs text-text-tertiary tabular-nums">
                   {p.n}
                 </span>
-                <span className="font-heading text-base font-600 text-text-primary">
+                <span className="font-heading text-base md:text-lg font-700 text-text-primary tracking-tight">
                   {p.label}
                 </span>
               </div>
