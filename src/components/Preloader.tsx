@@ -1,292 +1,175 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { AppleIntelligenceBorder } from "./AppleIntelligenceBorder";
 
 /**
- * Cinematic preloader. Three beats in ~1.6s:
- *   1. Massive 00→99 counter ticks up (tabular-nums) on left
- *   2. A status-line scrambles through micro-statements right side
- *   3. At 100, the counter shatters into particles + the panel
- *      slide-clips upward, revealing the page underneath
+ * Cinematic preloader — Apple Intelligence ambient border framing a
+ * sequence of editorial statements that swap in/out.
  *
- * On-brand: same colour system as the rest of the site, mono-feel
- * status copy ("compiling.work", "warming.field"), accent dot.
+ * Beat 1 (0.0s): Black screen. AI rim ignites and rotates.
+ * Beat 2 (0.4s): Statement #1 fades in — "Welcome."
+ * Beat 3 (1.0s): Statement #2 — "Five live products."
+ * Beat 4 (1.7s): Statement #3 — "One operator."
+ * Beat 5 (2.4s): Wordmark resolves — "Sizino Ennes."
+ * Beat 6 (3.0s): AI rim pulses bright, statement fades, lift.
  *
- * No external dependencies, pure canvas + DOM. Respects
- * prefers-reduced-motion (renders + dismisses instantly).
+ * Total ~3.4s. Captivating, on-brand, ends with the studio name burned
+ * into the visitor's eye. Respects reduced-motion (instant dismiss).
  */
 
-const LOADING_PHRASES = [
-  "studio.boot",
-  "fetching.work",
-  "warming.field",
-  "calibrating.signal",
-  "rendering.brand",
-  "ready",
-];
-
-const PROGRESS_DURATION = 1400; // counter run
-const HOLD_AT_100 = 280;
-const SHATTER_DURATION = 700;
-const LIFT_DURATION = 700;
-
-interface ShatterParticle {
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-  size: number;
-  color: string;
-  alpha: number;
+interface Statement {
+  text: string;
+  italic?: boolean;
+  accent?: string;
 }
 
+const beats: Statement[] = [
+  { text: "Welcome." },
+  { text: "Five live products." },
+  { text: "One operator." },
+  { text: "Sizino Ennes.", accent: "#2563EB" },
+];
+
+const BEAT_DURATION = 700; // ms per beat
+const LIFT_DURATION = 750;
+
 export function Preloader() {
-  const [count, setCount] = useState(0);
-  const [phase, setPhase] = useState<
-    "counting" | "shatter" | "lifting" | "done"
-  >("counting");
-  const [phrase, setPhrase] = useState(LOADING_PHRASES[0]);
+  const [done, setDone] = useState(false);
+  const [lifting, setLifting] = useState(false);
+  const [beatIdx, setBeatIdx] = useState(-1);
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const counterRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    // Reduced-motion: skip the whole sequence
+    // Reduced-motion: skip entirely
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setPhase("done");
+      setDone(true);
       return;
     }
 
     document.body.style.overflow = "hidden";
 
-    // PHASE 1 — counter ticks up
-    let startCount = performance.now();
-    let phraseIdx = 0;
-    setPhrase(LOADING_PHRASES[0]);
+    // Beat scheduler
+    const timers: ReturnType<typeof setTimeout>[] = [];
 
-    const phraseTimer = setInterval(() => {
-      phraseIdx = Math.min(phraseIdx + 1, LOADING_PHRASES.length - 1);
-      setPhrase(LOADING_PHRASES[phraseIdx]);
-    }, PROGRESS_DURATION / LOADING_PHRASES.length);
+    // Initial AI border ignition delay
+    timers.push(setTimeout(() => setBeatIdx(0), 300));
 
-    function tickCount(now: number) {
-      const elapsed = now - startCount;
-      const progress = Math.min(elapsed / PROGRESS_DURATION, 1);
-      const eased = 1 - Math.pow(1 - progress, 3); // easeOutCubic
-      setCount(Math.floor(eased * 100));
-      if (progress < 1) {
-        requestAnimationFrame(tickCount);
-      } else {
-        clearInterval(phraseTimer);
-        setPhrase("ready");
-        setCount(100);
-        setTimeout(triggerShatter, HOLD_AT_100);
-      }
-    }
-    requestAnimationFrame(tickCount);
-
-    function triggerShatter() {
-      setPhase("shatter");
-      shatterCounter();
+    // Subsequent beats
+    for (let i = 1; i < beats.length; i++) {
+      timers.push(setTimeout(() => setBeatIdx(i), 300 + i * BEAT_DURATION));
     }
 
-    function shatterCounter() {
-      // Capture the "100" rendered DOM bounds → sample its pixels → spawn
-      // particles at every lit pixel. Particles fly outward with random
-      // velocity, fading over SHATTER_DURATION.
-      const counterEl = counterRef.current;
-      const canvas = canvasRef.current;
-      if (!counterEl || !canvas) {
-        startLift();
-        return;
-      }
-
-      const rect = counterEl.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = window.innerWidth * dpr;
-      canvas.height = window.innerHeight * dpr;
-      canvas.style.width = `${window.innerWidth}px`;
-      canvas.style.height = `${window.innerHeight}px`;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) {
-        startLift();
-        return;
-      }
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-      // Render "100" into an offscreen canvas at the exact size
-      const off = document.createElement("canvas");
-      off.width = Math.ceil(rect.width);
-      off.height = Math.ceil(rect.height);
-      const oc = off.getContext("2d");
-      if (!oc) {
-        startLift();
-        return;
-      }
-
-      const style = window.getComputedStyle(counterEl);
-      oc.fillStyle = style.color;
-      oc.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
-      oc.textBaseline = "top";
-      oc.fillText("100", 0, 0);
-
-      const pixels = oc.getImageData(0, 0, off.width, off.height).data;
-      const particles: ShatterParticle[] = [];
-      const step = 3;
-      for (let py = 0; py < off.height; py += step) {
-        for (let px = 0; px < off.width; px += step) {
-          const idx = (py * off.width + px) * 4;
-          const alpha = pixels[idx + 3];
-          if (alpha > 130) {
-            const angle = Math.random() * Math.PI * 2;
-            const speed = 1.5 + Math.random() * 4.5;
-            particles.push({
-              x: rect.left + px,
-              y: rect.top + py,
-              vx: Math.cos(angle) * speed + (Math.random() - 0.5) * 1.2,
-              vy: Math.sin(angle) * speed - 1.5,
-              size: 1.6 + Math.random() * 1.0,
-              color: "#FAFAFA",
-              alpha: 1,
-            });
-          }
-        }
-      }
-
-      // Hide the original counter so it doesn't double up
-      counterEl.style.visibility = "hidden";
-
-      const start = performance.now();
-      function animate(now: number) {
-        const elapsed = now - start;
-        const t = Math.min(elapsed / SHATTER_DURATION, 1);
-        ctx?.clearRect(0, 0, window.innerWidth, window.innerHeight);
-        for (const p of particles) {
-          p.x += p.vx;
-          p.y += p.vy;
-          p.vy += 0.18; // gravity pull
-          p.vx *= 0.985;
-          p.alpha = 1 - t;
-
-          if (!ctx) continue;
-          ctx.fillStyle = `rgba(250, 250, 250, ${p.alpha})`;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size * (1 - t * 0.4), 0, Math.PI * 2);
-          ctx.fill();
-
-          // Subtle accent halo on a fraction of particles
-          if (p.size > 2.1) {
-            ctx.fillStyle = `rgba(37, 99, 235, ${p.alpha * 0.5})`;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size * 1.8 * (1 - t * 0.3), 0, Math.PI * 2);
-            ctx.fill();
-          }
-        }
-        if (t < 1) {
-          requestAnimationFrame(animate);
-        } else {
-          startLift();
-        }
-      }
-      requestAnimationFrame(animate);
-    }
-
-    function startLift() {
-      setPhase("lifting");
-      // CSS transition handles the slide-clip in the wrapper element
-      setTimeout(() => {
-        setPhase("done");
-        document.body.style.overflow = "";
-      }, LIFT_DURATION);
-    }
+    // Trigger lift after last beat holds
+    timers.push(
+      setTimeout(
+        () => {
+          setLifting(true);
+          setTimeout(() => {
+            setDone(true);
+            document.body.style.overflow = "";
+          }, LIFT_DURATION);
+        },
+        300 + beats.length * BEAT_DURATION + 400
+      )
+    );
 
     return () => {
-      clearInterval(phraseTimer);
+      timers.forEach((t) => clearTimeout(t));
       document.body.style.overflow = "";
     };
   }, []);
 
-  if (phase === "done") return null;
+  if (done) return null;
 
   return (
     <div
       ref={wrapperRef}
       className="fixed inset-0 z-[100] bg-bg pointer-events-auto overflow-hidden"
       style={{
-        transform: phase === "lifting" ? "translateY(-100%)" : "translateY(0)",
-        transition:
-          phase === "lifting"
-            ? `transform ${LIFT_DURATION}ms cubic-bezier(0.76, 0, 0.24, 1)`
-            : undefined,
-        clipPath: phase === "lifting" ? "inset(0 0 0 0)" : undefined,
+        transform: lifting ? "translateY(-100%)" : "translateY(0)",
+        transition: lifting
+          ? `transform ${LIFT_DURATION}ms cubic-bezier(0.76, 0, 0.24, 1)`
+          : undefined,
       }}
       aria-hidden="true"
     >
-      {/* Field grid background */}
+      {/* Apple Intelligence rotating rim — the show stopper */}
+      <AppleIntelligenceBorder
+        thickness={2}
+        intensity="xl"
+        speed={3.5}
+        radius={0}
+      />
+
+      {/* Subtle inner vignette so type pops above the rim glow */}
       <div
-        className="absolute inset-0 opacity-50 pointer-events-none"
+        className="absolute inset-0 pointer-events-none"
         style={{
-          backgroundImage:
-            "radial-gradient(circle at 25% 30%, rgba(37,99,235,0.18) 0%, transparent 55%), radial-gradient(circle at 75% 75%, rgba(168,85,247,0.14) 0%, transparent 55%)",
+          background:
+            "radial-gradient(ellipse at center, transparent 30%, rgba(10,10,11,0.7) 95%)",
         }}
       />
 
-      {/* Top-left brand mark */}
-      <div className="absolute top-6 left-6 flex items-center gap-2.5">
-        <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-        <span className="font-mono text-[11px] tracking-[0.25em] uppercase text-text-secondary">
-          STUDIO · SIZINO ENNES
+      {/* Top-left tag */}
+      <div className="absolute top-6 left-6 md:top-8 md:left-10 flex items-center gap-2.5 z-10">
+        <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+        <span className="font-mono text-[10px] md:text-[11px] tracking-[0.3em] uppercase text-text-secondary">
+          Studio · Sizino Ennes
         </span>
       </div>
 
-      {/* Top-right scrambling phrase */}
-      <div className="absolute top-6 right-6 font-mono text-[11px] tracking-[0.2em] text-text-tertiary">
-        <span className="text-accent">›</span> {phrase}
-      </div>
-
-      {/* MASSIVE counter, bottom-left */}
-      <div className="absolute left-6 md:left-12 bottom-12 flex items-end gap-3">
-        <span
-          ref={counterRef}
-          className="font-heading font-800 tabular-nums text-text-primary leading-[0.85] tracking-[-0.05em]"
-          style={{ fontSize: "clamp(7rem, 22vw, 22rem)" }}
-        >
-          {String(count).padStart(3, "0")}
+      {/* Bottom-right status */}
+      <div className="absolute bottom-6 right-6 md:bottom-8 md:right-10 z-10">
+        <span className="font-mono text-[10px] md:text-[11px] tracking-[0.25em] uppercase text-text-tertiary">
+          <span className="text-accent">›</span> initialising
         </span>
       </div>
 
-      {/* Centre-right small label */}
-      <div className="absolute right-6 md:right-12 bottom-16">
-        <div className="text-right">
-          <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-text-tertiary mb-2">
-            building hero
-          </div>
-          <div className="font-mono text-[11px] tracking-[0.18em] text-text-secondary">
-            v1 ·{" "}
-            <span className="text-accent">{Math.floor(count)}</span>
-            <span className="text-text-tertiary">/100</span>
-          </div>
-        </div>
-      </div>
+      {/* Center stage — statements swap in/out */}
+      <div className="absolute inset-0 flex items-center justify-center px-8 z-10">
+        {beats.map((b, i) => {
+          // Active when beatIdx === i. Hold the final beat slightly longer.
+          const isActive = beatIdx === i;
+          const isPast = beatIdx > i;
+          let opacity = 0;
+          let translateY = 24;
+          let blur = 12;
+          if (isActive) {
+            opacity = 1;
+            translateY = 0;
+            blur = 0;
+          } else if (isPast) {
+            opacity = 0;
+            translateY = -24;
+            blur = 12;
+          }
 
-      {/* Bottom thin progress bar */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-border">
-        <div
-          className="h-full bg-accent origin-left"
-          style={{
-            transform: `scaleX(${count / 100})`,
-            transition: "transform 80ms linear",
-          }}
-        />
+          return (
+            <h2
+              key={i}
+              className="absolute font-heading text-center leading-[0.9] tracking-tight text-text-primary"
+              style={{
+                fontSize: "clamp(2.5rem, 7.5vw, 7rem)",
+                fontWeight: i === beats.length - 1 ? 800 : 500,
+                fontStyle: b.italic ? "italic" : "normal",
+                opacity,
+                transform: `translateY(${translateY}px)`,
+                filter: `blur(${blur}px)`,
+                transition:
+                  "opacity 360ms ease, transform 460ms cubic-bezier(0.16, 1, 0.3, 1), filter 360ms ease",
+              }}
+            >
+              {b.text}
+              {b.accent && i === beats.length - 1 && (
+                <span style={{ color: b.accent }}>.</span>
+              )}
+            </h2>
+          );
+        })}
       </div>
-
-      {/* Shatter canvas (only painted during shatter phase) */}
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 w-full h-full pointer-events-none"
-      />
     </div>
   );
 }
