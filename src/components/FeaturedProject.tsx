@@ -5,6 +5,7 @@ import { ArrowUpRight } from "lucide-react";
 import { BorderBeam } from "./BorderBeam";
 import { PreviewImage } from "./PreviewImage";
 import { Halftone } from "./Halftone";
+import { MagneticWrap } from "./MagneticWrap";
 import type { Project } from "@/data/projects";
 
 interface FeaturedProjectProps {
@@ -146,26 +147,30 @@ export function FeaturedProject({ project, onSelect }: FeaturedProjectProps) {
               ))}
             </div>
             <div className="flex items-center gap-3">
-              <a
-                href={project.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-body rounded-md transition-colors duration-150 cursor-pointer"
-                style={{
-                  backgroundColor: project.accent,
-                  color: "white",
-                }}
-              >
-                Open live
-                <ArrowUpRight size={14} />
-              </a>
-              <button
-                onClick={() => onSelect(project)}
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-body text-text-primary border border-border hover:border-border-hover rounded-md transition-colors duration-150 cursor-pointer"
-              >
-                Full case
-              </button>
+              <MagneticWrap strength={0.18}>
+                <a
+                  href={project.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-body rounded-md transition-colors duration-150 cursor-pointer"
+                  style={{
+                    backgroundColor: project.accent,
+                    color: "white",
+                  }}
+                >
+                  Open live
+                  <ArrowUpRight size={14} />
+                </a>
+              </MagneticWrap>
+              <MagneticWrap strength={0.18}>
+                <button
+                  onClick={() => onSelect(project)}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-body text-text-primary border border-border hover:border-border-hover rounded-md transition-colors duration-150 cursor-pointer"
+                >
+                  Full case
+                </button>
+              </MagneticWrap>
             </div>
           </div>
         </div>

@@ -4,6 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 import { SectionReveal } from "./SectionReveal";
 import { Aurora } from "./Aurora";
 import { Socials } from "./Socials";
+import { MagneticWrap } from "./MagneticWrap";
 
 export function Contact() {
   return (
@@ -35,18 +36,20 @@ export function Contact() {
           </p>
 
           <div className="mt-10 flex flex-wrap items-center gap-4">
-            <a
-              href="mailto:giovanni.sizino.ennes@hotmail.co.uk"
-              className="group inline-flex items-center gap-3 px-6 py-4 rounded-md bg-text-primary text-bg hover:bg-text-secondary transition-colors duration-200 cursor-pointer"
-            >
-              <span className="font-heading text-sm font-600">
-                giovanni.sizino.ennes@hotmail.co.uk
-              </span>
-              <ArrowUpRight
-                size={16}
-                className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-              />
-            </a>
+            <MagneticWrap strength={0.2}>
+              <a
+                href="mailto:giovanni.sizino.ennes@hotmail.co.uk"
+                className="group inline-flex items-center gap-3 px-6 py-4 rounded-md bg-text-primary text-bg hover:bg-text-secondary transition-colors duration-200 cursor-pointer"
+              >
+                <span className="font-heading text-sm font-600">
+                  giovanni.sizino.ennes@hotmail.co.uk
+                </span>
+                <ArrowUpRight
+                  size={16}
+                  className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                />
+              </a>
+            </MagneticWrap>
             <Socials />
           </div>
 
