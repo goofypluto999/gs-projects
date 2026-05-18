@@ -9,6 +9,7 @@ import { Footer } from "@/components/Footer";
 import { SectionDivider } from "@/components/SectionDivider";
 import { AvailabilityStrip } from "@/components/AvailabilityStrip";
 import { Process } from "@/components/Process";
+import { Highlights } from "@/components/Highlights";
 
 export default function Home() {
   return (
@@ -19,6 +20,7 @@ export default function Home() {
         <TechMarquee />
         <SectionDivider label="01 · The Work" />
         <ProjectGrid />
+        <Highlights />
         <SectionDivider label="02 · What's next" />
         <Workshop />
         <AvailabilityStrip />
