@@ -4,9 +4,8 @@ import { useEffect, useState } from "react";
 
 /**
  * Subtle keyboard shortcut hint — appears bottom-left after a short delay.
- * Tells the user they can press `?` for keyboard shortcuts (none implemented
- * yet but the signal alone reads as a premium developer-aware site).
- * Auto-hides after 8 seconds.
+ * Cycles two hints (Esc dismiss, scroll-to-top). Auto-hides at 12s,
+ * dismissible by Esc.
  */
 export function KeyboardHint() {
   const [visible, setVisible] = useState(false);
@@ -17,12 +16,32 @@ export function KeyboardHint() {
     if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
 
     const t1 = setTimeout(() => setVisible(true), 2500);
-    const t2 = setTimeout(() => setVisible(false), 12_000);
+    const t2 = setTimeout(() => setVisible(false), 14_000);
 
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") {
         setVisible(false);
         setDismissed(true);
+      }
+      // T = go to top, B = bottom
+      if ((e.key === "t" || e.key === "T") && !e.metaKey && !e.ctrlKey) {
+        if (
+          document.activeElement?.tagName === "INPUT" ||
+          document.activeElement?.tagName === "TEXTAREA"
+        )
+          return;
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      if ((e.key === "b" || e.key === "B") && !e.metaKey && !e.ctrlKey) {
+        if (
+          document.activeElement?.tagName === "INPUT" ||
+          document.activeElement?.tagName === "TEXTAREA"
+        )
+          return;
+        window.scrollTo({
+          top: document.documentElement.scrollHeight,
+          behavior: "smooth",
+        });
       }
     }
     window.addEventListener("keydown", onKey);
@@ -45,9 +64,18 @@ export function KeyboardHint() {
       }`}
     >
       <kbd className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-bg border border-border text-text-secondary">
+        T
+      </kbd>
+      <span className="tracking-wide">top</span>
+      <kbd className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-bg border border-border text-text-secondary">
+        B
+      </kbd>
+      <span className="tracking-wide">bottom</span>
+      <span className="text-text-tertiary/60">·</span>
+      <kbd className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-bg border border-border text-text-secondary">
         Esc
       </kbd>
-      <span className="tracking-wide">to dismiss</span>
+      <span className="tracking-wide">dismiss</span>
     </div>
   );
 }
