@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Socials } from "./Socials";
+import { Monogram } from "./Monogram";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -174,7 +175,8 @@ export function Footer() {
 
         {/* Bottom strip */}
         <div className="mt-12 pt-6 border-t border-border flex flex-wrap items-center justify-between gap-4 text-xs text-text-tertiary">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            <Monogram size={20} />
             <span>&copy; {year}</span>
             <span>·</span>
             <span>Giovanni Sizino Ennes</span>

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Socials } from "./Socials";
 import { LiveClock } from "./LiveClock";
+import { Monogram } from "./Monogram";
 
 const navLinks = [
   { label: "Work", href: "#projects" },
@@ -61,11 +62,8 @@ export function Navigation() {
             className="flex items-center gap-2.5 cursor-pointer group"
             aria-label="Home"
           >
-            <span className="relative w-7 h-7 rounded-md bg-accent flex items-center justify-center overflow-hidden">
-              <span className="font-heading text-[11px] font-800 text-white">
-                GS
-              </span>
-              <span className="absolute inset-0 bg-white/0 group-hover:bg-white/15 transition-colors duration-200" />
+            <span className="relative transition-transform duration-200 group-hover:scale-105">
+              <Monogram size={28} />
             </span>
             <span className="font-heading text-[13px] font-600 text-text-primary tracking-tight hidden sm:inline">
               Sizino Ennes
