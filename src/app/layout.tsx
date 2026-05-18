@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Preloader } from "@/components/Preloader";
 import { SmoothScroll } from "@/components/SmoothScroll";
+import { ScrollProgress } from "@/components/ScrollProgress";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -40,6 +41,7 @@ export default function RootLayout({
       <body className="min-h-screen bg-bg text-text-primary antialiased">
         <Preloader />
         <SmoothScroll />
+        <ScrollProgress />
         {children}
       </body>
     </html>

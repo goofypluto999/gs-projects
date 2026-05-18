@@ -2,6 +2,7 @@
 
 import { Mail } from "lucide-react";
 import { socials, type SocialLink } from "@/data/projects";
+import { MagneticWrap } from "./MagneticWrap";
 
 const iconBase = "w-[15px] h-[15px]";
 
@@ -48,18 +49,19 @@ export function Socials({ className = "", size = "md" }: SocialsProps) {
       {socials.map((s: SocialLink) => {
         const Icon = iconMap[s.icon];
         return (
-          <a
-            key={s.label}
-            href={s.url}
-            target={s.icon === "mail" ? undefined : "_blank"}
-            rel={s.icon === "mail" ? undefined : "noopener noreferrer"}
-            aria-label={s.label}
-            className={`group relative inline-flex items-center justify-center rounded-md border border-border bg-surface/40 hover:bg-surface hover:border-border-hover text-text-secondary hover:text-text-primary transition-all duration-200 cursor-pointer ${
-              size === "sm" ? "w-8 h-8" : "w-9 h-9"
-            }`}
-          >
-            {Icon ? <Icon /> : <Mail size={size === "sm" ? 13 : 15} strokeWidth={1.5} />}
-          </a>
+          <MagneticWrap key={s.label} strength={0.25}>
+            <a
+              href={s.url}
+              target={s.icon === "mail" ? undefined : "_blank"}
+              rel={s.icon === "mail" ? undefined : "noopener noreferrer"}
+              aria-label={s.label}
+              className={`group relative inline-flex items-center justify-center rounded-md border border-border bg-surface/40 hover:bg-surface hover:border-border-hover text-text-secondary hover:text-text-primary transition-all duration-200 cursor-pointer ${
+                size === "sm" ? "w-8 h-8" : "w-9 h-9"
+              }`}
+            >
+              {Icon ? <Icon /> : <Mail size={size === "sm" ? 13 : 15} strokeWidth={1.5} />}
+            </a>
+          </MagneticWrap>
         );
       })}
     </div>
