@@ -1,37 +1,126 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SectionReveal } from "./SectionReveal";
 
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
+const principles = [
+  {
+    n: "01",
+    label: "Ship",
+    body:
+      "Working software, in production, with real users. Not pitch decks, not prototypes, not screenshots of a Figma file.",
+  },
+  {
+    n: "02",
+    label: "Specific",
+    body:
+      "Every product solves one concrete problem for a defined person. Generalist tools die; specialist tools ship.",
+  },
+  {
+    n: "03",
+    label: "End-to-end",
+    body:
+      "Idea, copy, design, frontend, backend, infra, billing, deploy. I own the whole stack — no hand-offs, no excuses.",
+  },
+  {
+    n: "04",
+    label: "Honest",
+    body:
+      "Beta is labelled beta. Free is actually free. Numbers in the marketing are numbers from the database.",
+  },
+];
+
 export function About() {
+  const wrapRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const items = wrapRef.current?.querySelectorAll("[data-principle]");
+    if (!items?.length) return;
+
+    const ctx = gsap.context(() => {
+      gsap.from(items, {
+        opacity: 0,
+        y: 30,
+        duration: 0.8,
+        ease: "power3.out",
+        stagger: 0.12,
+        scrollTrigger: {
+          trigger: wrapRef.current,
+          start: "top 75%",
+        },
+      });
+    });
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section id="about" className="px-6 py-24 scroll-mt-16">
-      <div className="mx-auto max-w-[1200px]">
+    <section id="about" className="px-6 py-32 scroll-mt-16 relative">
+      <div className="mx-auto max-w-[1280px]">
         <SectionReveal>
-          <h2 className="font-heading text-2xl font-700 text-text-primary mb-8">
-            About
+          <div className="flex items-center gap-2 mb-4">
+            <div className="w-1.5 h-1.5 rounded-full bg-accent" />
+            <span className="text-[11px] uppercase tracking-[0.25em] text-text-tertiary">
+              About
+            </span>
+          </div>
+          <h2 className="font-heading text-3xl md:text-5xl font-700 text-text-primary leading-[1.05] tracking-tight max-w-[860px]">
+            I make tools people actually use,
+            <br />
+            <span className="text-text-secondary">
+              not products that look good in a deck.
+            </span>
           </h2>
         </SectionReveal>
+
         <SectionReveal>
-          <div className="max-w-[600px] space-y-5 text-[15px] leading-relaxed text-text-secondary">
-            <p>
-              I build digital products — from first idea to live deployment.
-              Each project here started with a real problem and ended with
-              working software that people actually use.
+          <div className="mt-12 grid md:grid-cols-2 gap-12 max-w-[920px]">
+            <p className="text-[15px] leading-relaxed text-text-secondary">
+              I&apos;m Giovanni — based between the UK and Brazil. I build digital
+              products end-to-end: idea, design, code, infra, billing, deploy.
+              Every project on this page is live, paid for out of pocket, and
+              used by someone other than me.
             </p>
-            <p>
-              My work sits at the intersection of product thinking and
-              engineering. I care about the details that make software feel
-              considered: clear interfaces, fast performance, and architecture
-              that holds up as things scale.
-            </p>
-            <p>
-              Everything on this page is live, built, and maintained. If
-              something here catches your attention — whether as a user, a
-              collaborator, or someone with a similar problem to solve — I am
-              always open to a conversation.
+            <p className="text-[15px] leading-relaxed text-text-secondary">
+              My work sits where product thinking meets engineering. Tight
+              interfaces, fast performance, architecture that holds up as it
+              scales. I care about the details that make software feel
+              considered — which is why most of what I ship looks expensive and
+              isn&apos;t.
             </p>
           </div>
         </SectionReveal>
+
+        <div ref={wrapRef} className="mt-20 grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-border rounded-lg overflow-hidden border border-border">
+          {principles.map((p) => (
+            <div
+              key={p.n}
+              data-principle
+              className="p-6 bg-bg flex flex-col gap-3 hover:bg-surface transition-colors duration-200"
+            >
+              <div className="flex items-baseline gap-3">
+                <span className="font-heading text-xs text-text-tertiary tabular-nums">
+                  {p.n}
+                </span>
+                <span className="font-heading text-base font-600 text-text-primary">
+                  {p.label}
+                </span>
+              </div>
+              <p className="text-[13px] leading-relaxed text-text-secondary">
+                {p.body}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

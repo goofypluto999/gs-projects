@@ -5,6 +5,8 @@ import gsap from "gsap";
 import { GridPattern } from "./GridPattern";
 import { ScrollIndicator } from "./ScrollIndicator";
 import { TextRotate } from "./TextRotate";
+import { Meteors } from "./Meteors";
+import { AnimatedCounter } from "./AnimatedCounter";
 
 const rotatingWords = [
   "scenario intelligence",
@@ -169,6 +171,7 @@ export function Hero() {
       className="relative flex flex-col justify-center min-h-[92vh] px-6 pt-14 overflow-hidden"
     >
       <GridPattern className="opacity-40" />
+      <Meteors number={18} />
 
       {/* Cursor-driven ambient glow */}
       <div
@@ -241,27 +244,33 @@ export function Hero() {
           style={{ transform: "translateY(8px)" }}
         >
           <div>
-            <span className="font-heading text-2xl font-700 text-text-primary tabular-nums">
-              05
-            </span>
+            <AnimatedCounter
+              target={5}
+              className="font-heading text-2xl font-700 text-text-primary"
+              format={(n) => String(n).padStart(2, "0")}
+            />
             <span className="ml-2 text-xs text-text-tertiary">
               live products
             </span>
           </div>
           <div className="h-4 w-px bg-border" />
           <div>
-            <span className="font-heading text-2xl font-700 text-text-primary tabular-nums">
-              228K+
-            </span>
+            <AnimatedCounter
+              target={228}
+              className="font-heading text-2xl font-700 text-text-primary"
+              suffix="K+"
+            />
             <span className="ml-2 text-xs text-text-tertiary">
               records indexed
             </span>
           </div>
           <div className="h-4 w-px bg-border" />
           <div>
-            <span className="font-heading text-2xl font-700 text-text-primary tabular-nums">
-              500K
-            </span>
+            <AnimatedCounter
+              target={500}
+              className="font-heading text-2xl font-700 text-text-primary"
+              suffix="K"
+            />
             <span className="ml-2 text-xs text-text-tertiary">
               agent simulations
             </span>
