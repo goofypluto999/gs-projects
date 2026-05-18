@@ -1,34 +1,187 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Socials } from "./Socials";
 
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
+const sitemap = [
+  { label: "Work", href: "#projects" },
+  { label: "Workshop", href: "#projects" },
+  { label: "Process", href: "#process" },
+  { label: "About", href: "#about" },
+  { label: "Contact", href: "#contact" },
+];
+
+const productLinks = [
+  { label: "Foresay Labs", href: "https://foresaylabs.com/" },
+  { label: "AimVantage", href: "https://aimvantage.uk/" },
+  { label: "Wadda Play", href: "https://waddaplay.vercel.app/" },
+  { label: "CV Mirror", href: "https://cv-mirror-web.vercel.app/" },
+  { label: "AdsForge", href: "https://www.adsforge.store/" },
+];
+
 export function Footer() {
+  const wrapRef = useRef<HTMLElement>(null);
+  const giantRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const ctx = gsap.context(() => {
+      // Giant outro wordmark parallaxes upward as user reaches the bottom
+      gsap.fromTo(
+        giantRef.current,
+        { y: 60 },
+        {
+          y: -20,
+          ease: "none",
+          scrollTrigger: {
+            trigger: wrapRef.current,
+            start: "top bottom",
+            end: "bottom bottom",
+            scrub: 0.8,
+          },
+        }
+      );
+    });
+
+    return () => ctx.revert();
+  }, []);
+
+  const year = new Date().getFullYear();
+
   return (
-    <footer className="px-6 pt-16 pb-10 border-t border-border">
-      <div className="mx-auto max-w-[1280px] flex flex-col md:flex-row md:items-end md:justify-between gap-10">
-        <div>
-          <h3 className="font-heading text-3xl md:text-5xl font-800 text-text-primary leading-[0.95] tracking-tight">
-            Have a problem
-            <br />
-            worth solving?
-          </h3>
-          <p className="mt-4 text-text-secondary text-sm md:text-base max-w-[420px]">
-            I'm always open to a conversation about strategic projects, partnerships,
-            or selling any of the products on this page.
-          </p>
-          <a
-            href="mailto:giovanni.sizino.ennes@hotmail.co.uk"
-            className="inline-block mt-5 text-accent hover:text-accent-hover transition-colors duration-150 underline underline-offset-4 decoration-accent/30 hover:decoration-accent cursor-pointer text-[15px]"
-          >
-            giovanni.sizino.ennes@hotmail.co.uk
-          </a>
+    <footer
+      ref={wrapRef}
+      className="relative px-6 pt-24 pb-10 border-t border-border overflow-hidden"
+    >
+      <div className="mx-auto max-w-[1280px]">
+        {/* Top row: sitemap + products + credits */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-20">
+          <div>
+            <div className="text-[10px] uppercase tracking-[0.3em] text-text-tertiary mb-4">
+              Sitemap
+            </div>
+            <ul className="space-y-2.5">
+              {sitemap.map((item) => (
+                <li key={item.label}>
+                  <a
+                    href={item.href}
+                    className="text-[13px] text-text-secondary hover:text-text-primary transition-colors duration-150 cursor-pointer"
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <div className="text-[10px] uppercase tracking-[0.3em] text-text-tertiary mb-4">
+              Products
+            </div>
+            <ul className="space-y-2.5">
+              {productLinks.map((item) => (
+                <li key={item.label}>
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[13px] text-text-secondary hover:text-text-primary transition-colors duration-150 cursor-pointer"
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <div className="text-[10px] uppercase tracking-[0.3em] text-text-tertiary mb-4">
+              Reach
+            </div>
+            <ul className="space-y-2.5">
+              <li>
+                <a
+                  href="mailto:giovanni.sizino.ennes@hotmail.co.uk"
+                  className="text-[13px] text-text-secondary hover:text-text-primary transition-colors duration-150 cursor-pointer"
+                >
+                  Email
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://github.com/goofypluto999"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[13px] text-text-secondary hover:text-text-primary transition-colors duration-150 cursor-pointer"
+                >
+                  GitHub
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.linkedin.com/in/giovanni-sizino-ennes/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[13px] text-text-secondary hover:text-text-primary transition-colors duration-150 cursor-pointer"
+                >
+                  LinkedIn
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.instagram.com/giovannisizinoennes/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[13px] text-text-secondary hover:text-text-primary transition-colors duration-150 cursor-pointer"
+                >
+                  Instagram
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <div className="text-[10px] uppercase tracking-[0.3em] text-text-tertiary mb-4">
+              Colophon
+            </div>
+            <ul className="space-y-2.5 text-[12.5px] text-text-secondary leading-relaxed">
+              <li>Next.js 16 · TypeScript · Tailwind v4</li>
+              <li>GSAP · Lenis · Framer Motion</li>
+              <li>Type: Archivo + Space Grotesk</li>
+              <li>Hosted on Vercel · v1.0</li>
+            </ul>
+          </div>
         </div>
 
-        <div className="flex flex-col items-start md:items-end gap-4">
-          <Socials />
-          <div className="flex items-center gap-2 text-xs text-text-tertiary">
-            <span>&copy; {new Date().getFullYear()}</span>
+        {/* Giant outro wordmark */}
+        <div
+          ref={giantRef}
+          className="flex items-end justify-between gap-6 will-change-transform"
+        >
+          <h2 className="font-heading text-[clamp(3rem,15vw,14rem)] font-800 leading-[0.85] tracking-tighter text-text-primary">
+            Sizino<span className="italic font-300 text-text-secondary">Ennes</span>
+            <span className="text-accent">.</span>
+          </h2>
+        </div>
+
+        {/* Bottom strip */}
+        <div className="mt-12 pt-6 border-t border-border flex flex-wrap items-center justify-between gap-4 text-xs text-text-tertiary">
+          <div className="flex items-center gap-2">
+            <span>&copy; {year}</span>
             <span>·</span>
             <span>Giovanni Sizino Ennes</span>
+            <span>·</span>
+            <span className="hidden md:inline">UK / Brazil</span>
           </div>
+          <Socials size="sm" />
         </div>
       </div>
     </footer>
