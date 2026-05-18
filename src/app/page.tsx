@@ -14,6 +14,7 @@ import { Footer } from "@/components/Footer";
 import { SectionDivider } from "@/components/SectionDivider";
 import { BrandMarquee } from "@/components/BrandMarquee";
 import { Manifesto } from "@/components/Manifesto";
+import { DragStack } from "@/components/DragStack";
 
 /**
  * Page composition — tightened. Two SectionDividers max, redundant
@@ -43,6 +44,7 @@ export default function Home() {
         <BrandMarquee />
         <ProjectGrid />
         <Highlights />
+        <DragStack />
         <Testimonials />
 
         <SectionDivider label="02 · The Workshop" />
