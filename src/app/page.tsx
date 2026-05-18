@@ -12,6 +12,7 @@ import { Process } from "@/components/Process";
 import { Highlights } from "@/components/Highlights";
 import { ActivityFeed } from "@/components/ActivityFeed";
 import { Testimonials } from "@/components/Testimonials";
+import { HorizontalShowcase } from "@/components/HorizontalShowcase";
 
 export default function Home() {
   return (
@@ -21,6 +22,7 @@ export default function Home() {
         <Hero />
         <TechMarquee />
         <SectionDivider label="01 · The Work" />
+        <HorizontalShowcase />
         <ProjectGrid />
         <Highlights />
         <Testimonials />
