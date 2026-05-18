@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SectionReveal } from "./SectionReveal";
+import { SectionHeader } from "./SectionHeader";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -66,21 +67,11 @@ export function About() {
   return (
     <section id="about" className="px-6 py-32 scroll-mt-16 relative">
       <div className="mx-auto max-w-[1280px]">
-        <SectionReveal>
-          <div className="flex items-center gap-2 mb-4">
-            <div className="w-1.5 h-1.5 rounded-full bg-accent" />
-            <span className="text-[11px] uppercase tracking-[0.25em] text-text-tertiary">
-              About
-            </span>
-          </div>
-          <h2 className="font-heading text-3xl md:text-5xl font-700 text-text-primary leading-[1.05] tracking-tight max-w-[860px]">
-            I make tools people actually use,
-            <br />
-            <span className="text-text-secondary">
-              not products that look good in a deck.
-            </span>
-          </h2>
-        </SectionReveal>
+        <SectionHeader
+          eyebrow="About"
+          title="I make tools people actually use,"
+          subtitle="not products that look good in a deck."
+        />
 
         <SectionReveal>
           <div className="mt-12 grid md:grid-cols-2 gap-12 max-w-[920px]">

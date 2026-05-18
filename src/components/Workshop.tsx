@@ -1,6 +1,7 @@
 "use client";
 
 import { SectionReveal } from "./SectionReveal";
+import { SectionHeader } from "./SectionHeader";
 
 interface UpcomingItem {
   name: string;
@@ -48,25 +49,12 @@ export function Workshop() {
   return (
     <section className="px-6 py-24">
       <div className="mx-auto max-w-[1280px]">
-        <SectionReveal>
-          <div className="flex items-center gap-2 mb-4">
-            <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-            <span className="text-[11px] uppercase tracking-[0.25em] text-text-tertiary">
-              In the workshop
-            </span>
-          </div>
-          <div className="flex flex-wrap items-end justify-between gap-4 mb-12">
-            <h2 className="font-heading text-3xl md:text-5xl font-700 text-text-primary leading-[1.05] tracking-tight">
-              What&apos;s next on the bench,
-              <br />
-              <span className="text-text-secondary">honestly labelled.</span>
-            </h2>
-            <p className="text-sm text-text-secondary max-w-[320px] leading-relaxed">
-              Real status, not vapor. If it says &quot;Researching&quot;, there
-              is no code yet.
-            </p>
-          </div>
-        </SectionReveal>
+        <SectionHeader
+          eyebrow="In the workshop"
+          title="What's next on the bench,"
+          subtitle="honestly labelled."
+          descriptor='Real status, not vapor. If it says "Researching", there is no code yet.'
+        />
 
         <SectionReveal>
           <ul className="divide-y divide-border border-y border-border">

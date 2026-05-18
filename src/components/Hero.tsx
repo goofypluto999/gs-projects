@@ -7,6 +7,8 @@ import { ScrollIndicator } from "./ScrollIndicator";
 import { TextRotate } from "./TextRotate";
 import { Meteors } from "./Meteors";
 import { Aurora } from "./Aurora";
+import { OrbitSphere } from "./OrbitSphere";
+import { LiveStatus } from "./LiveStatus";
 import { AnimatedCounter } from "./AnimatedCounter";
 
 const rotatingWords = [
@@ -185,17 +187,19 @@ export function Hero() {
         }}
       />
 
+      {/* Floating orbit sphere — desktop only, sits in the right negative space */}
+      <div className="absolute inset-y-0 right-0 hidden lg:flex items-center pointer-events-none">
+        <OrbitSphere className="w-[460px] h-[460px] xl:w-[560px] xl:h-[560px] opacity-90 -mr-32 xl:-mr-20" />
+      </div>
+
       <div className="relative mx-auto max-w-[1200px] w-full">
-        {/* Eyebrow tag */}
+        {/* Live status pill */}
         <div
           ref={eyebrowRef}
-          className="flex items-center gap-2 mb-7 opacity-0"
+          className="mb-7 opacity-0"
           style={{ transform: "translateY(8px)" }}
         >
-          <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="text-[11px] tracking-[0.25em] uppercase text-text-tertiary">
-            Building in public · UK / Brazil
-          </span>
+          <LiveStatus />
         </div>
 
         {/* Name with line reveal */}
