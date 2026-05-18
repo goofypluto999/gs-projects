@@ -10,6 +10,7 @@ import { SectionDivider } from "@/components/SectionDivider";
 import { AvailabilityStrip } from "@/components/AvailabilityStrip";
 import { Process } from "@/components/Process";
 import { Highlights } from "@/components/Highlights";
+import { ActivityFeed } from "@/components/ActivityFeed";
 
 export default function Home() {
   return (
@@ -23,6 +24,7 @@ export default function Home() {
         <Highlights />
         <SectionDivider label="02 · What's next" />
         <Workshop />
+        <ActivityFeed />
         <AvailabilityStrip />
         <SectionDivider label="03 · The process" />
         <Process />
