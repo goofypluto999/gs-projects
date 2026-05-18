@@ -3,19 +3,12 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Custom canvas flow field — particles drift along a procedurally
- * generated vector field (3-octave pseudo-noise), accumulating glow.
- * The cursor creates a repulsion well: particles bend around it.
+ * Stabilised flow field — ink-in-water style. Lower-frequency noise,
+ * capped velocity, tighter colour palette (accent blue → soft white).
+ * Stronger frame clear (no residue buildup), bounded particle lifespan.
  *
- * Hand-rolled. No Three.js, no shader library, no template. The
- * field maths is a deterministic combination of sin/cos at multiple
- * frequencies, fed time + position. The visual signature looks like
- * smoke / ink in water — but generated mathematically, not faked
- * with a video.
- *
- * Particles tinted on a gradient from accent-blue → purple → emerald
- * based on their position in the field, so the colour reads as
- * "the work itself flowing" rather than decoration.
+ * Hand-rolled: no Three.js, no shader library. The field maths is a
+ * 2-octave pseudo-noise (sin/cos sum) fed time + position.
  */
 
 interface FlowFieldProps {
@@ -31,25 +24,23 @@ interface Particle {
   vx: number;
   vy: number;
   life: number;
+  maxLife: number;
   hue: number;
   size: number;
 }
 
-// Simple deterministic 2D noise — sum of sines at decreasing weights.
-// Not Perlin but visually similar at field scale.
+// Calmer 2-octave noise — predictable, no chaos.
 function noise2(x: number, y: number, t: number): number {
   return (
-    Math.sin(x * 0.0035 + t * 0.0004) * 0.5 +
-    Math.sin(y * 0.0042 - t * 0.0003) * 0.5 +
-    Math.sin((x + y) * 0.0018 + t * 0.0006) * 0.25 +
-    Math.cos(x * 0.0017 - y * 0.0023 + t * 0.0002) * 0.25
+    Math.sin(x * 0.0028 + t * 0.00035) * 0.6 +
+    Math.cos(y * 0.0032 - t * 0.00028 + x * 0.0009) * 0.4
   );
 }
 
 export function FlowField({
   className = "",
-  density = 0.00025,
-  repelRadius = 160,
+  density = 0.00014,
+  repelRadius = 150,
 }: FlowFieldProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouseRef = useRef({ x: -1000, y: -1000, active: false });
@@ -72,6 +63,20 @@ export function FlowField({
     let particles: Particle[] = [];
     let raf = 0;
     let timeAcc = 0;
+    let lastFrame = performance.now();
+
+    const MAX_SPEED = 2.6;
+
+    function spawnParticle(p: Particle, w: number, h: number) {
+      p.x = Math.random() * w;
+      p.y = Math.random() * h;
+      p.vx = 0;
+      p.vy = 0;
+      p.life = 0;
+      p.maxLife = 180 + Math.random() * 140;
+      p.hue = Math.random();
+      p.size = 0.7 + Math.random() * 0.9;
+    }
 
     function resize() {
       if (!canvas) return;
@@ -83,18 +88,26 @@ export function FlowField({
       canvas.height = height * dpr;
       ctx?.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      const count = Math.max(120, Math.floor(width * height * density));
+      const count = Math.min(
+        260,
+        Math.max(120, Math.floor(width * height * density))
+      );
       particles = [];
       for (let i = 0; i < count; i++) {
-        particles.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
+        const p: Particle = {
+          x: 0,
+          y: 0,
           vx: 0,
           vy: 0,
-          life: Math.random() * 200,
-          hue: Math.random() * 100,
-          size: 0.7 + Math.random() * 1.3,
-        });
+          life: 0,
+          maxLife: 0,
+          hue: 0,
+          size: 0,
+        };
+        spawnParticle(p, width, height);
+        // Stagger lives so they don't all respawn together
+        p.life = Math.random() * p.maxLife;
+        particles.push(p);
       }
     }
 
@@ -117,12 +130,14 @@ export function FlowField({
     window.addEventListener("mousemove", onMove, { passive: true });
     window.addEventListener("mouseleave", onLeave);
 
-    function frame() {
+    function frame(now: number) {
       if (!ctx) return;
-      timeAcc += 1;
+      const dt = Math.min(2, (now - lastFrame) / 16.67); // normalised to 60fps
+      lastFrame = now;
+      timeAcc += dt;
 
-      // Slow trail-fade instead of full clear — gives the smoke trail
-      ctx.fillStyle = "rgba(10, 10, 11, 0.10)";
+      // Stronger trail-fade so we don't accumulate residue
+      ctx.fillStyle = "rgba(10, 10, 11, 0.16)";
       ctx.fillRect(0, 0, width, height);
 
       const mx = mouseRef.current.x;
@@ -132,64 +147,77 @@ export function FlowField({
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
 
-        // Sample noise at particle position → angle
+        // Field steer
         const n = noise2(p.x, p.y, timeAcc);
         const angle = n * Math.PI * 2;
-        const speed = 0.35 + Math.abs(n) * 0.55;
+        const speed = 0.45 + Math.abs(n) * 0.35;
         let fx = Math.cos(angle) * speed;
         let fy = Math.sin(angle) * speed;
 
-        // Mouse repulsion
+        // Mouse repulsion (clamped)
         if (mouseOn) {
           const dx = p.x - mx;
           const dy = p.y - my;
           const dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < repelRadius && dist > 0) {
-            const force = (1 - dist / repelRadius) * 4;
+            const force = (1 - dist / repelRadius) * 2.4;
             fx += (dx / dist) * force;
             fy += (dy / dist) * force;
           }
         }
 
-        p.vx = p.vx * 0.86 + fx * 0.14;
-        p.vy = p.vy * 0.86 + fy * 0.14;
-        p.x += p.vx;
-        p.y += p.vy;
-        p.life += 1;
+        // Apply with damping
+        p.vx = p.vx * 0.9 + fx * 0.1;
+        p.vy = p.vy * 0.9 + fy * 0.1;
 
-        // Wrap edges + respawn occasionally
+        // Hard velocity cap — prevents runaway clusters
+        const sp = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+        if (sp > MAX_SPEED) {
+          p.vx = (p.vx / sp) * MAX_SPEED;
+          p.vy = (p.vy / sp) * MAX_SPEED;
+        }
+
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+        p.life += dt;
+
+        // Respawn when off-screen OR past lifespan
         if (
-          p.x < -10 ||
-          p.x > width + 10 ||
-          p.y < -10 ||
-          p.y > height + 10 ||
-          p.life > 400
+          p.x < -20 ||
+          p.x > width + 20 ||
+          p.y < -20 ||
+          p.y > height + 20 ||
+          p.life > p.maxLife
         ) {
-          p.x = Math.random() * width;
-          p.y = Math.random() * height;
-          p.vx = 0;
-          p.vy = 0;
-          p.life = 0;
-          p.hue = Math.random() * 100;
+          spawnParticle(p, width, height);
+          continue;
         }
 
-        // Tint by position + hue: blue → purple → emerald
-        const t = (p.x / width + p.hue / 100) % 1;
+        // Tight palette: accent blue → soft purple → near-white highlight.
+        // hue 0..1 maps to a 2-stop gradient, so no rainbow chaos.
         let r, g, b;
-        if (t < 0.5) {
-          const k = t * 2;
-          r = Math.round(37 + (168 - 37) * k);
-          g = Math.round(99 + (85 - 99) * k);
-          b = Math.round(235 + (247 - 235) * k);
+        const h = p.hue;
+        if (h < 0.6) {
+          // blue → purple
+          const k = h / 0.6;
+          r = Math.round(37 + (130 - 37) * k);
+          g = Math.round(99 + (90 - 99) * k);
+          b = Math.round(235 + (240 - 235) * k);
         } else {
-          const k = (t - 0.5) * 2;
-          r = Math.round(168 + (16 - 168) * k);
-          g = Math.round(85 + (185 - 85) * k);
-          b = Math.round(247 + (129 - 247) * k);
+          // purple → off-white highlight
+          const k = (h - 0.6) / 0.4;
+          r = Math.round(130 + (220 - 130) * k);
+          g = Math.round(90 + (220 - 90) * k);
+          b = Math.round(240 + (235 - 240) * k);
         }
 
-        const speedMag = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
-        const alpha = Math.min(0.65, 0.18 + speedMag * 0.18);
+        // Lifespan-based alpha: fade in 0→0.3, hold, fade out at end
+        const lifeFrac = p.life / p.maxLife;
+        let alpha;
+        if (lifeFrac < 0.15) alpha = lifeFrac / 0.15;
+        else if (lifeFrac > 0.85) alpha = (1 - lifeFrac) / 0.15;
+        else alpha = 1;
+        alpha *= 0.55;
 
         ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
         ctx.beginPath();
