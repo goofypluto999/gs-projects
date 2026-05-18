@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
+import { Preloader } from "@/components/Preloader";
+import { SmoothScroll } from "@/components/SmoothScroll";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Giovanni Sizino — Digital Products",
+  title: "Giovanni Sizino Ennes — Digital Products & Tools",
   description:
-    "Portfolio of digital products built by Giovanni Sizino. Scenario intelligence, job preparation, event planning, and more.",
+    "Portfolio of Giovanni Sizino Ennes. Five live digital products — scenario intelligence, ATS-grade CV tooling, AI job preparation, game discovery, and agent journalism.",
   openGraph: {
-    title: "Giovanni Sizino — Digital Products",
+    title: "Giovanni Sizino Ennes — Digital Products & Tools",
     description:
-      "Portfolio of digital products built by Giovanni Sizino.",
+      "Five live digital products, end-to-end built. Open to strategic partnerships.",
     type: "website",
     locale: "en_GB",
   },
@@ -33,8 +35,11 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
           rel="stylesheet"
         />
+        <link rel="preconnect" href="https://image.thum.io" crossOrigin="anonymous" />
       </head>
       <body className="min-h-screen bg-bg text-text-primary antialiased">
+        <Preloader />
+        <SmoothScroll />
         {children}
       </body>
     </html>

@@ -7,65 +7,141 @@ export interface Project {
   description: string;
   problem: string;
   url: string;
-  /** URL used for iframe preview — may differ from main url to avoid popups/blocks */
+  /** Public screenshot URL — uses thum.io free service for production reliability */
+  previewImage: string;
+  /** Optional iframe URL if we want a live in-detail preview (falls back to image) */
   previewUrl: string | null;
-  /** iframe sandbox policy — strip allow-same-origin to prevent cookie popups */
+  /** iframe sandbox policy */
   sandboxPolicy?: string;
+  /** If true, never attempt iframe — always show static image */
+  iframeBlocked?: boolean;
   status: ProjectStatus;
   tags: string[];
   accent: string;
   year: number;
-  /** If true, iframe embedding is blocked — use styled fallback everywhere */
-  iframeBlocked?: boolean;
+}
+
+/** Build a screenshot URL via thum.io (free, no auth required) */
+function screenshotUrl(siteUrl: string): string {
+  // Strip protocol for thum.io path format
+  const cleaned = siteUrl.replace(/^https?:\/\//, "");
+  return `https://image.thum.io/get/width/1200/crop/750/noanimate/https://${cleaned}`;
 }
 
 export const projects: Project[] = [
   {
     id: "foresay-labs",
     name: "Foresay Labs",
-    tagline: "Scenario intelligence for strategic decisions",
+    tagline: "Predict market reactions before you act",
     description:
-      "Multi-agent simulation engine that models real-world scenarios to surface blind spots before they become costly mistakes. Feed it a decision, and it runs parallel futures — showing you what happens when variables shift.",
+      "Scenario intelligence platform that simulates 500K agents with real census demographics. Every agent is AI-calibrated and runs on Nobel Prize-winning behavioural economics — Prospect Theory, DeGroot dynamics, logistic churn — to model how decisions cascade through a population in minutes, not weeks.",
     problem:
-      "Businesses make high-stakes decisions with incomplete information. Traditional forecasting looks backward. Foresay looks sideways — across multiple possible futures simultaneously.",
-    url: "https://foresay-labs-live.vercel.app/",
+      "Decision-makers run on gut instinct or six-week, thirty-thousand-pound research panels that ask 500 people what they say they would do. Foresay simulates what an entire population would actually do — deterministic, glass-box, and auditable.",
+    url: "https://foresaylabs.com/",
+    previewImage: screenshotUrl("https://foresaylabs.com/"),
     previewUrl: null,
     iframeBlocked: true,
     status: "live",
-    tags: ["AI", "Simulation", "Strategy", "Multi-Agent"],
+    tags: ["AI", "Simulation", "Strategy", "500K Agents", "Behavioural Econ"],
     accent: "#6366F1",
-    year: 2025,
+    year: 2026,
   },
   {
-    id: "stagplanner",
-    name: "StagPlanner",
-    tagline: "Group event planning, simplified",
+    id: "aimvantage",
+    name: "AimVantage",
+    tagline: "Full job-prep pack in 90 seconds",
     description:
-      "Takes the chaos out of planning group events. Handles itineraries, budgets, polls, and coordination across the group — so one person doesn't have to carry the entire mental load.",
+      "Upload a CV, paste a job link — get company intel, a tailored cover letter (4 tones), AI-graded mock interview questions, a CV fit score with the exact gaps to close, and a 5-minute interview pitch outline. Plus an AI job search across 20+ countries with ghost-job filtering and salary transparency.",
     problem:
-      "Planning a stag do, group trip, or big event means endless WhatsApp threads, spreadsheets, and someone always out of the loop. StagPlanner puts everything in one place.",
-    url: "https://stagplanner.vercel.app/#demo",
-    previewUrl: "https://stagplanner.vercel.app/#demo",
+      "Job seekers spend hours guessing what interviewers want and write generic cover letters that don't get read. AimVantage prepares you for a specific interview, against a specific company, in ninety seconds.",
+    url: "https://aimvantage.uk/",
+    previewImage: screenshotUrl("https://aimvantage.uk/"),
+    previewUrl: "https://aimvantage.uk/",
     sandboxPolicy: "allow-scripts allow-same-origin",
     status: "live",
-    tags: ["Events", "Planning", "Groups", "Coordination"],
-    accent: "#10B981",
-    year: 2025,
-  },
-  {
-    id: "vantage",
-    name: "Vantage",
-    tagline: "AI-powered job preparation platform",
-    description:
-      "Prepares candidates for interviews and applications with AI-driven mock interviews, CV analysis, and personalised coaching. Turns preparation into a competitive advantage.",
-    problem:
-      "Job seekers spend hours guessing what interviewers want. Vantage uses AI to simulate real interview conditions and give targeted feedback — before the real thing.",
-    url: "https://vantage-livid.vercel.app/",
-    previewUrl: "https://vantage-livid.vercel.app/",
-    sandboxPolicy: "allow-scripts allow-same-origin",
-    status: "live",
-    tags: ["AI", "Career", "Interviews", "SaaS"],
+    tags: ["AI", "Career", "Interviews", "Cover Letter", "SaaS"],
     accent: "#F59E0B",
-    year: 2025,
+    year: 2026,
+  },
+  {
+    id: "waddaplay",
+    name: "Wadda Play",
+    tagline: "Game discovery for fuzzy vibes",
+    description:
+      "Turn a half-formed thought like \"give me something cozy with light combat for 90 minutes after work\" into a stratified shortlist. 228K+ games indexed, AI-scored against the brief, no SEO-bait. Stop asking Reddit, get a personalised pick in 30 seconds.",
+    problem:
+      "Game discovery is broken — algorithm-driven storefronts push hits, Reddit threads are noise, and you waste a Friday night choosing instead of playing. Wadda Play turns a mood into a shortlist.",
+    url: "https://waddaplay.vercel.app/",
+    previewImage: screenshotUrl("https://waddaplay.vercel.app/"),
+    previewUrl: "https://waddaplay.vercel.app/",
+    sandboxPolicy: "allow-scripts allow-same-origin",
+    status: "live",
+    tags: ["AI", "Gaming", "Discovery", "228K Indexed"],
+    accent: "#A855F7",
+    year: 2026,
+  },
+  {
+    id: "cv-mirror",
+    name: "CV Mirror",
+    tagline: "See what 5 ATS parsers do to your CV",
+    description:
+      "Free, fully client-side. Simulates the documented quirks of Workday, Greenhouse, Lever, Taleo and iCIMS. Numbered reading-order overlay, vendor-specific lint, keyword extraction with JD match. Your CV bytes never leave your browser. Open-source.",
+    problem:
+      "Every other ATS scanner makes up a fake 0-100 score that recruiters confirm doesn't exist. CV Mirror shows you, field by field, which parser extracts what — and why most CVs silently fail before a human ever sees them.",
+    url: "https://cv-mirror-web.vercel.app/",
+    previewImage: screenshotUrl("https://cv-mirror-web.vercel.app/"),
+    previewUrl: "https://cv-mirror-web.vercel.app/",
+    sandboxPolicy: "allow-scripts allow-same-origin",
+    status: "live",
+    tags: ["Free", "Open Source", "ATS", "Privacy-first"],
+    accent: "#10B981",
+    year: 2026,
+  },
+  {
+    id: "adsforge",
+    name: "AdsForge",
+    tagline: "Where agents get forged",
+    description:
+      "Editorial built for clawbots first. Documents the AI agents, prompts, MCP servers and CLIs that actually work in production — job applications, inbox triage, calendar wrangling, receipt bookkeeping. Two dispatches a day. Concise. No fluff.",
+    problem:
+      "AI agent content online is either hype or 10-minute YouTube videos that never show working code. AdsForge ships short, working blueprints daily — architecture, prompts, real cost numbers, what breaks.",
+    url: "https://www.adsforge.store/",
+    previewImage: screenshotUrl("https://www.adsforge.store/"),
+    previewUrl: "https://www.adsforge.store/",
+    sandboxPolicy: "allow-scripts allow-same-origin",
+    status: "live",
+    tags: ["AI Agents", "MCP", "Editorial", "Daily"],
+    accent: "#EF4444",
+    year: 2026,
+  },
+];
+
+/** Public social profiles for Giovanni Sizino Ennes */
+export interface SocialLink {
+  label: string;
+  url: string;
+  icon: "linkedin" | "github" | "instagram" | "mail" | "twitter";
+}
+
+export const socials: SocialLink[] = [
+  {
+    label: "LinkedIn",
+    url: "https://www.linkedin.com/in/giovanni-sizino-ennes/",
+    icon: "linkedin",
+  },
+  {
+    label: "GitHub",
+    url: "https://github.com/goofypluto999",
+    icon: "github",
+  },
+  {
+    label: "Instagram",
+    url: "https://www.instagram.com/giovannisizinoennes/",
+    icon: "instagram",
+  },
+  {
+    label: "Email",
+    url: "mailto:giovanni.sizino.ennes@hotmail.co.uk",
+    icon: "mail",
   },
 ];
