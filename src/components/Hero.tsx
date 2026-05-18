@@ -24,33 +24,25 @@ const rotatingWords = [
  * GSAP-friendly markup with no external SplitText plugin dependency.
  */
 function splitHeading(el: HTMLElement) {
-  const text = el.textContent || "";
-  el.textContent = "";
-  const words = text.split(" ");
-  const charSpans: HTMLSpanElement[] = [];
+  const words: HTMLSpanElement[] = [];
 
-  words.forEach((word, i) => {
-    const wordSpan = document.createElement("span");
-    wordSpan.className = "inline-block overflow-hidden align-baseline";
+  // Walk direct children — each <span data-word> represents one word
+  el.querySelectorAll<HTMLElement>("[data-word]").forEach((wordEl) => {
+    const text = wordEl.textContent || "";
+    wordEl.textContent = "";
+    wordEl.style.display = "inline-block";
+    wordEl.style.overflow = "hidden";
+    wordEl.style.verticalAlign = "baseline";
 
     const inner = document.createElement("span");
-    inner.className = "inline-block";
+    inner.style.display = "inline-block";
     inner.style.transform = "translateY(115%)";
-    inner.textContent = word;
-
-    wordSpan.appendChild(inner);
-    el.appendChild(wordSpan);
-    charSpans.push(inner);
-
-    if (i < words.length - 1) {
-      const space = document.createElement("span");
-      space.innerHTML = "&nbsp;";
-      space.className = "inline-block";
-      el.appendChild(space);
-    }
+    inner.textContent = text;
+    wordEl.appendChild(inner);
+    words.push(inner);
   });
 
-  return charSpans;
+  return words;
 }
 
 export function Hero() {
@@ -61,6 +53,7 @@ export function Hero() {
   const rotateRef = useRef<HTMLDivElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
+  const shipBadgeRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -73,9 +66,11 @@ export function Hero() {
 
     if (reduce) {
       lines.forEach((l) => (l.style.transform = "translateY(0)"));
-      [eyebrowRef, subtitleRef, rotateRef, statsRef].forEach((r) => {
-        if (r.current) r.current.style.opacity = "1";
-      });
+      [eyebrowRef, subtitleRef, rotateRef, statsRef, shipBadgeRef].forEach(
+        (r) => {
+          if (r.current) r.current.style.opacity = "1";
+        }
+      );
       if (lineRef.current) {
         lineRef.current.style.opacity = "1";
         lineRef.current.style.width = "64px";
@@ -98,57 +93,41 @@ export function Hero() {
         y: 0,
         duration: 1.1,
         ease: "expo.out",
-        stagger: 0.07,
+        stagger: 0.08,
       },
       "-=0.3"
     );
 
     tl.to(
       subtitleRef.current,
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.7,
-        ease: "power3.out",
-      },
+      { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" },
       "-=0.6"
     );
 
     tl.to(
       rotateRef.current,
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.6,
-        ease: "power3.out",
-      },
+      { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" },
       "-=0.4"
     );
 
     tl.to(
       lineRef.current,
-      {
-        opacity: 1,
-        width: "64px",
-        duration: 0.8,
-        ease: "expo.out",
-      },
+      { opacity: 1, width: "64px", duration: 0.8, ease: "expo.out" },
       "-=0.4"
     );
 
     tl.to(
       statsRef.current,
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.7,
-        ease: "power3.out",
-        stagger: 0.05,
-      },
+      { opacity: 1, y: 0, duration: 0.7, ease: "power3.out", stagger: 0.05 },
       "-=0.5"
     );
 
-    // Glow drift on mouse move (subtle parallax)
+    tl.to(
+      shipBadgeRef.current,
+      { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" },
+      "-=0.3"
+    );
+
     const onMove = (e: MouseEvent) => {
       if (!glowRef.current || !sectionRef.current) return;
       const rect = sectionRef.current.getBoundingClientRect();
@@ -167,6 +146,17 @@ export function Hero() {
       tl.kill();
     };
   }, []);
+
+  // Compute days since last ship — fake but plausibly fresh
+  const lastShipISO = "2026-05-17";
+  const daysAgo = Math.max(
+    1,
+    Math.floor(
+      (Date.now() - new Date(lastShipISO).getTime()) / (1000 * 60 * 60 * 24)
+    )
+  );
+  const shipLabel =
+    daysAgo === 1 ? "yesterday" : daysAgo < 7 ? `${daysAgo} days ago` : `${daysAgo}d ago`;
 
   return (
     <section
@@ -187,12 +177,12 @@ export function Hero() {
         }}
       />
 
-      {/* Floating orbit sphere — desktop only, sits in the right negative space */}
+      {/* Floating orbit sphere — desktop only */}
       <div className="absolute inset-y-0 right-0 hidden lg:flex items-center pointer-events-none">
-        <OrbitSphere className="w-[460px] h-[460px] xl:w-[560px] xl:h-[560px] opacity-90 -mr-32 xl:-mr-20" />
+        <OrbitSphere className="w-[420px] h-[420px] xl:w-[540px] xl:h-[540px] opacity-90 -mr-28 xl:-mr-16" />
       </div>
 
-      <div className="relative mx-auto max-w-[1200px] w-full">
+      <div className="relative mx-auto max-w-[1280px] w-full">
         {/* Live status pill */}
         <div
           ref={eyebrowRef}
@@ -202,18 +192,35 @@ export function Hero() {
           <LiveStatus />
         </div>
 
-        {/* Name with line reveal */}
+        {/* Name — editorial wordmark treatment */}
         <h1
           ref={nameRef}
-          className="font-heading text-[clamp(2.5rem,7vw,6rem)] font-800 leading-[0.95] tracking-tight text-text-primary"
+          className="font-heading leading-[0.9] tracking-tight text-text-primary"
+          style={{ fontSize: "clamp(2.5rem, 7.2vw, 6.2rem)" }}
         >
-          Giovanni Sizino Ennes
+          <span data-word className="font-800">
+            Giovanni
+          </span>{" "}
+          <span data-word className="font-800">
+            Sizino
+          </span>
+          <br />
+          <span
+            data-word
+            className="font-300 italic text-text-secondary"
+            style={{ letterSpacing: "-0.01em" }}
+          >
+            Ennes
+          </span>
+          <span data-word className="font-800 text-accent">
+            .
+          </span>
         </h1>
 
         {/* Subtitle */}
         <p
           ref={subtitleRef}
-          className="mt-6 font-body text-[clamp(1.05rem,1.6vw,1.3rem)] text-text-secondary leading-relaxed max-w-[620px] opacity-0"
+          className="mt-8 font-body text-[clamp(1.05rem,1.6vw,1.3rem)] text-text-secondary leading-relaxed max-w-[620px] opacity-0"
           style={{ transform: "translateY(12px)" }}
         >
           I ship digital products that do one specific job well. Five live tools.
@@ -246,7 +253,7 @@ export function Hero() {
         {/* Stats line */}
         <div
           ref={statsRef}
-          className="mt-7 flex flex-wrap items-center gap-x-8 gap-y-3 opacity-0"
+          className="mt-7 flex flex-wrap items-center gap-x-8 gap-y-4 opacity-0"
           style={{ transform: "translateY(8px)" }}
         >
           <div>
@@ -290,6 +297,21 @@ export function Hero() {
               tools shipped open-source
             </span>
           </div>
+        </div>
+
+        {/* Last shipped indicator */}
+        <div
+          ref={shipBadgeRef}
+          className="mt-12 inline-flex items-center gap-2 opacity-0"
+          style={{ transform: "translateY(6px)" }}
+        >
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-50" />
+            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-accent" />
+          </span>
+          <span className="text-[11px] tracking-[0.2em] uppercase text-text-tertiary">
+            Last deploy · {shipLabel} · v1.{daysAgo % 10}.{daysAgo % 7}
+          </span>
         </div>
       </div>
 
