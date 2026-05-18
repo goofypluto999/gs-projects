@@ -12,6 +12,7 @@ import { About } from "@/components/About";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 import { SectionDivider } from "@/components/SectionDivider";
+import { BrandMarquee } from "@/components/BrandMarquee";
 
 /**
  * Page composition — tightened. Two SectionDividers max, redundant
@@ -37,6 +38,7 @@ export default function Home() {
 
         <SectionDivider label="01 · The Work" />
         <HorizontalShowcase />
+        <BrandMarquee />
         <ProjectGrid />
         <Highlights />
         <Testimonials />
