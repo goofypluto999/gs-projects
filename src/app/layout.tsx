@@ -3,6 +3,8 @@ import { Preloader } from "@/components/Preloader";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { Grain } from "@/components/Grain";
+import { BackToTop } from "@/components/BackToTop";
+import { KeyboardHint } from "@/components/KeyboardHint";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -45,6 +47,8 @@ export default function RootLayout({
         <ScrollProgress />
         <Grain />
         {children}
+        <BackToTop />
+        <KeyboardHint />
       </body>
     </html>
   );
