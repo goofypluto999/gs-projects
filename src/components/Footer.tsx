@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Socials } from "./Socials";
 import { Monogram } from "./Monogram";
+import { ScrambleLetters } from "./ScrambleLetters";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -168,7 +169,20 @@ export function Footer() {
           className="flex items-end justify-between gap-6 will-change-transform"
         >
           <h2 className="font-heading text-[clamp(3rem,15vw,14rem)] font-800 leading-[0.85] tracking-tighter text-text-primary">
-            Sizino<span className="italic font-300 text-text-secondary">Ennes</span>
+            <ScrambleLetters
+              text="Sizino"
+              className="inline-block"
+              scrambleColor="#2563EB"
+              radius={70}
+            />
+            <span className="italic font-300 text-text-secondary">
+              <ScrambleLetters
+                text="Ennes"
+                className="inline-block"
+                scrambleColor="#A855F7"
+                radius={70}
+              />
+            </span>
             <span className="text-accent">.</span>
           </h2>
         </div>
