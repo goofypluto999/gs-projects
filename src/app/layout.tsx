@@ -51,6 +51,20 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
+  // iOS Safari status bar matches the page bg — no white slice at the top
+  // of the viewport when the page loads. PWA standalone mode uses the
+  // same colour from manifest.ts.
+  themeColor: "#0A0A0B",
+  appleWebApp: {
+    capable: true,
+    title: "Sizino Ennes",
+    statusBarStyle: "black-translucent",
+  },
+  formatDetection: {
+    telephone: false,
+    email: false,
+    address: false,
+  },
 };
 
 export default function RootLayout({
