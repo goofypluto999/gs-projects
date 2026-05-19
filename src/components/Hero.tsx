@@ -251,11 +251,11 @@ export function Hero() {
         {/* Subtitle */}
         <p
           ref={subtitleRef}
-          className="mt-7 font-body text-[clamp(1.05rem,1.6vw,1.3rem)] text-text-secondary leading-[1.5] max-w-[620px] opacity-0"
+          className="mt-7 font-body text-[clamp(1.1rem,1.7vw,1.35rem)] text-text-secondary leading-[1.45] max-w-[620px] opacity-0"
           style={{ transform: "translateY(12px)" }}
         >
-          I ship digital products that do one specific job well. Five live tools.
-          Some open-source. All built end-to-end.
+          Specialist tools that ship. Five live products, two open-source,
+          all built solo — end-to-end.
         </p>
 
         {/* Rotating focus area */}
