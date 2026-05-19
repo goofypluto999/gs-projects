@@ -105,10 +105,20 @@ export function Testimonials() {
           ref={wrapRef}
           className="grid lg:grid-cols-[1.4fr_1fr] gap-5 lg:gap-6 mt-4"
         >
-          {/* Large featured quote */}
+          {/* Large featured quote — editorial accent backdrop matches the
+              treatment used in MobileSpecCards / DragStack / Highlights so
+              testimonials read as part of the same visual family. */}
           <figure
             data-quote
-            className="relative rounded-xl border border-border bg-bg/40 p-8 md:p-12 lg:p-14 flex flex-col gap-8 hover:bg-surface/60 transition-colors duration-200"
+            className="relative rounded-xl border p-8 md:p-12 lg:p-14 flex flex-col gap-8 transition-colors duration-200"
+            style={{
+              borderColor: `${large.accent}33`,
+              background: `
+                radial-gradient(ellipse at 90% 0%, ${large.accent}18 0%, transparent 55%),
+                radial-gradient(ellipse at 0% 100%, ${large.accent}0C 0%, transparent 60%),
+                rgba(20, 20, 21, 0.5)
+              `,
+            }}
           >
             <div className="flex items-center justify-between">
               <MarkSvg color={large.accent} />
@@ -146,7 +156,14 @@ export function Testimonials() {
               <figure
                 key={i}
                 data-quote
-                className="relative rounded-xl border border-border bg-bg/40 p-6 md:p-8 flex flex-col gap-5 hover:bg-surface/60 transition-colors duration-200 flex-1"
+                className="relative rounded-xl border p-6 md:p-8 flex flex-col gap-5 transition-colors duration-200 flex-1"
+                style={{
+                  borderColor: `${q.accent}33`,
+                  background: `
+                    radial-gradient(ellipse at 90% 0%, ${q.accent}14 0%, transparent 55%),
+                    rgba(20, 20, 21, 0.5)
+                  `,
+                }}
               >
                 <MarkSvg color={q.accent} />
 

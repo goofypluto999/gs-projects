@@ -40,7 +40,10 @@ export function TechMarquee() {
   ]);
 
   return (
-    <section className="relative py-8 border-y border-border overflow-hidden bg-bg/40">
+    // Hidden on mobile so the user lands on Hero and reaches the first
+    // product (MobileCarousel) in one scroll. On desktop the marquee is
+    // valuable quick-credibility between hero and the cinema showcase.
+    <section className="hidden md:block relative py-8 border-y border-border overflow-hidden bg-bg/40">
       <div className="absolute inset-y-0 left-0 w-40 z-10 bg-gradient-to-r from-bg via-bg to-transparent pointer-events-none" />
       <div className="absolute inset-y-0 right-0 w-40 z-10 bg-gradient-to-l from-bg via-bg to-transparent pointer-events-none" />
 
