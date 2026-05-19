@@ -115,10 +115,10 @@ export function ProjectDetail({ project, onClose }: ProjectDetailProps) {
 
             <button
               onClick={onClose}
-              className="absolute top-5 right-5 p-2 text-text-secondary hover:text-text-primary transition-colors duration-150 cursor-pointer z-10 rounded-md bg-bg/85 backdrop-blur-sm border border-border"
+              className="absolute top-4 right-4 inline-flex items-center justify-center min-w-11 min-h-11 text-text-secondary hover:text-text-primary active:text-text-primary transition-colors duration-150 cursor-pointer z-10 rounded-md bg-bg/85 backdrop-blur-sm border border-border"
               aria-label="Close project detail"
             >
-              <X size={16} />
+              <X size={18} />
             </button>
 
             {/* Preview area */}
