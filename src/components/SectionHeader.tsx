@@ -39,7 +39,7 @@ export function SectionHeader({
         </span>
       </div>
       <div className="flex flex-wrap items-end justify-between gap-6 mb-12">
-        <h2 className="font-heading text-3xl md:text-5xl lg:text-6xl font-700 text-text-primary leading-[1.02] tracking-tight">
+        <h2 className="font-heading font-700 text-text-primary leading-[1.02] tracking-[-0.025em]" style={{ fontSize: "clamp(2.25rem, 5vw, 4rem)" }}>
           {title}
           {subtitle && (
             <>
@@ -49,7 +49,7 @@ export function SectionHeader({
           )}
         </h2>
         {descriptor && (
-          <p className="text-sm text-text-secondary max-w-[340px] leading-relaxed">
+          <p className="text-sm md:text-[15px] text-text-secondary max-w-[340px] leading-relaxed">
             {descriptor}
           </p>
         )}
