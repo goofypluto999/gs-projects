@@ -103,10 +103,10 @@ export function Navigation() {
 
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-1.5 text-text-secondary hover:text-text-primary transition-colors duration-150 cursor-pointer"
+            className="md:hidden inline-flex items-center justify-center min-w-11 min-h-11 -mr-2 text-text-secondary hover:text-text-primary active:text-text-primary transition-colors duration-150 cursor-pointer"
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
           >
-            {mobileOpen ? <X size={18} /> : <Menu size={18} />}
+            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
       </nav>

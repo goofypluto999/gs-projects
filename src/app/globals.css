@@ -137,6 +137,18 @@
     0%, 50% { opacity: 1; }
     50.01%, 100% { opacity: 0; }
   }
+
+  /* Mobile preloader text — quick fade in, hold, fade out (1.4s total) */
+  .preloader-touch-fade {
+    opacity: 0;
+    animation: preloader-touch-fade 1400ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes preloader-touch-fade {
+    0%   { opacity: 0; transform: translateY(12px); }
+    25%  { opacity: 1; transform: translateY(0); }
+    75%  { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-8px); }
+  }
   @keyframes ken-burns {
     0% {
       transform: scale(1);

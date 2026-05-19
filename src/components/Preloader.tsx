@@ -68,6 +68,23 @@ export function Preloader() {
       return;
     }
 
+    // Touch / mobile fast-path: skip the particle simulation entirely
+    // (1500+ sampled pixels × physics is expensive on a phone GPU). Show
+    // a quick text fade instead. Same brand beat, half the boot time.
+    const isTouch = window.matchMedia("(hover: none) or (pointer: coarse)").matches;
+    if (isTouch) {
+      document.body.style.overflow = "hidden";
+      const t1 = setTimeout(() => {
+        document.body.style.overflow = "";
+        setPhase("done");
+        setOverlayAlpha(0);
+      }, 1400);
+      return () => {
+        clearTimeout(t1);
+        document.body.style.overflow = "";
+      };
+    }
+
     document.body.style.overflow = "hidden";
 
     const canvas = canvasRef.current;
@@ -280,6 +297,16 @@ export function Preloader() {
         ref={canvasRef}
         className="absolute inset-0 w-full h-full pointer-events-none"
       />
+
+      {/* Touch-device fallback: simple text fade, no canvas particles */}
+      <div className="md:hidden absolute inset-0 flex items-center justify-center pointer-events-none">
+        <span
+          className="font-heading font-800 text-text-primary preloader-touch-fade"
+          style={{ fontSize: "clamp(3.5rem, 22vw, 7rem)" }}
+        >
+          Studio<span className="text-accent">.</span>
+        </span>
+      </div>
 
       {/* Top-left tag — small, on-brand, no flashy gradient */}
       <div className="absolute top-6 left-6 md:top-8 md:left-10 flex items-center gap-2.5 z-10">
