@@ -109,7 +109,7 @@ export function BrandMarquee() {
             <span
               key={i}
               className="font-heading font-800 leading-none tracking-tighter text-text-primary/90 hover:text-text-primary cursor-default"
-              style={{ fontSize: "clamp(3rem, 9vw, 8rem)" }}
+              style={{ fontSize: "clamp(2rem, 9vw, 8rem)" }}
             >
               {b}
               <span className="text-accent">.</span>

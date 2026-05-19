@@ -73,6 +73,19 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  /* Active tap states — touch devices don't fire :hover, so :active is
+     the only feedback the user gets when they touch a button or link.
+     Apply to common interactive primitives so taps feel responsive. */
+  @media (hover: none) and (pointer: coarse) {
+    a:active,
+    button:active,
+    [role="button"]:active {
+      transform: scale(0.97);
+      opacity: 0.82;
+      transition: transform 80ms ease-out, opacity 80ms ease-out;
+    }
+  }
+
   ::selection {
     background-color: var(--color-accent);
     color: white;
