@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import NextImage from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { projects } from "@/data/projects";
 import { WindowChrome } from "./WindowChrome";
@@ -164,11 +165,14 @@ export function DragStack({ className = "" }: DragStackProps) {
                     .replace(/\/$/, "")}
                 />
                 <div className="absolute inset-0 pt-7">
-                  <img
+                  <NextImage
                     src={p.previewImage}
                     alt={`${p.name} preview`}
+                    fill
+                    sizes="(max-width: 1024px) 0vw, 720px"
+                    quality={85}
                     draggable={false}
-                    className="absolute inset-0 w-full h-full object-cover object-top pointer-events-none"
+                    className="object-cover object-top pointer-events-none"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-bg/90 via-bg/20 to-transparent pointer-events-none" />
 

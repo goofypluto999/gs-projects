@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import NextImage from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowUpRight } from "lucide-react";
@@ -147,11 +148,15 @@ export function HorizontalShowcase() {
             className="group relative shrink-0 w-[80vw] max-w-[1100px] h-[70vh] rounded-xl overflow-hidden border border-border bg-surface cursor-pointer"
           >
             {/* HD screenshot */}
-            <img
+            <NextImage
               src={p.previewImage}
               alt={`${p.name} preview`}
-              className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.02]"
+              fill
+              sizes="(max-width: 1024px) 0vw, 80vw"
+              quality={85}
+              priority={i < 2}
               loading={i < 2 ? "eager" : "lazy"}
+              className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.02]"
             />
 
             {/* Vignette */}

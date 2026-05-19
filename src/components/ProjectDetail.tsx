@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import NextImage from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ExternalLink, ArrowUpRight } from "lucide-react";
 import type { Project } from "@/data/projects";
@@ -38,11 +39,14 @@ function StaticPreview({ project }: { project: Project }) {
       </div>
 
       {!imgError && (
-        <img
+        <NextImage
           src={project.previewImage}
           alt={`${project.name} preview`}
-          className="absolute inset-0 w-full h-full object-cover object-top"
-          loading="eager"
+          fill
+          sizes="(max-width: 1080px) 100vw, 1080px"
+          quality={85}
+          priority
+          className="object-cover object-top"
           onError={() => setImgError(true)}
         />
       )}
