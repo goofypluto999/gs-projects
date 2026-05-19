@@ -38,8 +38,8 @@ const principles = [
 ];
 
 const locations = [
-  { city: "London", tz: "GMT", flag: "🇬🇧" },
-  { city: "São Paulo", tz: "BRT", flag: "🇧🇷" },
+  { city: "London", tz: "GMT", flag: "🇬🇧", role: "Build base" },
+  { city: "Lisbon", tz: "WET", flag: "🇵🇹", role: "Sales · Johnny" },
 ];
 
 export function About() {
@@ -83,10 +83,10 @@ export function About() {
             {/* Bio text */}
             <div className="grid md:grid-cols-2 gap-10">
               <p className="text-[15px] leading-relaxed text-text-secondary">
-                I&apos;m Giovanni — based between the UK and Brazil. I build
-                digital products end-to-end: idea, design, code, infra,
-                billing, deploy. Every project on this page is live, paid for
-                out of pocket, and used by someone other than me.
+                I&apos;m Giovanni — UK-based. I build digital products
+                end-to-end: idea, design, code, infra, billing, deploy. Every
+                project on this page is live, paid for out of pocket, and
+                used by someone other than me.
               </p>
               <p className="text-[15px] leading-relaxed text-text-secondary">
                 My work sits where product thinking meets engineering. Tight
@@ -106,15 +106,20 @@ export function About() {
                 {locations.map((loc) => (
                   <li
                     key={loc.city}
-                    className="flex items-center justify-between"
+                    className="flex items-start justify-between gap-4"
                   >
-                    <div className="flex items-center gap-3">
-                      <span className="text-base">{loc.flag}</span>
-                      <span className="font-heading text-base font-600 text-text-primary">
-                        {loc.city}
-                      </span>
+                    <div className="flex items-start gap-3">
+                      <span className="text-base mt-0.5">{loc.flag}</span>
+                      <div>
+                        <span className="block font-heading text-base font-600 text-text-primary leading-tight">
+                          {loc.city}
+                        </span>
+                        <span className="block mt-0.5 text-[10.5px] uppercase tracking-[0.2em] text-text-tertiary">
+                          {loc.role}
+                        </span>
+                      </div>
                     </div>
-                    <span className="text-[11px] text-text-tertiary tabular-nums tracking-wider">
+                    <span className="text-[11px] text-text-tertiary tabular-nums tracking-wider mt-1">
                       {loc.tz}
                     </span>
                   </li>
