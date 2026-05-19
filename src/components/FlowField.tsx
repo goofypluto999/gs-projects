@@ -64,6 +64,7 @@ export function FlowField({
     let raf = 0;
     let timeAcc = 0;
     let lastFrame = performance.now();
+    let frameCount = 0;
 
     const MAX_SPEED = 2.6;
 
@@ -135,10 +136,17 @@ export function FlowField({
       const dt = Math.min(2, (now - lastFrame) / 16.67); // normalised to 60fps
       lastFrame = now;
       timeAcc += dt;
+      frameCount += 1;
 
-      // Stronger trail-fade so we don't accumulate residue
-      ctx.fillStyle = "rgba(10, 10, 11, 0.16)";
-      ctx.fillRect(0, 0, width, height);
+      // Every 10s do a hard clear to prevent any residue accumulation
+      // (alpha rounding can leave faint trails that compound over minutes).
+      if (frameCount % 600 === 0) {
+        ctx.clearRect(0, 0, width, height);
+      } else {
+        // Otherwise normal trail-fade
+        ctx.fillStyle = "rgba(10, 10, 11, 0.18)";
+        ctx.fillRect(0, 0, width, height);
+      }
 
       const mx = mouseRef.current.x;
       const my = mouseRef.current.y;

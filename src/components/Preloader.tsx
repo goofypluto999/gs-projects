@@ -2,174 +2,241 @@
 
 import { useEffect, useRef, useState } from "react";
 import { AppleIntelligenceBorder } from "./AppleIntelligenceBorder";
+import { FlowField } from "./FlowField";
 
 /**
- * Cinematic preloader — Apple Intelligence ambient border framing a
- * sequence of editorial statements that swap in/out.
+ * Preloader v3 — consistent with the hero, immersive, less polarising.
  *
- * Beat 1 (0.0s): Black screen. AI rim ignites and rotates.
- * Beat 2 (0.4s): Statement #1 fades in — "Welcome."
- * Beat 3 (1.0s): Statement #2 — "Five live products."
- * Beat 4 (1.7s): Statement #3 — "One operator."
- * Beat 5 (2.4s): Wordmark resolves — "Sizino Ennes."
- * Beat 6 (3.0s): AI rim pulses bright, statement fades, lift.
+ * Background: same FlowField the hero uses, at reduced density so it
+ * reads as "the hero already breathing through". This means the
+ * transition to the live page is almost invisible — same canvas, same
+ * field, just statements that fade and a corner accent that softens.
  *
- * Total ~3.4s. Captivating, on-brand, ends with the studio name burned
- * into the visitor's eye. Respects reduced-motion (instant dismiss).
+ * Corner Apple Intelligence accent (top-right): rotating conic glow
+ * confined to a 280x280 square in the corner — Siri-summon style, NOT
+ * a full-viewport rim that fights the rest of the design.
+ *
+ * Centre stage: three statements + closing tag. Each beat has a
+ * background slow-orbiting line glyph that adds real motion art —
+ * not just text fading, an actual orbit drawing around the line.
  */
 
-interface Statement {
+interface Beat {
   text: string;
-  italic?: boolean;
-  accent?: string;
+  size?: "lg" | "xl";
 }
 
-const beats: Statement[] = [
+const beats: Beat[] = [
   { text: "Welcome." },
   { text: "Five live products." },
-  { text: "One operator." },
-  { text: "Sizino Ennes.", accent: "#2563EB" },
+  { text: "One operator.", size: "xl" },
 ];
 
-const BEAT_DURATION = 700; // ms per beat
-const LIFT_DURATION = 750;
+const BEAT_DURATION = 750;
+const FADE_DURATION = 700;
 
 export function Preloader() {
-  const [done, setDone] = useState(false);
-  const [lifting, setLifting] = useState(false);
+  const [phase, setPhase] = useState<"loading" | "fading" | "done">("loading");
   const [beatIdx, setBeatIdx] = useState(-1);
-  const wrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    // Reduced-motion: skip entirely
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setDone(true);
+      setPhase("done");
       return;
     }
 
     document.body.style.overflow = "hidden";
-
-    // Beat scheduler
     const timers: ReturnType<typeof setTimeout>[] = [];
 
-    // Initial AI border ignition delay
-    timers.push(setTimeout(() => setBeatIdx(0), 300));
-
-    // Subsequent beats
+    // Brief settle, then first beat
+    timers.push(setTimeout(() => setBeatIdx(0), 250));
     for (let i = 1; i < beats.length; i++) {
-      timers.push(setTimeout(() => setBeatIdx(i), 300 + i * BEAT_DURATION));
+      timers.push(setTimeout(() => setBeatIdx(i), 250 + i * BEAT_DURATION));
     }
 
-    // Trigger lift after last beat holds
+    // Begin fade out after last beat holds
     timers.push(
       setTimeout(
         () => {
-          setLifting(true);
+          setPhase("fading");
           setTimeout(() => {
-            setDone(true);
+            setPhase("done");
             document.body.style.overflow = "";
-          }, LIFT_DURATION);
+          }, FADE_DURATION);
         },
-        300 + beats.length * BEAT_DURATION + 400
+        250 + beats.length * BEAT_DURATION + 300
       )
     );
 
     return () => {
-      timers.forEach((t) => clearTimeout(t));
+      timers.forEach(clearTimeout);
       document.body.style.overflow = "";
     };
   }, []);
 
-  if (done) return null;
+  if (phase === "done") return null;
 
   return (
     <div
-      ref={wrapperRef}
       className="fixed inset-0 z-[100] bg-bg pointer-events-auto overflow-hidden"
       style={{
-        transform: lifting ? "translateY(-100%)" : "translateY(0)",
-        transition: lifting
-          ? `transform ${LIFT_DURATION}ms cubic-bezier(0.76, 0, 0.24, 1)`
-          : undefined,
+        opacity: phase === "fading" ? 0 : 1,
+        transition:
+          phase === "fading"
+            ? `opacity ${FADE_DURATION}ms cubic-bezier(0.4, 0, 0.2, 1)`
+            : undefined,
       }}
       aria-hidden="true"
     >
-      {/* Apple Intelligence rotating rim — the show stopper */}
-      <AppleIntelligenceBorder
-        thickness={2}
-        intensity="xl"
-        speed={3.5}
-        radius={0}
-      />
+      {/* Same FlowField as the hero — visual continuity */}
+      <FlowField density={0.00010} repelRadius={120} />
 
-      {/* Subtle inner vignette so type pops above the rim glow */}
+      {/* Subtle radial vignette so type pops */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse at center, transparent 30%, rgba(10,10,11,0.7) 95%)",
+            "radial-gradient(ellipse at center, transparent 25%, rgba(10,10,11,0.55) 90%)",
         }}
       />
+
+      {/* TOP-RIGHT corner Apple Intelligence accent — confined glow,
+          NOT a full-viewport rim. Siri-summon scale. */}
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          top: "-40px",
+          right: "-40px",
+          width: "320px",
+          height: "320px",
+          borderRadius: "999px",
+          overflow: "hidden",
+        }}
+      >
+        <AppleIntelligenceBorder
+          thickness={3}
+          intensity="xl"
+          speed={4}
+          radius={999}
+        />
+      </div>
+
+      {/* BOTTOM-LEFT smaller mirrored accent — sets the diagonal */}
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          bottom: "-30px",
+          left: "-30px",
+          width: "220px",
+          height: "220px",
+          borderRadius: "999px",
+          overflow: "hidden",
+          opacity: 0.6,
+        }}
+      >
+        <AppleIntelligenceBorder
+          thickness={2}
+          intensity="lg"
+          speed={5.5}
+          radius={999}
+        />
+      </div>
 
       {/* Top-left tag */}
       <div className="absolute top-6 left-6 md:top-8 md:left-10 flex items-center gap-2.5 z-10">
         <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
         <span className="font-mono text-[10px] md:text-[11px] tracking-[0.3em] uppercase text-text-secondary">
-          Studio · Sizino Ennes
+          Studio · 2026
         </span>
       </div>
 
       {/* Bottom-right status */}
-      <div className="absolute bottom-6 right-6 md:bottom-8 md:right-10 z-10">
+      <div className="absolute bottom-6 left-6 md:bottom-8 md:left-10 z-10">
         <span className="font-mono text-[10px] md:text-[11px] tracking-[0.25em] uppercase text-text-tertiary">
-          <span className="text-accent">›</span> initialising
+          <span className="text-accent">›</span> rendering
         </span>
       </div>
 
-      {/* Center stage — statements swap in/out */}
+      {/* Center stage — statements + orbiting line glyph */}
       <div className="absolute inset-0 flex items-center justify-center px-8 z-10">
+        {/* Decorative orbiting ring behind text — pure SVG */}
+        <svg
+          className="absolute pointer-events-none"
+          viewBox="0 0 600 600"
+          width="min(80vw, 600px)"
+          height="min(80vw, 600px)"
+          style={{ opacity: 0.18 }}
+          aria-hidden="true"
+        >
+          <defs>
+            <radialGradient id="orbit-fade" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#FAFAFA" stopOpacity="0" />
+              <stop offset="60%" stopColor="#FAFAFA" stopOpacity="0" />
+              <stop offset="85%" stopColor="#FAFAFA" stopOpacity="0.4" />
+              <stop offset="100%" stopColor="#FAFAFA" stopOpacity="0" />
+            </radialGradient>
+          </defs>
+          <g style={{ transformOrigin: "center", animation: "preloader-spin 18s linear infinite" }}>
+            <circle cx="300" cy="300" r="260" fill="none" stroke="url(#orbit-fade)" strokeWidth="1.2" strokeDasharray="2 6" />
+          </g>
+          <g style={{ transformOrigin: "center", animation: "preloader-spin-r 26s linear infinite" }}>
+            <circle cx="300" cy="300" r="200" fill="none" stroke="rgba(37,99,235,0.35)" strokeWidth="0.8" strokeDasharray="1 5" />
+          </g>
+          <g style={{ transformOrigin: "center", animation: "preloader-spin 36s linear infinite" }}>
+            <ellipse cx="300" cy="300" rx="260" ry="120" fill="none" stroke="rgba(168,85,247,0.25)" strokeWidth="0.6" />
+          </g>
+        </svg>
+
         {beats.map((b, i) => {
-          // Active when beatIdx === i. Hold the final beat slightly longer.
           const isActive = beatIdx === i;
           const isPast = beatIdx > i;
           let opacity = 0;
-          let translateY = 24;
-          let blur = 12;
+          let translateY = 28;
+          let blur = 14;
           if (isActive) {
             opacity = 1;
             translateY = 0;
             blur = 0;
           } else if (isPast) {
             opacity = 0;
-            translateY = -24;
-            blur = 12;
+            translateY = -28;
+            blur = 14;
           }
 
           return (
             <h2
               key={i}
-              className="absolute font-heading text-center leading-[0.9] tracking-tight text-text-primary"
+              className="absolute font-heading text-center leading-[0.92] tracking-tight text-text-primary"
               style={{
-                fontSize: "clamp(2.5rem, 7.5vw, 7rem)",
-                fontWeight: i === beats.length - 1 ? 800 : 500,
-                fontStyle: b.italic ? "italic" : "normal",
+                fontSize: b.size === "xl" ? "clamp(3rem, 9vw, 8rem)" : "clamp(2.5rem, 7vw, 6.5rem)",
+                fontWeight: 600,
                 opacity,
                 transform: `translateY(${translateY}px)`,
                 filter: `blur(${blur}px)`,
                 transition:
-                  "opacity 360ms ease, transform 460ms cubic-bezier(0.16, 1, 0.3, 1), filter 360ms ease",
+                  "opacity 380ms ease, transform 500ms cubic-bezier(0.16, 1, 0.3, 1), filter 380ms ease",
               }}
             >
               {b.text}
-              {b.accent && i === beats.length - 1 && (
-                <span style={{ color: b.accent }}>.</span>
-              )}
             </h2>
           );
         })}
       </div>
+
+      <style jsx>{`
+        @keyframes preloader-spin {
+          to {
+            transform: rotate(360deg);
+          }
+        }
+        @keyframes preloader-spin-r {
+          to {
+            transform: rotate(-360deg);
+          }
+        }
+      `}</style>
     </div>
   );
 }

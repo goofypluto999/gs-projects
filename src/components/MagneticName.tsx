@@ -89,8 +89,8 @@ export function MagneticName({
         while (size > 24) {
           c.font = `${italic ? "italic" : "normal"} ${weight} ${size}px Archivo, system-ui, sans-serif`;
           const tw = c.measureText(text).width;
-          if (tw <= maxWidth) return size;
-          size -= 4;
+          if (tw <= maxWidth - 8) return size; // 8px safety margin
+          size -= 2;
         }
         return size;
       }
@@ -140,8 +140,8 @@ export function MagneticName({
         while (size > 24) {
           oc!.font = `${italic ? "italic" : "normal"} ${weight} ${size}px Archivo, system-ui, sans-serif`;
           const w = oc!.measureText(text).width;
-          if (w <= maxWidth) return size;
-          size -= 4;
+          if (w <= maxWidth - 8) return size; // 8px safety margin
+          size -= 2;
         }
         return size;
       }

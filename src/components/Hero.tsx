@@ -192,25 +192,18 @@ export function Hero() {
         {/* Name — desktop gets the MagneticName particle canvas,
             mobile keeps the static editorial wordmark for readability. */}
 
-        {/* Mobile: static editorial */}
+        {/* Mobile: static editorial — "Giovanni Sizino." */}
         <h1
           ref={nameRef}
           className="lg:hidden font-heading leading-[0.9] tracking-tight text-text-primary"
-          style={{ fontSize: "clamp(2.5rem, 7.2vw, 6.2rem)" }}
+          style={{ fontSize: "clamp(2.75rem, 9vw, 5.5rem)" }}
         >
           <span data-word className="font-800">
             Giovanni
-          </span>{" "}
-          <span data-word className="font-800">
-            Sizino
           </span>
           <br />
-          <span
-            data-word
-            className="font-300 italic text-text-secondary"
-            style={{ letterSpacing: "-0.01em" }}
-          >
-            Ennes
+          <span data-word className="font-800">
+            Sizino
           </span>
           <span data-word className="font-800 text-accent">
             .
@@ -220,20 +213,18 @@ export function Hero() {
         {/* Desktop: particle-cluster name that disperses on cursor */}
         <div
           className="hidden lg:block w-full"
-          style={{ height: "clamp(280px, 32vh, 380px)" }}
+          style={{ height: "clamp(240px, 28vh, 340px)" }}
         >
           <MagneticName
             lines={[
-              { text: "Giovanni Sizino", weight: 800, color: "#FAFAFA" },
-              { text: "Ennes.", weight: 300, italic: true, color: "#A1A1AA" },
+              { text: "Giovanni", weight: 800, color: "#FAFAFA" },
+              { text: "Sizino.", weight: 800, color: "#FAFAFA" },
             ]}
             samplingStep={3}
           />
         </div>
 
-        {/* Visible aria-label sourced from the canvas; sighted users see
-            either the mobile h1 or the desktop canvas. Add a sr-only h1
-            for SEO + screen readers regardless. */}
+        {/* SR-only formal name for SEO + screen readers */}
         <h1 className="sr-only">Giovanni Sizino Ennes</h1>
 
         {/* Subtitle */}
