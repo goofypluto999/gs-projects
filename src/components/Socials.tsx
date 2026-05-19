@@ -56,7 +56,7 @@ export function Socials({ className = "", size = "md" }: SocialsProps) {
               rel={s.icon === "mail" ? undefined : "noopener noreferrer"}
               aria-label={s.label}
               className={`group relative inline-flex items-center justify-center rounded-md border border-border bg-surface/40 hover:bg-surface hover:border-border-hover text-text-secondary hover:text-text-primary transition-all duration-200 cursor-pointer ${
-                size === "sm" ? "w-8 h-8" : "w-9 h-9"
+                size === "sm" ? "w-9 h-9 md:w-8 md:h-8" : "w-11 h-11 md:w-9 md:h-9"
               }`}
             >
               {Icon ? <Icon /> : <Mail size={size === "sm" ? 13 : 15} strokeWidth={1.5} />}
