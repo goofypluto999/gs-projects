@@ -290,7 +290,7 @@ export function Hero() {
           <div className="border-l border-border pl-3">
             <AnimatedCounter
               target={5}
-              className="font-heading text-3xl md:text-4xl font-800 text-text-primary block leading-none"
+              className="font-heading text-4xl md:text-5xl font-800 text-text-primary block leading-none tracking-[-0.02em]"
               format={(n) => String(n).padStart(2, "0")}
             />
             <span className="block mt-2 text-[10px] uppercase tracking-[0.18em] text-text-tertiary leading-snug">
@@ -300,7 +300,7 @@ export function Hero() {
           <div className="border-l border-border pl-3">
             <AnimatedCounter
               target={228}
-              className="font-heading text-3xl md:text-4xl font-800 text-text-primary block leading-none"
+              className="font-heading text-4xl md:text-5xl font-800 text-text-primary block leading-none tracking-[-0.02em]"
               suffix="K+"
             />
             <span className="block mt-2 text-[10px] uppercase tracking-[0.18em] text-text-tertiary leading-snug">
@@ -310,7 +310,7 @@ export function Hero() {
           <div className="border-l pl-3" style={{ borderColor: "var(--color-accent)" }}>
             <AnimatedCounter
               target={500}
-              className="font-heading text-3xl md:text-4xl font-800 text-text-primary block leading-none"
+              className="font-heading text-4xl md:text-5xl font-800 text-text-primary block leading-none tracking-[-0.02em]"
               suffix="K"
             />
             <span className="block mt-2 text-[10px] uppercase tracking-[0.18em] text-text-tertiary leading-snug">
@@ -318,7 +318,7 @@ export function Hero() {
             </span>
           </div>
           <div className="border-l border-border pl-3">
-            <span className="font-heading text-3xl md:text-4xl font-800 text-text-primary block leading-none">
+            <span className="font-heading text-4xl md:text-5xl font-800 text-text-primary block leading-none tracking-[-0.02em]">
               Free
             </span>
             <span className="block mt-2 text-[10px] uppercase tracking-[0.18em] text-text-tertiary leading-snug">
