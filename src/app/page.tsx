@@ -15,6 +15,7 @@ import { SectionDivider } from "@/components/SectionDivider";
 import { BrandMarquee } from "@/components/BrandMarquee";
 import { Manifesto, ManifestoMobile } from "@/components/Manifesto";
 import { DragStack } from "@/components/DragStack";
+import { MobileCarousel } from "@/components/MobileCarousel";
 
 /**
  * Page composition — tightened. Two SectionDividers max, redundant
@@ -42,6 +43,7 @@ export default function Home() {
 
         <SectionDivider label="01 · The Work" />
         <HorizontalShowcase />
+        <MobileCarousel />
         <BrandMarquee />
         <ProjectGrid />
         <Highlights />

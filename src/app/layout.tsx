@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Archivo, Space_Grotesk } from "next/font/google";
 import { Preloader } from "@/components/Preloader";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { ScrollProgress } from "@/components/ScrollProgress";
@@ -8,6 +9,22 @@ import { KeyboardHint } from "@/components/KeyboardHint";
 import { SectionRail } from "@/components/SectionRail";
 import { CursorTrail } from "@/components/CursorTrail";
 import "./globals.css";
+
+// next/font self-hosts the fonts and inlines the critical CSS — no FOUT,
+// no third-party round-trip on first paint.
+const archivo = Archivo({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-archivo",
+  display: "swap",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-space-grotesk",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Giovanni Sizino Ennes — Digital Products & Tools",
@@ -39,21 +56,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
-        <link rel="preconnect" href="https://image.thum.io" crossOrigin="anonymous" />
-      </head>
-      <body className="min-h-screen bg-bg text-text-primary antialiased">
+    <html
+      lang="en"
+      className={`dark ${archivo.variable} ${spaceGrotesk.variable}`}
+    >
+      <body
+        className="min-h-screen bg-bg text-text-primary antialiased"
+        style={{ fontFamily: "var(--font-space-grotesk), system-ui, sans-serif" }}
+      >
         <Preloader />
         <SmoothScroll />
         <ScrollProgress />

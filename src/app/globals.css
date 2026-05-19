@@ -14,8 +14,8 @@
   --color-cta: #F97316;
   --color-cta-hover: #FB923C;
 
-  --font-heading: "Archivo", system-ui, sans-serif;
-  --font-body: "Space Grotesk", system-ui, sans-serif;
+  --font-heading: var(--font-archivo), "Archivo", system-ui, sans-serif;
+  --font-body: var(--font-space-grotesk), "Space Grotesk", system-ui, sans-serif;
   --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", monospace;
 
   --radius-sm: 4px;
