@@ -209,8 +209,8 @@ export function Hero() {
         {/* Mobile: static editorial — "Giovanni Sizino." */}
         <h1
           ref={nameRef}
-          className="lg:hidden font-heading leading-[0.95] tracking-tight text-text-primary"
-          style={{ fontSize: "clamp(2.75rem, 9vw, 4.5rem)" }}
+          className="lg:hidden font-heading leading-[0.92] tracking-[-0.025em] text-text-primary"
+          style={{ fontSize: "clamp(3rem, 11vw, 5.5rem)" }}
         >
           <span data-word className="font-800">
             Giovanni
@@ -319,18 +319,46 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Last shipped indicator */}
+        {/* Primary CTA row — explicit "start a conversation" button + the
+            ship indicator. Compresses the path to inquiry: visitors no
+            longer have to scroll the entire page to find a contact link. */}
         <div
           ref={shipBadgeRef}
-          className="mt-12 inline-flex items-center gap-2 opacity-0"
+          className="mt-12 flex flex-wrap items-center gap-x-6 gap-y-4 opacity-0"
           style={{ transform: "translateY(6px)" }}
         >
-          <span className="relative flex h-1.5 w-1.5">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-50" />
-            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-accent" />
-          </span>
-          <span className="text-[11px] tracking-[0.2em] uppercase text-text-tertiary">
-            Last deploy · {shipLabel} · production
+          <a
+            href="#contact"
+            className="group inline-flex items-center gap-2.5 px-5 py-3 rounded-md bg-text-primary text-bg font-heading text-sm font-600 tracking-tight hover:bg-text-secondary transition-colors duration-200 cursor-pointer min-h-11"
+          >
+            Start a conversation
+            <span
+              aria-hidden="true"
+              className="inline-block transition-transform duration-200 group-hover:translate-x-0.5"
+            >
+              →
+            </span>
+          </a>
+          <a
+            href="#projects"
+            className="group inline-flex items-center gap-2 text-[12.5px] text-text-secondary hover:text-text-primary transition-colors duration-200 cursor-pointer min-h-11"
+          >
+            See the work
+            <span
+              aria-hidden="true"
+              className="inline-block transition-transform duration-200 group-hover:translate-x-0.5"
+            >
+              ↓
+            </span>
+          </a>
+          <span className="inline-flex items-center gap-2 ml-0 sm:ml-auto">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-50" />
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-accent" />
+            </span>
+            <span className="text-[11px] tracking-[0.2em] uppercase text-text-tertiary">
+              Last deploy · {shipLabel}
+            </span>
           </span>
         </div>
       </div>
