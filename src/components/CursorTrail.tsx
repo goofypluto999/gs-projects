@@ -98,22 +98,6 @@ export function CursorTrail() {
         aria-hidden="true"
       />
 
-      <style jsx global>{`
-        @media (hover: hover) and (pointer: fine) {
-          html.custom-cursor-active,
-          html.custom-cursor-active a,
-          html.custom-cursor-active button,
-          html.custom-cursor-active [role="button"] {
-            cursor: none !important;
-          }
-        }
-        @media (hover: none) or (pointer: coarse) {
-          .cursor-ring,
-          .cursor-dot {
-            display: none !important;
-          }
-        }
-      `}</style>
     </>
   );
 }

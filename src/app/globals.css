@@ -37,6 +37,10 @@
      (BackToTop, mobile menu, etc.) doesn't get covered. */
   body {
     padding-bottom: env(safe-area-inset-bottom, 0px);
+    /* iOS Safari rubber-band: contain vertical overscroll so the page
+       doesn't pull down past the footer or up past the nav. Mobile-only;
+       desktop browsers ignore overscroll-behavior on body. */
+    overscroll-behavior-y: contain;
   }
 
   /* Lenis class-driven CSS — added/removed on <html> by Lenis */
@@ -166,6 +170,22 @@
   /* Hide native scrollbar on mobile snap rails (touch carousel) */
   .mobile-snap-rail::-webkit-scrollbar {
     display: none;
+  }
+
+  /* Custom cursor — only on fine-pointer desktops. Hide everywhere else. */
+  @media (hover: hover) and (pointer: fine) {
+    html.custom-cursor-active,
+    html.custom-cursor-active a,
+    html.custom-cursor-active button,
+    html.custom-cursor-active [role="button"] {
+      cursor: none !important;
+    }
+  }
+  @media (hover: none) or (pointer: coarse) {
+    .cursor-ring,
+    .cursor-dot {
+      display: none !important;
+    }
   }
 
   /* Footer column links — guaranteed ≥44px tap target via padding. The

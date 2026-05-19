@@ -168,7 +168,7 @@ export function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative flex flex-col justify-center min-h-[92vh] px-6 pt-14 overflow-hidden"
+      className="relative flex flex-col justify-center min-h-[92svh] md:min-h-[92vh] px-6 pt-14 overflow-hidden"
     >
       <Aurora className="opacity-70" />
       <GridPattern className="opacity-20" />
