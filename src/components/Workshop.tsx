@@ -111,7 +111,7 @@ export function Workshop() {
   }, []);
 
   return (
-    <section className="px-6 py-28">
+    <section className="px-6 py-16 md:py-28">
       <div className="mx-auto max-w-[1280px]">
         <SectionHeader
           eyebrow="In the workshop"

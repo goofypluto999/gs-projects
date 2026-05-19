@@ -70,7 +70,7 @@ export function About() {
   }, []);
 
   return (
-    <section id="about" className="px-6 py-32 scroll-mt-16 relative">
+    <section id="about" className="px-6 py-20 md:py-32 scroll-mt-16 relative">
       <div className="mx-auto max-w-[1280px]">
         <SectionHeader
           eyebrow="About"

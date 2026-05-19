@@ -126,7 +126,7 @@ export function Process() {
   }, []);
 
   return (
-    <section id="process" className="px-6 py-28 scroll-mt-16">
+    <section id="process" className="px-6 py-16 md:py-28 scroll-mt-16">
       <div className="mx-auto max-w-[1280px]">
         <SectionHeader
           eyebrow="The process"

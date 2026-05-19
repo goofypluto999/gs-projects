@@ -91,7 +91,7 @@ export function Highlights() {
   }, []);
 
   return (
-    <section className="px-6 py-24">
+    <section className="px-6 py-16 md:py-24">
       <div className="mx-auto max-w-[1280px]">
         <SectionHeader
           eyebrow="Highlights"

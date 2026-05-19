@@ -10,7 +10,7 @@ export function Contact() {
   return (
     <section
       id="contact"
-      className="relative px-6 py-32 scroll-mt-16 overflow-hidden"
+      className="relative px-6 py-20 md:py-32 scroll-mt-16 overflow-hidden"
     >
       <Aurora className="opacity-50" />
 

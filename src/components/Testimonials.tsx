@@ -92,7 +92,7 @@ export function Testimonials() {
   }, []);
 
   return (
-    <section className="px-6 py-28 relative overflow-hidden">
+    <section className="px-6 py-16 md:py-28 relative overflow-hidden">
       <div className="mx-auto max-w-[1280px]">
         <SectionHeader
           eyebrow="Pre-launch · interest signals"
