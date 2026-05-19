@@ -57,6 +57,8 @@ export function Preloader() {
   const [fading, setFading] = useState(false);
   const [statementsVisible, setStatementsVisible] = useState(false);
   const [nameplate, setNameplate] = useState("");
+  // Client-only random coords (avoid SSR hydration mismatch)
+  const [randomCoords, setRandomCoords] = useState({ coord: "0000", phase: "00" });
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const ringsRef = useRef<Ring[]>([]);
   const lastRingEmitRef = useRef(0);
@@ -72,6 +74,12 @@ export function Preloader() {
       setDone(true);
       return;
     }
+
+    // Set random coords AFTER hydration so server/client match
+    setRandomCoords({
+      coord: Math.floor(Math.random() * 9999).toString().padStart(4, "0"),
+      phase: Math.floor(Math.random() * 99).toString().padStart(2, "0"),
+    });
 
     document.body.style.overflow = "hidden";
 
@@ -367,8 +375,7 @@ export function Preloader() {
           <span className="text-accent">›</span> sequence 01
         </div>
         <div className="font-mono text-[9px] tracking-[0.2em] uppercase text-text-tertiary tabular-nums">
-          coord {Math.floor(Math.random() * 9999).toString().padStart(4, "0")} ·
-          phase {Math.floor(Math.random() * 99).toString().padStart(2, "0")}
+          coord {randomCoords.coord} · phase {randomCoords.phase}
         </div>
       </div>
 

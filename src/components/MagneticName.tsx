@@ -115,6 +115,10 @@ export function MagneticName({
       const rect = canvas.getBoundingClientRect();
       width = rect.width;
       height = rect.height;
+
+      // Guard against zero-size canvas (happens before layout settles)
+      if (width < 1 || height < 1) return;
+
       dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = width * dpr;
       canvas.height = height * dpr;
@@ -122,8 +126,8 @@ export function MagneticName({
 
       // Render text onto an offscreen canvas at the displayed scale
       const off = document.createElement("canvas");
-      off.width = width;
-      off.height = height;
+      off.width = Math.max(1, Math.floor(width));
+      off.height = Math.max(1, Math.floor(height));
       const oc = off.getContext("2d");
       if (!oc) return;
 
