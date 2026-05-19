@@ -114,17 +114,13 @@ export function Navigation() {
       {/* Mobile menu — backdrop is always mounted but pointer-events
           + opacity swap on `mobileOpen` so the fade is smooth (~200ms)
           without the framer-motion unmount race that leaves a stale
-          0-opacity overlay blocking taps on the page beneath it. The
-          staggered link reveal is handled by a CSS class hook that
-          animates only when [data-menu-open="true"]. */}
+          0-opacity overlay blocking taps. CSS rule in globals keys on
+          data-menu-open so we don't depend on Tailwind JIT picking up
+          opacity-{100,0} from a template-literal-interpolated class. */}
       <div
         data-menu-open={mobileOpen ? "true" : "false"}
         aria-hidden={!mobileOpen}
-        className={`fixed inset-0 z-30 bg-bg/98 backdrop-blur-xl pt-20 transition-opacity duration-200 ease-out ${
-          mobileOpen
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none"
-        }`}
+        className="mobile-menu-backdrop fixed inset-0 z-30 bg-bg/98 backdrop-blur-xl pt-20"
       >
         <div className="flex flex-col items-start px-6 gap-7">
           {navLinks.map((link, i) => (
