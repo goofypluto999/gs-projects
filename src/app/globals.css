@@ -178,6 +178,18 @@
     50.01%, 100% { opacity: 0; }
   }
 
+  /* Shimmer animation for PreviewImage loading state */
+  .preview-shimmer {
+    animation: preview-shimmer 1.6s infinite linear;
+  }
+  @keyframes preview-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .preview-shimmer { animation: none; }
+  }
+
   /* Mobile preloader text — quick fade in, hold, fade out (1.4s total) */
   .preloader-touch-fade {
     opacity: 0;
