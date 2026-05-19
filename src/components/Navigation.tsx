@@ -119,7 +119,7 @@ export function Navigation() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileOpen(false)}
-                className="font-heading text-4xl font-800 text-text-primary cursor-pointer tracking-tight"
+                className="font-heading text-4xl font-800 text-text-primary cursor-pointer tracking-tight py-1 inline-flex items-center min-h-11"
               >
                 {link.label}
               </a>
@@ -133,7 +133,7 @@ export function Navigation() {
               </p>
               <a
                 href="mailto:giovanni.sizino.ennes@hotmail.co.uk"
-                className="block mt-1 text-sm text-text-secondary hover:text-text-primary transition-colors duration-150"
+                className="block mt-2 text-sm text-text-secondary hover:text-text-primary active:text-text-primary transition-colors duration-150 py-3 min-h-11 inline-flex items-center"
               >
                 giovanni.sizino.ennes@hotmail.co.uk
               </a>
