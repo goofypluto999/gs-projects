@@ -22,20 +22,24 @@ export function SmoothScroll() {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    // Always turn off native CSS smooth scroll so it doesn't double up
-    document.documentElement.style.scrollBehavior = "auto";
-
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      // Reduced-motion users get instant anchor jumps — no smooth
+      document.documentElement.style.scrollBehavior = "auto";
       return;
     }
 
     // Native momentum scroll wins on touch devices — Lenis intercepting
     // touch events causes jank and inertia mismatch on iOS/Android.
+    // Restore native CSS smooth-scroll so anchor clicks still glide.
     const isTouch =
       window.matchMedia("(hover: none) or (pointer: coarse)").matches;
     if (isTouch) {
+      document.documentElement.style.scrollBehavior = "smooth";
       return;
     }
+
+    // Desktop with Lenis — Lenis owns smoothing, native off
+    document.documentElement.style.scrollBehavior = "auto";
 
     const lenis = new Lenis({
       duration: 1.05,

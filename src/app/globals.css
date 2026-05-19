@@ -80,6 +80,19 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  /* Keyboard focus rings — visible only on :focus-visible (i.e. keyboard
+     tab navigation), not on mouse click. Accent-blue 2px ring + offset. */
+  a:focus-visible,
+  button:focus-visible,
+  [role="button"]:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
   /* Hard-hide keyboard-only affordances on touch devices */
   @media (hover: none) or (pointer: coarse) {
     .keyboard-hint {
