@@ -63,7 +63,7 @@ export function SectionDivider({ label }: SectionDividerProps) {
   }, []);
 
   return (
-    <div ref={wrapRef} className="relative px-6 py-16">
+    <div ref={wrapRef} className="relative px-6 py-10 md:py-16">
       <div className="mx-auto max-w-[1280px] flex items-center gap-6">
         <div
           ref={lineRef}
