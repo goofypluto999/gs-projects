@@ -52,10 +52,17 @@ const upcoming: UpcomingItem[] = [
 ];
 
 const statusStyles: Record<UpcomingItem["status"], string> = {
-  Researching: "text-text-tertiary border-border",
-  Designing: "text-amber-400/90 border-amber-400/30",
-  Building: "text-accent border-accent/40",
-  "Internal beta": "text-emerald-400 border-emerald-400/40",
+  Researching: "text-text-tertiary border-border bg-text-tertiary/[0.04]",
+  Designing: "text-amber-400/90 border-amber-400/35 bg-amber-400/[0.06]",
+  Building: "text-accent border-accent/45 bg-accent/[0.06]",
+  "Internal beta": "text-emerald-400 border-emerald-400/45 bg-emerald-400/[0.06]",
+};
+
+const statusDotStyles: Record<UpcomingItem["status"], string> = {
+  Researching: "bg-text-tertiary",
+  Designing: "bg-amber-400",
+  Building: "bg-accent",
+  "Internal beta": "bg-emerald-400",
 };
 
 /**
@@ -158,8 +165,12 @@ export function Workshop() {
 
                   <div className="flex items-center justify-between gap-4 md:contents">
                     <span
-                      className={`text-[10px] uppercase tracking-[0.2em] border px-2.5 py-1 rounded ${statusStyles[p.status]} md:justify-self-start`}
+                      className={`inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.2em] border px-2.5 py-1 rounded ${statusStyles[p.status]} md:justify-self-start`}
                     >
+                      <span
+                        className={`w-1.5 h-1.5 rounded-full ${statusDotStyles[p.status]} ${p.status === "Building" ? "animate-pulse" : ""}`}
+                        aria-hidden="true"
+                      />
                       {p.status}
                     </span>
                     <span className="hidden md:inline text-xs text-text-tertiary tabular-nums md:justify-self-end">
