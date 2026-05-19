@@ -253,52 +253,87 @@ export function ManifestoMobile() {
   }, []);
 
   return (
-    <section ref={wrapRef} className="lg:hidden px-6 py-20 bg-bg">
-      <div className="flex items-center gap-2 mb-10">
-        <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-        <span className="text-[10px] uppercase tracking-[0.3em] text-text-tertiary">
-          Manifesto
+    <section
+      ref={wrapRef}
+      className="manifesto-mobile lg:hidden bg-bg relative"
+    >
+      {/* Eyebrow header — sticky at top of the section while beats scroll */}
+      <div className="sticky top-14 z-10 px-6 py-5 flex items-center justify-between bg-gradient-to-b from-bg via-bg/90 to-transparent">
+        <div className="flex items-center gap-2">
+          <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+          <span className="text-[10px] uppercase tracking-[0.3em] text-text-tertiary">
+            Manifesto
+          </span>
+        </div>
+        <span className="text-[10px] uppercase tracking-[0.3em] text-text-tertiary tabular-nums">
+          {beats.length} beats
         </span>
       </div>
 
-      <div className="space-y-14">
-        {beats.map((b, i) => (
-          <div key={i} data-mbeat>
-            <div className="flex items-baseline gap-4 mb-4">
+      {/* Beats — each takes most of the viewport so they read as one
+          big moment per scroll page, mimicking the desktop pinned
+          scrollytelling. Soft accent gradient backdrop per beat. */}
+      {beats.map((b, i) => (
+        <div
+          key={i}
+          data-mbeat
+          className="relative px-6 py-16 flex flex-col justify-center min-h-[80svh] border-b border-border/30 last:border-b-0"
+          style={{
+            background: `
+              radial-gradient(ellipse at 100% 0%, ${b.accent}1A 0%, transparent 55%),
+              radial-gradient(ellipse at 0% 100%, ${b.accent}10 0%, transparent 60%)
+            `,
+          }}
+        >
+          <div className="flex items-baseline gap-4 mb-6">
+            <span
+              className="font-heading text-xl md:text-2xl font-300 italic"
+              style={{ color: b.accent }}
+            >
+              {b.kicker}
+            </span>
+            <span className="text-[10px] uppercase tracking-[0.3em] text-text-tertiary tabular-nums">
+              Beat {String(i + 1).padStart(2, "0")} / {String(beats.length).padStart(2, "0")}
+            </span>
+          </div>
+
+          <h2
+            className="font-heading font-800 leading-[0.92] tracking-[-0.035em] text-text-primary"
+            style={{
+              fontSize: "clamp(3rem, 14vw, 5.5rem)",
+              filter: `drop-shadow(0 0 32px ${b.accent}24)`,
+            }}
+          >
+            {b.lines.map((line, li) => (
               <span
-                className="font-heading text-lg font-300 italic"
-                style={{ color: b.accent }}
+                key={li}
+                className="block"
+                style={{
+                  color: li === b.lines.length - 1 ? b.accent : undefined,
+                }}
               >
-                {b.kicker}
+                {line}
               </span>
-              <span className="text-[9px] uppercase tracking-[0.3em] text-text-tertiary">
-                Beat {String(i + 1).padStart(2, "0")} / {String(beats.length).padStart(2, "0")}
+            ))}
+          </h2>
+
+          {b.caption && (
+            <p className="mt-7 max-w-[520px] text-[15px] text-text-secondary leading-relaxed">
+              {b.caption}
+            </p>
+          )}
+
+          {/* Bottom hint on the last beat */}
+          {i === beats.length - 1 && (
+            <div className="mt-10 flex items-center gap-2">
+              <span className="w-6 h-px bg-accent" />
+              <span className="text-[10px] uppercase tracking-[0.3em] text-text-tertiary">
+                Now the work →
               </span>
             </div>
-
-            <h2
-              className="font-heading font-800 leading-[0.95] tracking-[-0.03em] text-text-primary"
-              style={{ fontSize: "clamp(2.25rem, 11vw, 4rem)" }}
-            >
-              {b.lines.map((line, li) => (
-                <span
-                  key={li}
-                  className="block"
-                  style={{ color: li === b.lines.length - 1 ? b.accent : undefined }}
-                >
-                  {line}
-                </span>
-              ))}
-            </h2>
-
-            {b.caption && (
-              <p className="mt-5 text-[14px] text-text-secondary leading-relaxed">
-                {b.caption}
-              </p>
-            )}
-          </div>
-        ))}
-      </div>
+          )}
+        </div>
+      ))}
     </section>
   );
 }
