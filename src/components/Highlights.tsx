@@ -118,21 +118,41 @@ export function Highlights() {
             <div
               key={`${h.product}-${h.number}`}
               data-highlight
-              className="group relative bg-bg p-6 md:p-7 flex flex-col gap-3 hover:bg-surface transition-colors duration-200"
+              className="group relative p-6 md:p-7 flex flex-col gap-3 transition-colors duration-200 min-h-[200px] md:min-h-0"
+              style={{
+                // Editorial gradient backdrop per highlight — same pattern
+                // used in MobileSpecCards + DragStack so the section reads
+                // as part of the same visual family, not generic tiles.
+                background: `
+                  radial-gradient(ellipse at 85% 0%, ${h.accent}1F 0%, transparent 55%),
+                  radial-gradient(ellipse at 0% 100%, ${h.accent}10 0%, transparent 60%),
+                  var(--color-bg)
+                `,
+              }}
             >
-              {/* Accent tab */}
+              {/* Accent stripe — extends on hover */}
               <div
-                className="absolute top-0 left-0 w-8 h-px"
-                style={{ backgroundColor: h.accent }}
+                className="absolute top-0 left-0 h-px transition-all duration-300 group-hover:w-20"
+                style={{
+                  width: "32px",
+                  backgroundColor: h.accent,
+                  boxShadow: `0 0 14px ${h.accent}55`,
+                }}
+                aria-hidden="true"
               />
 
               <div className="flex items-baseline gap-3">
                 <span
-                  className="font-heading text-4xl md:text-5xl font-800 leading-none tracking-tight text-text-primary tabular-nums"
+                  className="font-heading font-800 leading-none tracking-[-0.03em] tabular-nums"
+                  style={{
+                    fontSize: "clamp(2.75rem, 13vw, 4rem)",
+                    color: h.accent,
+                    textShadow: `0 0 24px ${h.accent}33`,
+                  }}
                 >
                   {h.number}
                 </span>
-                <span className="text-[11px] uppercase tracking-[0.2em] text-text-tertiary">
+                <span className="text-[10.5px] uppercase tracking-[0.22em] text-text-tertiary max-w-[120px] leading-snug">
                   {h.label}
                 </span>
               </div>
@@ -146,7 +166,7 @@ export function Highlights() {
                   className="w-1.5 h-1.5 rounded-full"
                   style={{ backgroundColor: h.accent }}
                 />
-                <span className="text-[11px] uppercase tracking-widest text-text-tertiary group-hover:text-text-secondary transition-colors duration-200">
+                <span className="text-[10px] uppercase tracking-[0.25em] text-text-tertiary">
                   {h.product}
                 </span>
               </div>
