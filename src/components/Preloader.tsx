@@ -3,83 +3,70 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * STUDIO ECHO — a sonar/calibration-instrument preloader.
+ * Preloader v4 — "The studio comes into focus."
  *
- * Concept: the site is "calibrating" before it shows the work. A
- * central node emits concentric echo rings outward, each ring slightly
- * displaced by noise so it reads as a real acoustic pulse rather than
- * a perfect circle. Statements appear in cardinal positions as rings
- * pass through them. A radar grid sits underneath. Final shockwave
- * fills the viewport and ripple-dissolves to reveal the hero.
+ * Beat 1 (0.0–0.8s): Particles flow inward from the entire viewport,
+ *   converging toward the centre.
+ * Beat 2 (0.8–2.2s): They lock into the shape of the word "Studio."
+ *   and hold steady, faintly breathing.
+ * Beat 3 (2.2–3.0s): They release outward, dispersing back into a
+ *   free-flowing field — the SAME field the hero uses underneath.
+ * Beat 4 (3.0–3.6s): The dark overlay fades; the hero's own FlowField
+ *   is already running behind us, so the transition reads as the
+ *   particles settling rather than a curtain lifting.
  *
- * Hand-rolled canvas 2D. No library, no template. The noise displacement
- * is computed per-frame so no two pageloads draw exactly the same rings.
+ * MEANING: the studio assembles itself in front of you. Once assembled,
+ * the maker of the studio (the hero's "Giovanni Sizino." MagneticName)
+ * is revealed underneath.
  *
- * Sequence (~3.6s):
- *   0.0s — black, central node pulse, radar grid fades in
- *   0.4s — Ring 1 emits (accent blue)
- *   0.7s — Ring 2 emits (purple)
- *   1.0s — Ring 3 emits (emerald), nameplate types out
- *   1.4s — Statements pop in (TOP/BOTTOM/LEFT/RIGHT)
- *   2.2s — Sequence repeats with rapid rings
- *   3.0s — Final shockwave expands to fill
- *   3.4s — Ripple dissolve reveals page
+ * Hand-rolled canvas 2D. Single colour palette: white particles + a
+ * single accent-blue period. No rainbow chaos. Continuity over spectacle.
  */
 
-interface Statement {
-  text: string;
-  position: "top" | "bottom" | "left" | "right";
-}
-
-const statements: Statement[] = [
-  { text: "STUDIO", position: "top" },
-  { text: "EST. 2023", position: "bottom" },
-  { text: "FIVE LIVE PRODUCTS", position: "left" },
-  { text: "ONE OPERATOR", position: "right" },
-];
-
-interface Ring {
-  radius: number;
-  maxRadius: number;
-  speed: number;
-  color: string;
+interface Particle {
+  // Current position
+  x: number;
+  y: number;
+  // Velocity
+  vx: number;
+  vy: number;
+  // Target (when forming text)
+  hx: number;
+  hy: number;
+  // Spawn position to return to when dispersing
+  bx: number;
+  by: number;
+  // Per-particle visual
   alpha: number;
-  born: number;
-  // Noise seed per ring so each looks slightly different
-  seed: number;
+  size: number;
+  // Drift offset for breathing during hold
+  driftSeed: number;
 }
 
-const SEQUENCE_DURATION = 3600;
-const FADE_DURATION = 600;
+type Phase = "converge" | "hold" | "disperse" | "fade" | "done";
+
+// Phase timings
+const T_CONVERGE = 800;
+const T_HOLD = 1400;
+const T_DISPERSE = 800;
+const T_FADE = 600;
+// Total: 3600ms
 
 export function Preloader() {
-  const [done, setDone] = useState(false);
-  const [fading, setFading] = useState(false);
-  const [statementsVisible, setStatementsVisible] = useState(false);
-  const [nameplate, setNameplate] = useState("");
-  // Client-only random coords (avoid SSR hydration mismatch)
-  const [randomCoords, setRandomCoords] = useState({ coord: "0000", phase: "00" });
+  const [phase, setPhase] = useState<Phase>("converge");
+  const [overlayAlpha, setOverlayAlpha] = useState(1);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const ringsRef = useRef<Ring[]>([]);
-  const lastRingEmitRef = useRef(0);
-  const shockwaveRef = useRef<{ radius: number; active: boolean }>({
-    radius: 0,
-    active: false,
-  });
+  const particlesRef = useRef<Particle[]>([]);
+  const phaseStartRef = useRef(0);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setDone(true);
+      setPhase("done");
+      setOverlayAlpha(0);
       return;
     }
-
-    // Set random coords AFTER hydration so server/client match
-    setRandomCoords({
-      coord: Math.floor(Math.random() * 9999).toString().padStart(4, "0"),
-      phase: Math.floor(Math.random() * 99).toString().padStart(2, "0"),
-    });
 
     document.body.style.overflow = "hidden";
 
@@ -91,6 +78,10 @@ export function Preloader() {
     let dpr = Math.min(window.devicePixelRatio || 1, 2);
     let width = window.innerWidth;
     let height = window.innerHeight;
+    let raf = 0;
+    let currentPhase: Phase = "converge";
+    let phaseStart = performance.now();
+    let overlayCurrent = 1;
 
     function resize() {
       if (!canvas) return;
@@ -102,345 +93,214 @@ export function Preloader() {
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
       ctx?.setTransform(dpr, 0, 0, dpr, 0, 0);
+      buildParticles();
     }
+
+    function buildParticles() {
+      // Render the target word into an offscreen canvas, sample its
+      // pixels. Each lit pixel becomes a particle target.
+      const off = document.createElement("canvas");
+      off.width = Math.max(1, Math.floor(width));
+      off.height = Math.max(1, Math.floor(height));
+      const oc = off.getContext("2d");
+      if (!oc) return;
+
+      const word = "Studio.";
+      // Auto-fit font size to the viewport width
+      let fontSize = Math.min(width / 4.5, 260);
+      oc.font = `800 ${fontSize}px Archivo, system-ui, sans-serif`;
+      while (oc.measureText(word).width > width * 0.78 && fontSize > 40) {
+        fontSize -= 4;
+        oc.font = `800 ${fontSize}px Archivo, system-ui, sans-serif`;
+      }
+      const textWidth = oc.measureText(word).width;
+      const drawX = (width - textWidth) / 2;
+      const drawY = height / 2 + fontSize * 0.34;
+      oc.fillStyle = "#FFFFFF";
+      oc.fillText(word, drawX, drawY);
+
+      // Sample pixels at a step
+      const step = Math.max(4, Math.floor(fontSize / 40));
+      const data = oc.getImageData(0, 0, off.width, off.height).data;
+      const newParticles: Particle[] = [];
+
+      for (let py = 0; py < off.height; py += step) {
+        for (let px = 0; px < off.width; px += step) {
+          const idx = (py * off.width + px) * 4;
+          if (data[idx + 3] > 130) {
+            // Random spawn position somewhere far from viewport centre
+            const angle = Math.random() * Math.PI * 2;
+            const radius =
+              Math.max(width, height) * (0.7 + Math.random() * 0.5);
+            const bx = width / 2 + Math.cos(angle) * radius;
+            const by = height / 2 + Math.sin(angle) * radius;
+
+            newParticles.push({
+              x: bx,
+              y: by,
+              vx: 0,
+              vy: 0,
+              hx: px,
+              hy: py,
+              bx,
+              by,
+              alpha: 0.5 + Math.random() * 0.4,
+              size: 1.1 + Math.random() * 0.6,
+              driftSeed: Math.random() * 1000,
+            });
+          }
+        }
+      }
+      particlesRef.current = newParticles;
+    }
+
     resize();
     window.addEventListener("resize", resize);
 
-    const startTime = performance.now();
-    const cx = () => width / 2;
-    const cy = () => height / 2;
-
-    const ringPalette = [
-      "rgba(37, 99, 235, ",   // blue
-      "rgba(168, 85, 247, ",  // purple
-      "rgba(16, 185, 129, ",  // emerald
-      "rgba(250, 250, 250, ", // white highlight
-    ];
-
-    function emitRing(palette: number, speed = 0.8, maxR?: number) {
-      const r: Ring = {
-        radius: 0,
-        maxRadius: maxR ?? Math.max(width, height),
-        speed,
-        color: ringPalette[palette % ringPalette.length],
-        alpha: 1,
-        born: performance.now(),
-        seed: Math.random() * 1000,
-      };
-      ringsRef.current.push(r);
-    }
-
-    // Schedule statements + nameplate
-    const t1 = setTimeout(() => setStatementsVisible(true), 1100);
-    const t2 = setTimeout(() => {
-      const target = "STUDIO · GIOVANNI SIZINO · 2026";
-      let i = 0;
-      const typeId = setInterval(() => {
-        setNameplate(target.slice(0, i + 1));
-        i++;
-        if (i >= target.length) clearInterval(typeId);
-      }, 26);
-    }, 700);
-
-    // Schedule shockwave at end
-    const t3 = setTimeout(() => {
-      shockwaveRef.current.active = true;
-    }, SEQUENCE_DURATION - 600);
-
-    // Schedule dismiss
-    const t4 = setTimeout(() => {
-      setFading(true);
-      setTimeout(() => {
-        setDone(true);
-        document.body.style.overflow = "";
-      }, FADE_DURATION);
-    }, SEQUENCE_DURATION);
-
-    let raf = 0;
-
-    function drawGrid(elapsed: number) {
-      const gridAlpha = Math.min(0.18, elapsed / 800 * 0.18);
-      ctx!.strokeStyle = `rgba(250, 250, 250, ${gridAlpha * 0.3})`;
-      ctx!.lineWidth = 0.5;
-      const step = 60;
-      for (let x = (cx() % step); x < width; x += step) {
-        ctx!.beginPath();
-        ctx!.moveTo(x, 0);
-        ctx!.lineTo(x, height);
-        ctx!.stroke();
-      }
-      for (let y = (cy() % step); y < height; y += step) {
-        ctx!.beginPath();
-        ctx!.moveTo(0, y);
-        ctx!.lineTo(width, y);
-        ctx!.stroke();
-      }
-
-      // Concentric reference circles
-      ctx!.strokeStyle = `rgba(250, 250, 250, ${gridAlpha * 0.4})`;
-      for (let r = 100; r < Math.max(width, height); r += 120) {
-        ctx!.beginPath();
-        ctx!.arc(cx(), cy(), r, 0, Math.PI * 2);
-        ctx!.stroke();
-      }
-
-      // Crosshair
-      ctx!.strokeStyle = `rgba(37, 99, 235, ${gridAlpha * 1.4})`;
-      ctx!.lineWidth = 0.6;
-      ctx!.beginPath();
-      ctx!.moveTo(cx() - 20, cy());
-      ctx!.lineTo(cx() + 20, cy());
-      ctx!.moveTo(cx(), cy() - 20);
-      ctx!.lineTo(cx(), cy() + 20);
-      ctx!.stroke();
-    }
-
-    function drawCentralPulse(elapsed: number) {
-      // Breathing dot at the centre — pulses 0..1 every 1200ms
-      const pulse = (Math.sin(elapsed / 600) + 1) / 2;
-      const rad = 4 + pulse * 3;
-
-      // Outer glow
-      const grad = ctx!.createRadialGradient(cx(), cy(), 0, cx(), cy(), 24);
-      grad.addColorStop(0, "rgba(37, 99, 235, 0.6)");
-      grad.addColorStop(1, "rgba(37, 99, 235, 0)");
-      ctx!.fillStyle = grad;
-      ctx!.beginPath();
-      ctx!.arc(cx(), cy(), 24, 0, Math.PI * 2);
-      ctx!.fill();
-
-      ctx!.fillStyle = "#FAFAFA";
-      ctx!.beginPath();
-      ctx!.arc(cx(), cy(), rad, 0, Math.PI * 2);
-      ctx!.fill();
-    }
-
-    function drawRing(r: Ring) {
-      // Ring lifetime
-      const age = (performance.now() - r.born) / 1000;
-      r.radius = age * 220 * r.speed;
-      r.alpha = Math.max(0, 1 - r.radius / r.maxRadius);
-
-      if (r.radius < 1 || r.alpha < 0.01) return;
-
-      // Wobbly ring — 80 sample points around the circle, each
-      // displaced by deterministic noise based on angle + seed.
-      ctx!.beginPath();
-      const segments = 80;
-      const wobble = 6;
-      for (let i = 0; i <= segments; i++) {
-        const a = (i / segments) * Math.PI * 2;
-        const n =
-          Math.sin(a * 5 + r.seed) * 0.6 +
-          Math.sin(a * 11 - r.seed * 0.7) * 0.3 +
-          Math.cos(a * 17 + r.seed * 0.4) * 0.1;
-        const rad = r.radius + n * wobble;
-        const x = cx() + Math.cos(a) * rad;
-        const y = cy() + Math.sin(a) * rad;
-        if (i === 0) ctx!.moveTo(x, y);
-        else ctx!.lineTo(x, y);
-      }
-      ctx!.strokeStyle = `${r.color}${r.alpha * 0.85})`;
-      ctx!.lineWidth = 1.4;
-      ctx!.stroke();
-
-      // Inner faint companion line (offset by 6px) for that "echo" feel
-      ctx!.beginPath();
-      for (let i = 0; i <= segments; i++) {
-        const a = (i / segments) * Math.PI * 2;
-        const n =
-          Math.sin(a * 5 + r.seed) * 0.6 +
-          Math.sin(a * 11 - r.seed * 0.7) * 0.3;
-        const rad = r.radius - 6 + n * wobble * 0.5;
-        const x = cx() + Math.cos(a) * rad;
-        const y = cy() + Math.sin(a) * rad;
-        if (i === 0) ctx!.moveTo(x, y);
-        else ctx!.lineTo(x, y);
-      }
-      ctx!.strokeStyle = `${r.color}${r.alpha * 0.4})`;
-      ctx!.lineWidth = 0.6;
-      ctx!.stroke();
-    }
-
-    function drawShockwave(elapsed: number) {
-      // Final fill — a HUGE distorted ring that consumes everything
-      if (!shockwaveRef.current.active) return;
-      const swElapsed = elapsed - (SEQUENCE_DURATION - 600);
-      const t = Math.min(swElapsed / 600, 1);
-      shockwaveRef.current.radius = t * Math.max(width, height) * 1.2;
-
-      const grad = ctx!.createRadialGradient(
-        cx(),
-        cy(),
-        Math.max(0, shockwaveRef.current.radius - 60),
-        cx(),
-        cy(),
-        shockwaveRef.current.radius
-      );
-      grad.addColorStop(0, "rgba(250, 250, 250, 0)");
-      grad.addColorStop(0.5, "rgba(37, 99, 235, 0.4)");
-      grad.addColorStop(1, "rgba(250, 250, 250, 0)");
-
-      ctx!.beginPath();
-      const segments = 96;
-      for (let i = 0; i <= segments; i++) {
-        const a = (i / segments) * Math.PI * 2;
-        const n =
-          Math.sin(a * 7 + elapsed / 400) * 0.5 +
-          Math.cos(a * 13 - elapsed / 300) * 0.3;
-        const rad = shockwaveRef.current.radius + n * 24;
-        const x = cx() + Math.cos(a) * rad;
-        const y = cy() + Math.sin(a) * rad;
-        if (i === 0) ctx!.moveTo(x, y);
-        else ctx!.lineTo(x, y);
-      }
-      ctx!.strokeStyle = grad;
-      ctx!.lineWidth = 24;
-      ctx!.stroke();
+    function setPhaseInternal(p: Phase) {
+      currentPhase = p;
+      phaseStart = performance.now();
+      setPhase(p);
+      phaseStartRef.current = phaseStart;
     }
 
     function frame() {
       if (!ctx) return;
-      const elapsed = performance.now() - startTime;
+      const now = performance.now();
+      const elapsed = now - phaseStart;
 
-      // Trail-fade
+      // Slower trail-fade for soft motion blur
       ctx.fillStyle = "rgba(10, 10, 11, 0.22)";
       ctx.fillRect(0, 0, width, height);
 
-      drawGrid(elapsed);
-      drawCentralPulse(elapsed);
+      const parts = particlesRef.current;
 
-      // Emit rings at variable cadence
-      const emitInterval = elapsed > 1800 ? 220 : 360;
-      if (performance.now() - lastRingEmitRef.current > emitInterval) {
-        const palette = Math.floor(elapsed / 360) % 3;
-        const speed = elapsed > 1800 ? 1.1 : 0.85;
-        emitRing(palette, speed);
-        lastRingEmitRef.current = performance.now();
+      if (currentPhase === "converge") {
+        const t = Math.min(elapsed / T_CONVERGE, 1);
+        const eased = 1 - Math.pow(1 - t, 3);
+        for (const p of parts) {
+          // Lerp from base toward home target with easing
+          p.x = p.bx + (p.hx - p.bx) * eased;
+          p.y = p.by + (p.hy - p.by) * eased;
+        }
+        if (t >= 1) setPhaseInternal("hold");
+      } else if (currentPhase === "hold") {
+        // Particles gently breathe around their home position
+        const breath = Math.sin(elapsed / 350) * 0.6;
+        for (const p of parts) {
+          p.x = p.hx + Math.sin(elapsed / 600 + p.driftSeed) * breath;
+          p.y =
+            p.hy + Math.cos(elapsed / 750 + p.driftSeed * 0.7) * breath;
+        }
+        if (elapsed > T_HOLD) setPhaseInternal("disperse");
+      } else if (currentPhase === "disperse") {
+        const t = Math.min(elapsed / T_DISPERSE, 1);
+        const eased = t * t;
+        for (const p of parts) {
+          // Lerp outward — but to a NEW random outside-viewport target so
+          // it feels like dispersion, not retract
+          if (eased === 0) continue;
+          const dirX = p.hx - width / 2;
+          const dirY = p.hy - height / 2;
+          const len = Math.sqrt(dirX * dirX + dirY * dirY) || 1;
+          const outX =
+            width / 2 + (dirX / len) * Math.max(width, height) * 1.1;
+          const outY =
+            height / 2 + (dirY / len) * Math.max(width, height) * 1.1;
+          p.x = p.hx + (outX - p.hx) * eased;
+          p.y = p.hy + (outY - p.hy) * eased;
+        }
+        if (t >= 1) setPhaseInternal("fade");
+      } else if (currentPhase === "fade") {
+        const t = Math.min(elapsed / T_FADE, 1);
+        overlayCurrent = 1 - t;
+        setOverlayAlpha(overlayCurrent);
+        if (t >= 1) {
+          setPhaseInternal("done");
+          document.body.style.overflow = "";
+          return;
+        }
       }
 
-      // Update + draw rings
-      ringsRef.current = ringsRef.current.filter((r) => r.alpha > 0.01);
-      for (const r of ringsRef.current) {
-        drawRing(r);
+      // Draw particles
+      for (const p of parts) {
+        // Fade out particles as they leave during disperse
+        let alpha = p.alpha;
+        if (currentPhase === "disperse") {
+          const t = elapsed / T_DISPERSE;
+          alpha = p.alpha * (1 - t * 0.8);
+        }
+        if (alpha <= 0.02) continue;
+        ctx.fillStyle = `rgba(250, 250, 250, ${alpha})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
       }
 
-      drawShockwave(elapsed);
+      // Tint the period (the last 6% of x in the formed text region) accent blue
+      // by re-painting particles whose home x is in the rightmost band
+      if (currentPhase === "hold" || currentPhase === "converge") {
+        let maxHx = 0;
+        for (const p of parts) if (p.hx > maxHx) maxHx = p.hx;
+        const dotThreshold = maxHx - 30; // last ~30px = the period
+        for (const p of parts) {
+          if (p.hx > dotThreshold) {
+            ctx.fillStyle = "rgba(37, 99, 235, 0.9)";
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size + 0.4, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+      }
 
       raf = requestAnimationFrame(frame);
     }
     raf = requestAnimationFrame(frame);
 
     return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-      clearTimeout(t3);
-      clearTimeout(t4);
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
       document.body.style.overflow = "";
     };
   }, []);
 
-  if (done) return null;
+  if (phase === "done") return null;
 
   return (
     <div
-      className="fixed inset-0 z-[100] bg-bg pointer-events-auto overflow-hidden"
+      className="fixed inset-0 z-[100] pointer-events-auto overflow-hidden"
       style={{
-        opacity: fading ? 0 : 1,
-        transition: fading
-          ? `opacity ${FADE_DURATION}ms cubic-bezier(0.4, 0, 0.2, 1)`
-          : undefined,
+        backgroundColor: `rgba(10, 10, 11, ${overlayAlpha})`,
+        opacity: overlayAlpha,
+        transition: undefined,
       }}
       aria-hidden="true"
     >
-      {/* Echo canvas */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full pointer-events-none"
       />
 
-      {/* Top tag */}
+      {/* Top-left tag — small, on-brand, no flashy gradient */}
       <div className="absolute top-6 left-6 md:top-8 md:left-10 flex items-center gap-2.5 z-10">
         <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
         <span className="font-mono text-[10px] md:text-[11px] tracking-[0.3em] uppercase text-text-secondary">
-          calibrating field
+          coming into focus
         </span>
       </div>
 
-      {/* Top-right status with scrolling values */}
-      <div className="absolute top-6 right-6 md:top-8 md:right-10 z-10 text-right">
-        <div className="font-mono text-[10px] md:text-[11px] tracking-[0.25em] uppercase text-text-tertiary mb-1">
-          <span className="text-accent">›</span> sequence 01
-        </div>
-        <div className="font-mono text-[9px] tracking-[0.2em] uppercase text-text-tertiary tabular-nums">
-          coord {randomCoords.coord} · phase {randomCoords.phase}
-        </div>
-      </div>
-
-      {/* Cardinal statements appearing as rings pass */}
-      {statements.map((s) => {
-        const baseStyle: React.CSSProperties = {
-          opacity: statementsVisible ? 1 : 0,
-          transition:
-            "opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1)",
-          transitionDelay:
-            s.position === "top"
-              ? "0ms"
-              : s.position === "right"
-                ? "150ms"
-                : s.position === "bottom"
-                  ? "300ms"
-                  : "450ms",
-        };
-
-        let pos: React.CSSProperties = {};
-        let translate = "";
-        if (s.position === "top") {
-          pos = { top: "18%", left: "50%" };
-          translate = statementsVisible
-            ? "translate(-50%, 0)"
-            : "translate(-50%, -16px)";
-        } else if (s.position === "bottom") {
-          pos = { bottom: "22%", left: "50%" };
-          translate = statementsVisible
-            ? "translate(-50%, 0)"
-            : "translate(-50%, 16px)";
-        } else if (s.position === "left") {
-          pos = { top: "50%", left: "9%" };
-          translate = statementsVisible
-            ? "translate(0, -50%)"
-            : "translate(-16px, -50%)";
-        } else {
-          pos = { top: "50%", right: "9%" };
-          translate = statementsVisible
-            ? "translate(0, -50%)"
-            : "translate(16px, -50%)";
-        }
-
-        return (
-          <div
-            key={s.position}
-            className="absolute z-10 font-mono text-[10px] md:text-[11px] tracking-[0.3em] uppercase text-text-secondary"
-            style={{
-              ...baseStyle,
-              ...pos,
-              transform: translate,
-            }}
-          >
-            <span className="text-accent mr-2">›</span>
-            {s.text}
-          </div>
-        );
-      })}
-
-      {/* Bottom-center nameplate that types out */}
-      <div className="absolute bottom-8 md:bottom-10 left-1/2 -translate-x-1/2 z-10 text-center">
-        <div className="font-mono text-[11px] md:text-[12px] tracking-[0.3em] uppercase text-text-primary tabular-nums">
-          {nameplate}
-          <span className="preloader-cursor inline-block w-[10px] ml-1 bg-accent" style={{ height: "1em", verticalAlign: "middle" }} />
-        </div>
+      {/* Bottom-left phase label */}
+      <div className="absolute bottom-6 left-6 md:bottom-8 md:left-10 z-10">
+        <span className="font-mono text-[10px] md:text-[11px] tracking-[0.3em] uppercase text-text-tertiary">
+          <span className="text-accent">›</span>{" "}
+          {phase === "converge"
+            ? "assembling"
+            : phase === "hold"
+              ? "online"
+              : phase === "disperse"
+                ? "releasing"
+                : "ready"}
+        </span>
       </div>
     </div>
   );
