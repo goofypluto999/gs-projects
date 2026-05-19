@@ -441,6 +441,20 @@
   }
 }
 
+/* Mobile menu item reveal — translate + fade. The transitionDelay
+   ladder is set inline per item; this just holds the start/end states
+   so the React state flip animates instead of snapping. */
+.mobile-menu-item {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 400ms cubic-bezier(0.16, 1, 0.3, 1),
+              transform 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.mobile-menu-item.is-open {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* TechMarquee — horizontal scrolling tech-stack strip. The wrapping
    .group also pauses the animation on hover via a CSS-only hook.
    Name avoids `animate-*` prefix since Tailwind v4 reserves that

@@ -111,36 +111,59 @@ export function Navigation() {
         </div>
       </nav>
 
-      {mobileOpen && (
-        <div className="fixed inset-0 z-30 bg-bg/98 pt-20">
-          <div className="flex flex-col items-start px-6 gap-7">
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={() => setMobileOpen(false)}
-                className="font-heading text-4xl font-800 text-text-primary cursor-pointer tracking-tight py-1 inline-flex items-center min-h-11"
-              >
-                {link.label}
-              </a>
-            ))}
-            <div className="pt-6">
-              <Socials />
-            </div>
-            <div className="absolute bottom-12 left-6 right-6 pt-6 border-t border-border">
-              <p className="text-xs text-text-tertiary leading-relaxed">
-                Reach out anytime —
-              </p>
-              <a
-                href="mailto:giovanni.sizino.ennes@hotmail.co.uk"
-                className="block mt-2 text-sm text-text-secondary hover:text-text-primary active:text-text-primary transition-colors duration-150 py-3 min-h-11 inline-flex items-center"
-              >
-                giovanni.sizino.ennes@hotmail.co.uk
-              </a>
-            </div>
+      {/* Mobile menu — backdrop is always mounted but pointer-events
+          + opacity swap on `mobileOpen` so the fade is smooth (~200ms)
+          without the framer-motion unmount race that leaves a stale
+          0-opacity overlay blocking taps on the page beneath it. The
+          staggered link reveal is handled by a CSS class hook that
+          animates only when [data-menu-open="true"]. */}
+      <div
+        data-menu-open={mobileOpen ? "true" : "false"}
+        aria-hidden={!mobileOpen}
+        className={`fixed inset-0 z-30 bg-bg/98 backdrop-blur-xl pt-20 transition-opacity duration-200 ease-out ${
+          mobileOpen
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
+        }`}
+      >
+        <div className="flex flex-col items-start px-6 gap-7">
+          {navLinks.map((link, i) => (
+            <a
+              key={link.href}
+              href={link.href}
+              onClick={() => setMobileOpen(false)}
+              style={{ transitionDelay: mobileOpen ? `${80 + i * 50}ms` : "0ms" }}
+              className={`mobile-menu-item font-heading text-4xl font-800 text-text-primary cursor-pointer tracking-tight py-1 inline-flex items-center min-h-11 ${
+                mobileOpen ? "is-open" : ""
+              }`}
+            >
+              {link.label}
+            </a>
+          ))}
+          <div
+            style={{ transitionDelay: mobileOpen ? "280ms" : "0ms" }}
+            className={`mobile-menu-item pt-6 ${mobileOpen ? "is-open" : ""}`}
+          >
+            <Socials />
+          </div>
+          <div
+            style={{ transitionDelay: mobileOpen ? "360ms" : "0ms" }}
+            className={`mobile-menu-item absolute bottom-12 left-6 right-6 pt-6 border-t border-border ${
+              mobileOpen ? "is-open" : ""
+            }`}
+          >
+            <p className="text-xs text-text-tertiary leading-relaxed">
+              Reach out anytime —
+            </p>
+            <a
+              href="mailto:giovanni.sizino.ennes@hotmail.co.uk"
+              className="block mt-2 text-sm text-text-secondary hover:text-text-primary active:text-text-primary transition-colors duration-150 py-3 min-h-11 inline-flex items-center"
+            >
+              giovanni.sizino.ennes@hotmail.co.uk
+            </a>
           </div>
         </div>
-      )}
+      </div>
     </>
   );
 }
