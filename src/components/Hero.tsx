@@ -202,7 +202,7 @@ export function Hero() {
         <h1
           ref={nameRef}
           className="lg:hidden font-heading leading-[0.95] tracking-tight text-text-primary"
-          style={{ fontSize: "clamp(2.5rem, 8vw, 4.5rem)" }}
+          style={{ fontSize: "clamp(2.75rem, 9vw, 4.5rem)" }}
         >
           <span data-word className="font-800">
             Giovanni
@@ -235,7 +235,7 @@ export function Hero() {
         {/* Subtitle */}
         <p
           ref={subtitleRef}
-          className="mt-8 font-body text-[clamp(1.05rem,1.6vw,1.3rem)] text-text-secondary leading-relaxed max-w-[620px] opacity-0"
+          className="mt-7 font-body text-[clamp(1.05rem,1.6vw,1.3rem)] text-text-secondary leading-[1.5] max-w-[620px] opacity-0"
           style={{ transform: "translateY(12px)" }}
         >
           I ship digital products that do one specific job well. Five live tools.
