@@ -10,6 +10,7 @@ import { SectionRail } from "@/components/SectionRail";
 import { CursorTrail } from "@/components/CursorTrail";
 import { RevealFailsafe } from "@/components/RevealFailsafe";
 import { StickyContactCTA } from "@/components/StickyContactCTA";
+import { StructuredData } from "@/components/StructuredData";
 import "./globals.css";
 
 // next/font self-hosts the fonts and inlines the critical CSS — no FOUT,
@@ -62,6 +63,9 @@ export default function RootLayout({
       lang="en"
       className={`dark ${archivo.variable} ${spaceGrotesk.variable}`}
     >
+      <head>
+        <StructuredData />
+      </head>
       <body className="min-h-screen bg-bg text-text-primary antialiased">
         <Preloader />
         <SmoothScroll />
