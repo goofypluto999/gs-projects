@@ -57,7 +57,7 @@ export function KeyboardHint() {
 
   return (
     <div
-      className={`fixed bottom-6 left-6 z-30 inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-border bg-surface/80 backdrop-blur-md text-text-tertiary text-[11px] transition-all duration-500 ${
+      className={`keyboard-hint fixed bottom-6 left-6 z-30 inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-border bg-surface/80 backdrop-blur-md text-text-tertiary text-[11px] transition-all duration-500 ${
         visible
           ? "opacity-100 translate-y-0"
           : "opacity-0 translate-y-3 pointer-events-none"

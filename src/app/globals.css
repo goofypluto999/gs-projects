@@ -32,6 +32,13 @@
     text-rendering: optimizeLegibility;
   }
 
+  /* iPhone notch / dynamic island / home indicator awareness.
+     Pad the body's bottom by the home indicator gutter so fixed UI
+     (BackToTop, mobile menu, etc.) doesn't get covered. */
+  body {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
   /* Lenis class-driven CSS — added/removed on <html> by Lenis */
   html.lenis,
   html.lenis body {
@@ -71,6 +78,13 @@
   /* Smooth fade for hover targets */
   a, button {
     -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Hard-hide keyboard-only affordances on touch devices */
+  @media (hover: none) or (pointer: coarse) {
+    .keyboard-hint {
+      display: none !important;
+    }
   }
 
   /* Active tap states — touch devices don't fire :hover, so :active is
