@@ -5,14 +5,18 @@ import { useEffect, useState } from "react";
 interface Section {
   id: string;
   label: string;
+  /** Per-section accent — matches the editorial palette used in
+   *  BrandMarquee + ProjectCard accents so the rail reads as the
+   *  page's table-of-contents in the same colour story. */
+  accent: string;
 }
 
 const sections: Section[] = [
-  { id: "top", label: "Intro" },
-  { id: "projects", label: "Work" },
-  { id: "process", label: "Process" },
-  { id: "about", label: "Who" },
-  { id: "contact", label: "Talk" },
+  { id: "top", label: "Intro", accent: "#2563EB" },
+  { id: "projects", label: "Work", accent: "#6366F1" },
+  { id: "process", label: "Process", accent: "#F97316" },
+  { id: "about", label: "Who", accent: "#10B981" },
+  { id: "contact", label: "Talk", accent: "#EF4444" },
 ];
 
 /**
@@ -72,11 +76,13 @@ export function SectionRail() {
               {s.label}
             </span>
             <span
-              className={`block rounded-full transition-all duration-300 ${
-                isActive
-                  ? "w-6 h-1 bg-accent"
-                  : "w-1 h-1 bg-text-tertiary/40 group-hover:bg-text-secondary"
-              }`}
+              className="block rounded-full transition-all duration-300"
+              style={{
+                width: isActive ? "24px" : "4px",
+                height: "4px",
+                backgroundColor: isActive ? s.accent : "rgba(113, 113, 122, 0.4)",
+                boxShadow: isActive ? `0 0 8px ${s.accent}66` : "none",
+              }}
             />
           </a>
         );
