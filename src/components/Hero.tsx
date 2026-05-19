@@ -365,7 +365,7 @@ export function Hero() {
               <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-accent" />
             </span>
             <span className="text-[11px] tracking-[0.2em] uppercase text-text-tertiary">
-              Last deploy · {shipLabel}
+              Shipped {shipLabel}
             </span>
           </span>
         </div>

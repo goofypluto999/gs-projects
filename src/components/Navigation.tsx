@@ -52,7 +52,7 @@ export function Navigation() {
       <nav
         className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
           scrolled || mobileOpen
-            ? "bg-bg/85 backdrop-blur-xl border-b border-border"
+            ? "bg-bg/85 backdrop-blur-xl border-b border-border shadow-[0_8px_24px_-12px_rgba(0,0,0,0.5)]"
             : "bg-transparent"
         }`}
       >
