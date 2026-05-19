@@ -27,10 +27,17 @@ export function ScrollProgress() {
       aria-hidden="true"
     >
       <div
-        className="h-full bg-accent origin-left"
+        className="h-full origin-left"
         style={{
+          // Multi-accent gradient across the 5 product colours. As the
+          // user scrolls the bar fills left-to-right, fading from
+          // Foresay indigo through the AdsForge red — the same palette
+          // the marquee, spec cards, and per-card accents use.
+          background:
+            "linear-gradient(90deg, #6366F1 0%, #2563EB 22%, #A855F7 44%, #F59E0B 66%, #10B981 84%, #EF4444 100%)",
           transform: `scaleX(${progress})`,
           transition: "transform 60ms linear",
+          boxShadow: "0 0 6px rgba(37, 99, 235, 0.35)",
         }}
       />
     </div>
