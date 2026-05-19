@@ -161,27 +161,27 @@ export function MobileCarousel() {
         ))}
       </div>
 
-      {/* Dot pagination */}
-      <div className="px-6 mt-5 flex items-center justify-center gap-1.5">
+      {/* Dot pagination — invisible 44x44 hit zone wraps the visible pill so
+          tap targets meet Apple HIG without making the pills themselves huge. */}
+      <div className="px-6 mt-3 flex items-center justify-center gap-0.5">
         {projects.map((p, i) => (
           <button
             key={p.id}
             onClick={() => scrollToIndex(i)}
             aria-label={`Go to ${p.name}`}
-            className="h-1 rounded-full transition-all duration-300"
-            style={{
-              width: i === active ? 24 : 6,
-              backgroundColor: i === active ? p.accent : "var(--color-border)",
-            }}
-          />
+            aria-current={i === active ? "true" : undefined}
+            className="inline-flex items-center justify-center min-w-11 min-h-11 px-1 group cursor-pointer"
+          >
+            <span
+              className="block h-[3px] rounded-full transition-all duration-300"
+              style={{
+                width: i === active ? 26 : 8,
+                backgroundColor: i === active ? p.accent : "var(--color-border)",
+              }}
+            />
+          </button>
         ))}
       </div>
-
-      <style jsx>{`
-        .mobile-snap-rail::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
     </section>
   );
 }

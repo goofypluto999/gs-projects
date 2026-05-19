@@ -59,7 +59,7 @@ export function Navigation() {
         <div className="mx-auto max-w-[1280px] px-6 h-14 flex items-center justify-between">
           <a
             href="#"
-            className="flex items-center gap-2.5 cursor-pointer group"
+            className="inline-flex items-center gap-2.5 min-w-11 min-h-11 -ml-1 px-1 cursor-pointer group"
             aria-label="Home"
           >
             <span className="relative transition-transform duration-200 group-hover:scale-105">

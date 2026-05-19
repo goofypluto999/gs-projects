@@ -60,10 +60,7 @@ export default function RootLayout({
       lang="en"
       className={`dark ${archivo.variable} ${spaceGrotesk.variable}`}
     >
-      <body
-        className="min-h-screen bg-bg text-text-primary antialiased"
-        style={{ fontFamily: "var(--font-space-grotesk), system-ui, sans-serif" }}
-      >
+      <body className="min-h-screen bg-bg text-text-primary antialiased">
         <Preloader />
         <SmoothScroll />
         <ScrollProgress />

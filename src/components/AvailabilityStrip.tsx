@@ -110,7 +110,7 @@ export function AvailabilityStrip() {
 
         <a
           href="#contact"
-          className="group inline-flex items-center gap-2 text-[12px] text-accent hover:text-accent-hover transition-colors duration-150 cursor-pointer whitespace-nowrap"
+          className="group inline-flex items-center gap-2 min-h-11 py-2 text-[12px] text-accent hover:text-accent-hover transition-colors duration-150 cursor-pointer whitespace-nowrap"
         >
           Make an inquiry
           <span className="transition-transform duration-200 group-hover:translate-x-0.5">

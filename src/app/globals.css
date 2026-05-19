@@ -163,6 +163,41 @@
     text-wrap: pretty;
   }
 
+  /* Hide native scrollbar on mobile snap rails (touch carousel) */
+  .mobile-snap-rail::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Footer column links — guaranteed ≥44px tap target via padding. The
+     visual rhythm reads as ~10px gap; the padding makes the whole row
+     tappable so users don't have to land on the exact 13px text. */
+  .footer-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    min-width: 44px;
+    padding: 4px 0;
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    transition: color 150ms ease;
+    cursor: pointer;
+  }
+  .footer-link:hover {
+    color: var(--color-text-primary);
+  }
+
+  /* Scroll indicator chevron — soft pulse downward */
+  .scroll-indicator-arrow {
+    animation: scroll-indicator-pulse 2s ease-in-out infinite;
+  }
+  @keyframes scroll-indicator-pulse {
+    0%, 100% { opacity: 0.4; transform: translateY(0); }
+    50% { opacity: 1; transform: translateY(4px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-indicator-arrow { animation: none; opacity: 0.7; }
+  }
+
   /* Slow Ken Burns zoom on static screenshots — applied to PreviewImage img */
   .ken-burns {
     animation: ken-burns 24s ease-in-out infinite alternate;

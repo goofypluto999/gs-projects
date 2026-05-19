@@ -67,15 +67,15 @@ export function Footer() {
         {/* Top row: sitemap + products + credits */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-20">
           <div>
-            <div className="text-[10px] uppercase tracking-[0.3em] text-text-tertiary mb-4">
+            <div className="text-[10px] uppercase tracking-[0.3em] text-text-tertiary mb-2">
               Sitemap
             </div>
-            <ul className="space-y-2.5">
+            <ul>
               {sitemap.map((item) => (
                 <li key={item.label}>
                   <a
                     href={item.href}
-                    className="text-[13px] text-text-secondary hover:text-text-primary transition-colors duration-150 cursor-pointer"
+                    className="footer-link"
                   >
                     {item.label}
                   </a>
@@ -85,17 +85,17 @@ export function Footer() {
           </div>
 
           <div>
-            <div className="text-[10px] uppercase tracking-[0.3em] text-text-tertiary mb-4">
+            <div className="text-[10px] uppercase tracking-[0.3em] text-text-tertiary mb-2">
               Products
             </div>
-            <ul className="space-y-2.5">
+            <ul>
               {productLinks.map((item) => (
                 <li key={item.label}>
                   <a
                     href={item.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[13px] text-text-secondary hover:text-text-primary transition-colors duration-150 cursor-pointer"
+                    className="footer-link"
                   >
                     {item.label}
                   </a>
@@ -105,14 +105,14 @@ export function Footer() {
           </div>
 
           <div>
-            <div className="text-[10px] uppercase tracking-[0.3em] text-text-tertiary mb-4">
+            <div className="text-[10px] uppercase tracking-[0.3em] text-text-tertiary mb-2">
               Reach
             </div>
-            <ul className="space-y-2.5">
+            <ul>
               <li>
                 <a
                   href="mailto:giovanni.sizino.ennes@hotmail.co.uk"
-                  className="text-[13px] text-text-secondary hover:text-text-primary transition-colors duration-150 cursor-pointer"
+                  className="footer-link"
                 >
                   Email
                 </a>
@@ -122,7 +122,7 @@ export function Footer() {
                   href="https://github.com/goofypluto999"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[13px] text-text-secondary hover:text-text-primary transition-colors duration-150 cursor-pointer"
+                  className="footer-link"
                 >
                   GitHub
                 </a>
@@ -132,7 +132,7 @@ export function Footer() {
                   href="https://www.linkedin.com/in/giovannisizino/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[13px] text-text-secondary hover:text-text-primary transition-colors duration-150 cursor-pointer"
+                  className="footer-link"
                 >
                   LinkedIn
                 </a>
@@ -142,7 +142,7 @@ export function Footer() {
                   href="https://www.instagram.com/g.sizinoennes/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[13px] text-text-secondary hover:text-text-primary transition-colors duration-150 cursor-pointer"
+                  className="footer-link"
                 >
                   Instagram
                 </a>

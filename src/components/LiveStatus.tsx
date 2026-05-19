@@ -8,7 +8,7 @@ export function LiveStatus() {
   return (
     <a
       href="#projects"
-      className="group inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-surface/40 backdrop-blur-sm hover:border-border-hover transition-colors duration-200 cursor-pointer"
+      className="group inline-flex items-center gap-2 min-h-11 px-3.5 py-2 rounded-full border border-border bg-surface/40 backdrop-blur-sm hover:border-border-hover transition-colors duration-200 cursor-pointer"
     >
       <span className="relative flex h-1.5 w-1.5">
         <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
