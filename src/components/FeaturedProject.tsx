@@ -62,16 +62,6 @@ export function FeaturedProject({ project, onSelect }: FeaturedProjectProps) {
       className="featured-card relative group cursor-pointer rounded-xl overflow-hidden border border-border bg-surface transition-transform duration-300 will-change-transform"
       style={{ transformStyle: "preserve-3d" }}
     >
-      <style jsx>{`
-        .featured-card .ai-hover-rim {
-          opacity: 0;
-          transition: opacity 420ms ease;
-        }
-        .featured-card:hover .ai-hover-rim {
-          opacity: 1;
-        }
-      `}</style>
-
       {/* Apple Intelligence rim — visible on hover only. Sits above
           the regular BorderBeam for a "premium awakens" feel. */}
       <div className="ai-hover-rim absolute inset-0 pointer-events-none rounded-xl overflow-hidden z-[2]">

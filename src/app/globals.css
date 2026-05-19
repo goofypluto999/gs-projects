@@ -326,3 +326,135 @@
 @media (prefers-reduced-motion: reduce) {
   .aurora-blob { animation: none; }
 }
+
+/* FeaturedProject Apple-Intelligence rim — fades in on hover only.
+   On touch devices there's no hover state so rim stays opacity 0. */
+.featured-card .ai-hover-rim {
+  opacity: 0;
+  transition: opacity 420ms ease;
+}
+.featured-card:hover .ai-hover-rim {
+  opacity: 1;
+}
+
+/* BorderBeam — tracing light that follows the rim of a container.
+   CSS-var driven so per-instance size/duration/colour stay on the
+   element and one shared rule + keyframe handles every render. */
+.border-beam-dot {
+  position: absolute;
+  width: var(--bb-size, 80px);
+  height: var(--bb-size, 80px);
+  background: radial-gradient(circle, var(--bb-color, rgba(37, 99, 235, 0.5)) 0%, transparent 70%);
+  animation: border-beam var(--bb-duration, 3s) linear infinite;
+  top: calc(-1 * var(--bb-half, 40px));
+  left: calc(-1 * var(--bb-half, 40px));
+  pointer-events: none;
+}
+@keyframes border-beam {
+  0% {
+    top: calc(-1 * var(--bb-half, 40px));
+    left: calc(-1 * var(--bb-half, 40px));
+  }
+  25% {
+    top: calc(-1 * var(--bb-half, 40px));
+    left: calc(100% - var(--bb-half, 40px));
+  }
+  50% {
+    top: calc(100% - var(--bb-half, 40px));
+    left: calc(100% - var(--bb-half, 40px));
+  }
+  75% {
+    top: calc(100% - var(--bb-half, 40px));
+    left: calc(-1 * var(--bb-half, 40px));
+  }
+  100% {
+    top: calc(-1 * var(--bb-half, 40px));
+    left: calc(-1 * var(--bb-half, 40px));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .border-beam-dot { animation: none; }
+}
+
+/* AppleIntelligenceBorder — iOS-18-summon style conic rim + glow.
+   Uses Houdini @property so the conic-gradient angle can animate
+   smoothly (without @property, the angle would jump on each frame). */
+@property --ai-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes ai-rotate {
+  to {
+    --ai-angle: 360deg;
+  }
+}
+.ai-border,
+.ai-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--ai-radius, 0px);
+  pointer-events: none;
+}
+.ai-border {
+  padding: var(--ai-thickness, 2px);
+  background: conic-gradient(
+    from var(--ai-angle),
+    #2563eb 0deg,
+    #6366f1 60deg,
+    #a855f7 120deg,
+    #ec4899 180deg,
+    #f97316 240deg,
+    #6366f1 300deg,
+    #2563eb 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: ai-rotate var(--ai-speed, 4s) linear infinite;
+  opacity: var(--ai-opacity, 1);
+}
+.ai-glow {
+  background: conic-gradient(
+    from var(--ai-angle),
+    #2563eb 0deg,
+    #6366f1 60deg,
+    #a855f7 120deg,
+    #ec4899 180deg,
+    #f97316 240deg,
+    #6366f1 300deg,
+    #2563eb 360deg
+  );
+  filter: blur(var(--ai-blur, 36px));
+  opacity: 0.55;
+  animation: ai-rotate var(--ai-speed, 4s) linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ai-border,
+  .ai-glow {
+    animation: none;
+  }
+}
+
+/* TechMarquee — horizontal scrolling tech-stack strip. The wrapping
+   .group also pauses the animation on hover via a CSS-only hook.
+   Name avoids `animate-*` prefix since Tailwind v4 reserves that
+   namespace for theme-driven utilities. */
+@keyframes marquee-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+.marquee-track {
+  animation: marquee-scroll 55s linear infinite;
+}
+.group:hover .marquee-track {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
+}

@@ -45,7 +45,7 @@ export function TechMarquee() {
       <div className="absolute inset-y-0 right-0 w-40 z-10 bg-gradient-to-l from-bg via-bg to-transparent pointer-events-none" />
 
       <div className="relative flex group">
-        <ul className="flex animate-marquee items-center gap-6 pr-6 shrink-0">
+        <ul className="flex marquee-track items-center gap-6 pr-6 shrink-0">
           {flat.map((entry, i) => (
             <li
               key={`a-${i}`}
@@ -62,7 +62,7 @@ export function TechMarquee() {
         </ul>
         <ul
           aria-hidden="true"
-          className="flex animate-marquee items-center gap-6 pr-6 shrink-0"
+          className="flex marquee-track items-center gap-6 pr-6 shrink-0"
         >
           {flat.map((entry, i) => (
             <li
@@ -80,23 +80,6 @@ export function TechMarquee() {
         </ul>
       </div>
 
-      <style jsx>{`
-        @keyframes marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-100%); }
-        }
-        .animate-marquee {
-          animation: marquee 55s linear infinite;
-        }
-        .group:hover .animate-marquee {
-          animation-play-state: paused;
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .animate-marquee {
-            animation: none;
-          }
-        }
-      `}</style>
     </section>
   );
 }

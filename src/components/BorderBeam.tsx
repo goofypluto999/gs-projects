@@ -3,6 +3,10 @@
 /**
  * Aceternity-inspired border beam effect.
  * A small light that traces the border of a container on hover.
+ *
+ * Size, duration, and colour pass as CSS variables consumed by the
+ * shared `.border-beam-dot` rule + `@keyframes border-beam` in
+ * globals.css. Keeps styling out of every render's scope hash.
  */
 export function BorderBeam({
   duration = 3,
@@ -16,40 +20,16 @@ export function BorderBeam({
   return (
     <div className="absolute inset-0 overflow-hidden rounded-lg pointer-events-none">
       <div
-        className="absolute"
-        style={{
-          width: `${size}px`,
-          height: `${size}px`,
-          background: `radial-gradient(circle, ${color} 0%, transparent 70%)`,
-          animation: `border-beam ${duration}s linear infinite`,
-          top: "-40px",
-          left: "-40px",
-        }}
-      />
-      <style jsx>{`
-        @keyframes border-beam {
-          0% {
-            top: -${size / 2}px;
-            left: -${size / 2}px;
-          }
-          25% {
-            top: -${size / 2}px;
-            left: calc(100% - ${size / 2}px);
-          }
-          50% {
-            top: calc(100% - ${size / 2}px);
-            left: calc(100% - ${size / 2}px);
-          }
-          75% {
-            top: calc(100% - ${size / 2}px);
-            left: -${size / 2}px;
-          }
-          100% {
-            top: -${size / 2}px;
-            left: -${size / 2}px;
-          }
+        className="border-beam-dot"
+        style={
+          {
+            "--bb-size": `${size}px`,
+            "--bb-half": `${size / 2}px`,
+            "--bb-duration": `${duration}s`,
+            "--bb-color": color,
+          } as React.CSSProperties
         }
-      `}</style>
+      />
     </div>
   );
 }
