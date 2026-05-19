@@ -220,26 +220,36 @@ export function ManifestoMobile() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const ctx = gsap.context(() => {
-      const items = wrapRef.current?.querySelectorAll("[data-mbeat]");
-      if (!items?.length) return;
-      items.forEach((item) => {
-        gsap.from(item, {
-          opacity: 0,
-          y: 40,
-          duration: 0.8,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: item,
-            start: "top 80%",
-          },
+    const items = wrapRef.current?.querySelectorAll<HTMLElement>("[data-mbeat]");
+    if (!items?.length) return;
+
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Reduced motion → no reveal animation, just show everything immediately
+    if (reduce) {
+      items.forEach((item) => item.classList.add("mbeat-revealed"));
+      return;
+    }
+
+    // Pure IntersectionObserver reveal — adds .mbeat-revealed class when
+    // a beat enters view. CSS handles the fade-in. Switched off GSAP
+    // because gsap.fromTo with ScrollTrigger was setting opacity:0 inline
+    // and never firing the trigger fast enough on mobile, leaving beats
+    // permanently invisible.
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("mbeat-revealed");
+            io.unobserve(entry.target);
+          }
         });
-      });
-    });
+      },
+      { rootMargin: "0px 0px -10% 0px", threshold: 0.05 }
+    );
 
-    return () => ctx.revert();
+    items.forEach((item) => io.observe(item));
+    return () => io.disconnect();
   }, []);
 
   return (

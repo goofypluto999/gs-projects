@@ -441,6 +441,22 @@
   }
 }
 
+/* ManifestoMobile beat reveal — pure IntersectionObserver + CSS.
+   Beats start hidden (opacity 0, slight downward offset) and slide
+   up into view when the .mbeat-revealed class is added by the IO.
+   Safer than gsap.from + ScrollTrigger which left beats stuck at
+   opacity:0 on mobile in our testing. */
+[data-mbeat] {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
+              transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+[data-mbeat].mbeat-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* Mobile menu item reveal — translate + fade. The transitionDelay
    ladder is set inline per item; this just holds the start/end states
    so the React state flip animates instead of snapping. */
