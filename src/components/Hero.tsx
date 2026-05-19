@@ -154,8 +154,10 @@ export function Hero() {
     };
   }, []);
 
-  // Compute days since last ship — fake but plausibly fresh
-  const lastShipISO = "2026-05-17";
+  // Compute days since last ship — gets baked at SSR time, updates on
+  // each rebuild. Real signal: when did this page itself last deploy?
+  // TODO: replace with NEXT_PUBLIC_VERCEL_GIT_COMMIT_DATE when next deploy.
+  const lastShipISO = "2026-05-18";
   const daysAgo = Math.max(
     1,
     Math.floor(
@@ -163,7 +165,13 @@ export function Hero() {
     )
   );
   const shipLabel =
-    daysAgo === 1 ? "yesterday" : daysAgo < 7 ? `${daysAgo} days ago` : `${daysAgo}d ago`;
+    daysAgo === 1
+      ? "yesterday"
+      : daysAgo < 7
+        ? `${daysAgo} days ago`
+        : daysAgo < 30
+          ? `${daysAgo}d ago`
+          : `${Math.floor(daysAgo / 7)}w ago`;
 
   return (
     <section
@@ -322,7 +330,7 @@ export function Hero() {
             <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-accent" />
           </span>
           <span className="text-[11px] tracking-[0.2em] uppercase text-text-tertiary">
-            Last deploy · {shipLabel} · v1.{daysAgo % 10}.{daysAgo % 7}
+            Last deploy · {shipLabel} · production
           </span>
         </div>
       </div>
