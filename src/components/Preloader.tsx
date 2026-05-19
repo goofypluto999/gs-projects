@@ -222,35 +222,35 @@ export function Preloader() {
         }
       }
 
-      // Draw particles
+      // Compute period region — the rightmost band of particles is the trailing
+      // dot. Use a generous threshold so the WHOLE period reads blue, not just
+      // one stray particle.
+      let maxHx = 0;
+      let minHx = Infinity;
       for (const p of parts) {
-        // Fade out particles as they leave during disperse
+        if (p.hx > maxHx) maxHx = p.hx;
+        if (p.hx < minHx) minHx = p.hx;
+      }
+      const textWidth = maxHx - minHx;
+      // Period in Archivo ~ 4–6% of the text width at this scale. Add buffer.
+      const dotThreshold = maxHx - Math.max(40, textWidth * 0.055);
+
+      // Draw particles — period is full accent blue, everything else white
+      for (const p of parts) {
         let alpha = p.alpha;
         if (currentPhase === "disperse") {
           const t = elapsed / T_DISPERSE;
           alpha = p.alpha * (1 - t * 0.8);
         }
         if (alpha <= 0.02) continue;
-        ctx.fillStyle = `rgba(250, 250, 250, ${alpha})`;
+
+        const isPeriod = p.hx > dotThreshold;
+        ctx.fillStyle = isPeriod
+          ? `rgba(37, 99, 235, ${alpha})`
+          : `rgba(250, 250, 250, ${alpha})`;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fill();
-      }
-
-      // Tint the period (the last 6% of x in the formed text region) accent blue
-      // by re-painting particles whose home x is in the rightmost band
-      if (currentPhase === "hold" || currentPhase === "converge") {
-        let maxHx = 0;
-        for (const p of parts) if (p.hx > maxHx) maxHx = p.hx;
-        const dotThreshold = maxHx - 30; // last ~30px = the period
-        for (const p of parts) {
-          if (p.hx > dotThreshold) {
-            ctx.fillStyle = "rgba(37, 99, 235, 0.9)";
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size + 0.4, 0, Math.PI * 2);
-            ctx.fill();
-          }
-        }
       }
 
       raf = requestAnimationFrame(frame);

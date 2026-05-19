@@ -129,7 +129,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="https://www.linkedin.com/in/giovanni-sizino-ennes/"
+                  href="https://www.linkedin.com/in/giovannisizino/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[13px] text-text-secondary hover:text-text-primary transition-colors duration-150 cursor-pointer"
@@ -139,7 +139,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="https://www.instagram.com/giovannisizinoennes/"
+                  href="https://www.instagram.com/g.sizinoennes/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[13px] text-text-secondary hover:text-text-primary transition-colors duration-150 cursor-pointer"

@@ -54,7 +54,7 @@ export function Contact() {
           </div>
 
           <p className="mt-12 text-xs text-text-tertiary tracking-wider">
-            Typically reply within 24 hours · UK + Brazil time zones
+            Typically reply within 24 hours · UK time zone
           </p>
         </SectionReveal>
       </div>

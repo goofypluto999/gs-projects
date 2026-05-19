@@ -21,27 +21,27 @@ interface Quote {
 const quotes: Quote[] = [
   {
     body:
-      "We used Foresay to pressure-test a 12% price hike before the board meeting. The simulation flagged churn risk in two of our three segments — we ended up shipping a targeted 8% increase instead.",
-    attribution: "Head of Pricing",
-    context: "Subscription SaaS · early adopter",
+      "Walked through the simulation engine on a discovery call and I was sold on the premise within ten minutes. The way it lets a non-technical exec actually interrogate the model is what's missing from every research tool I've been pitched.",
+    attribution: "Head of Strategy",
+    context: "Mid-market SaaS · discovery call",
     product: "Foresay Labs",
     accent: "#6366F1",
     size: "large",
   },
   {
     body:
-      "The glass-box provenance is what sold us. Every score lets me show a stakeholder exactly why a decision is risky — the inputs, the source data, the confidence interval.",
-    attribution: "Director of Strategy",
-    context: "Retail group · early adopter",
+      "Glass-box provenance is the bit I keep coming back to. Most platforms hide the model — this is the first one I could see myself defending to a board.",
+    attribution: "Director",
+    context: "Retail group · active evaluation",
     product: "Foresay Labs",
     accent: "#6366F1",
     size: "small",
   },
   {
     body:
-      "We'd historically pay a research firm six weeks and thirty thousand pounds for a read that wasn't even actionable. Foresay gave us a stronger signal in an afternoon.",
+      "Speed hooked me. Most things I get demoed take a month to set up before there's anything to look at. Here I had a working scenario inside the call.",
     attribution: "VP Product",
-    context: "Fintech challenger · early adopter",
+    context: "Fintech challenger · introductory call",
     product: "Foresay Labs",
     accent: "#6366F1",
     size: "small",
@@ -95,10 +95,10 @@ export function Testimonials() {
     <section className="px-6 py-28 relative overflow-hidden">
       <div className="mx-auto max-w-[1280px]">
         <SectionHeader
-          eyebrow="Beta operators · in their own words"
-          title="Pulled from the early-adopter dashboard,"
-          subtitle="identifying details withheld at their request."
-          descriptor="Three real quotes. Public-launch versions will name names."
+          eyebrow="Pre-launch · interest signals"
+          title="From discovery calls and demo sessions,"
+          subtitle="paraphrased, names withheld until public launch."
+          descriptor="Inbound interest, not closed sales. The product is in active evaluation with the people quoted here."
         />
 
         <div
@@ -116,7 +116,7 @@ export function Testimonials() {
                 className="text-[10px] uppercase tracking-[0.25em]"
                 style={{ color: large.accent }}
               >
-                Featured · via {large.product}
+                Discovery call · {large.product}
               </span>
             </div>
 

@@ -124,7 +124,7 @@ export interface SocialLink {
 export const socials: SocialLink[] = [
   {
     label: "LinkedIn",
-    url: "https://www.linkedin.com/in/giovanni-sizino-ennes/",
+    url: "https://www.linkedin.com/in/giovannisizino/",
     icon: "linkedin",
   },
   {
@@ -134,7 +134,7 @@ export const socials: SocialLink[] = [
   },
   {
     label: "Instagram",
-    url: "https://www.instagram.com/giovannisizinoennes/",
+    url: "https://www.instagram.com/g.sizinoennes/",
     icon: "instagram",
   },
   {
