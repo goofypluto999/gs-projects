@@ -8,12 +8,19 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const brands = [
-  "FORESAY LABS",
-  "AIMVANTAGE",
-  "WADDA PLAY",
-  "CV MIRROR",
-  "ADSFORGE",
+interface Brand {
+  name: string;
+  /** Accent colour pulled from the project — keeps the marquee in lockstep
+   *  with each product's identity instead of all-white. */
+  accent: string;
+}
+
+const brands: Brand[] = [
+  { name: "FORESAY LABS", accent: "#6366F1" },
+  { name: "AIMVANTAGE", accent: "#F59E0B" },
+  { name: "WADDA PLAY", accent: "#A855F7" },
+  { name: "CV MIRROR", accent: "#10B981" },
+  { name: "ADSFORGE", accent: "#EF4444" },
 ];
 
 /**
@@ -108,11 +115,15 @@ export function BrandMarquee() {
           {looped.map((b, i) => (
             <span
               key={i}
-              className="font-heading font-800 leading-none tracking-tighter text-text-primary/90 hover:text-text-primary cursor-default"
-              style={{ fontSize: "clamp(2rem, 9vw, 8rem)" }}
+              className="font-heading font-800 leading-none tracking-tighter cursor-default transition-opacity duration-300 hover:opacity-90"
+              style={{
+                fontSize: "clamp(2rem, 9vw, 8rem)",
+                color: b.accent,
+                textShadow: `0 0 24px ${b.accent}40`,
+              }}
             >
-              {b}
-              <span className="text-accent">.</span>
+              {b.name}
+              <span className="text-text-primary">.</span>
             </span>
           ))}
         </div>
