@@ -185,12 +185,17 @@ export function MagneticName({
         yCursor += lineHeight - size;
       }
 
+      // Sample step branches on viewport — mobile gets coarser sampling
+      // so we don't render 3000+ particles on a small GPU. samplingStep
+      // is the prop value; we widen it for small viewports.
+      const effectiveStep = width < 768 ? Math.max(samplingStep, 5) : samplingStep;
+
       // Sample the offscreen canvas — every lit pixel above alpha
       // threshold becomes a particle with home = its raster position.
       const imageData = oc.getImageData(0, 0, width, height).data;
       const built: Particle[] = [];
-      for (let py = 0; py < height; py += samplingStep) {
-        for (let px = 0; px < width; px += samplingStep) {
+      for (let py = 0; py < height; py += effectiveStep) {
+        for (let px = 0; px < width; px += effectiveStep) {
           const idx = (py * width + px) * 4;
           const alpha = imageData[idx + 3];
           if (alpha > 128) {

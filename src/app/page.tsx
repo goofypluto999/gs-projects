@@ -13,7 +13,7 @@ import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 import { SectionDivider } from "@/components/SectionDivider";
 import { BrandMarquee } from "@/components/BrandMarquee";
-import { Manifesto } from "@/components/Manifesto";
+import { Manifesto, ManifestoMobile } from "@/components/Manifesto";
 import { DragStack } from "@/components/DragStack";
 
 /**
@@ -37,6 +37,7 @@ export default function Home() {
       <main>
         <Hero />
         <Manifesto />
+        <ManifestoMobile />
         <TechMarquee />
 
         <SectionDivider label="01 · The Work" />

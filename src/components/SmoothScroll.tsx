@@ -29,6 +29,14 @@ export function SmoothScroll() {
       return;
     }
 
+    // Native momentum scroll wins on touch devices — Lenis intercepting
+    // touch events causes jank and inertia mismatch on iOS/Android.
+    const isTouch =
+      window.matchMedia("(hover: none) or (pointer: coarse)").matches;
+    if (isTouch) {
+      return;
+    }
+
     const lenis = new Lenis({
       duration: 1.05,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),

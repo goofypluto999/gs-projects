@@ -210,3 +210,85 @@ export function Manifesto() {
     </section>
   );
 }
+
+/**
+ * Mobile variant — stacks all 4 beats vertically with smaller type and
+ * scroll-reveal fade-in. No pinning (would feel broken on touch).
+ */
+export function ManifestoMobile() {
+  const wrapRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const ctx = gsap.context(() => {
+      const items = wrapRef.current?.querySelectorAll("[data-mbeat]");
+      if (!items?.length) return;
+      items.forEach((item) => {
+        gsap.from(item, {
+          opacity: 0,
+          y: 40,
+          duration: 0.8,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: item,
+            start: "top 80%",
+          },
+        });
+      });
+    });
+
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section ref={wrapRef} className="lg:hidden px-6 py-20 bg-bg">
+      <div className="flex items-center gap-2 mb-10">
+        <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+        <span className="text-[10px] uppercase tracking-[0.3em] text-text-tertiary">
+          Manifesto
+        </span>
+      </div>
+
+      <div className="space-y-14">
+        {beats.map((b, i) => (
+          <div key={i} data-mbeat>
+            <div className="flex items-baseline gap-4 mb-4">
+              <span
+                className="font-heading text-lg font-300 italic"
+                style={{ color: b.accent }}
+              >
+                {b.kicker}
+              </span>
+              <span className="text-[9px] uppercase tracking-[0.3em] text-text-tertiary">
+                Beat {String(i + 1).padStart(2, "0")} / {String(beats.length).padStart(2, "0")}
+              </span>
+            </div>
+
+            <h2
+              className="font-heading font-800 leading-[0.95] tracking-[-0.03em] text-text-primary"
+              style={{ fontSize: "clamp(2.25rem, 11vw, 4rem)" }}
+            >
+              {b.lines.map((line, li) => (
+                <span
+                  key={li}
+                  className="block"
+                  style={{ color: li === b.lines.length - 1 ? b.accent : undefined }}
+                >
+                  {line}
+                </span>
+              ))}
+            </h2>
+
+            {b.caption && (
+              <p className="mt-5 text-[14px] text-text-secondary leading-relaxed">
+                {b.caption}
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}

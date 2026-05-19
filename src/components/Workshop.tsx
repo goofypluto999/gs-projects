@@ -129,34 +129,43 @@ export function Workshop() {
                 data-progress-val={p.progress}
                 className="group relative border-b border-border last:border-b-0 hover:bg-surface/30 transition-colors duration-200 cursor-default"
               >
-                <div className="grid md:grid-cols-[80px_1.2fr_2fr_140px_120px] gap-4 md:gap-8 items-center py-6 px-2">
-                  <span className="font-heading text-xs text-text-tertiary tabular-nums tracking-wider">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-
-                  <div className="flex items-center gap-3">
-                    <span
-                      className="w-1.5 h-1.5 rounded-full"
-                      style={{ backgroundColor: p.accent }}
-                    />
-                    <h3 className="font-heading text-base md:text-lg font-600 text-text-primary">
-                      {p.name}
-                    </h3>
+                {/* Mobile: stacked card. Desktop: 5-col grid. */}
+                <div className="md:grid md:grid-cols-[80px_1.2fr_2fr_140px_120px] md:gap-8 md:items-center py-5 md:py-6 px-2">
+                  {/* Mobile top row: number + name + ETA */}
+                  <div className="flex md:contents items-center justify-between gap-4 mb-2 md:mb-0">
+                    <div className="flex items-center gap-3 md:contents">
+                      <span className="font-heading text-xs text-text-tertiary tabular-nums tracking-wider">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <div className="flex items-center gap-3">
+                        <span
+                          className="w-1.5 h-1.5 rounded-full shrink-0"
+                          style={{ backgroundColor: p.accent }}
+                        />
+                        <h3 className="font-heading text-base md:text-lg font-600 text-text-primary">
+                          {p.name}
+                        </h3>
+                      </div>
+                    </div>
+                    <span className="md:hidden text-[10px] uppercase tracking-[0.2em] text-text-tertiary tabular-nums">
+                      {p.eta}
+                    </span>
                   </div>
 
-                  <p className="text-[13px] text-text-secondary leading-relaxed">
+                  <p className="text-[13px] text-text-secondary leading-relaxed mb-3 md:mb-0">
                     {p.one_liner}
                   </p>
 
-                  <span
-                    className={`justify-self-start text-[10px] uppercase tracking-[0.2em] border px-2.5 py-1 rounded ${statusStyles[p.status]}`}
-                  >
-                    {p.status}
-                  </span>
-
-                  <span className="text-xs text-text-tertiary tabular-nums md:justify-self-end">
-                    {p.eta}
-                  </span>
+                  <div className="flex items-center justify-between gap-4 md:contents">
+                    <span
+                      className={`text-[10px] uppercase tracking-[0.2em] border px-2.5 py-1 rounded ${statusStyles[p.status]} md:justify-self-start`}
+                    >
+                      {p.status}
+                    </span>
+                    <span className="hidden md:inline text-xs text-text-tertiary tabular-nums md:justify-self-end">
+                      {p.eta}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Progress bar — bottom of the row */}

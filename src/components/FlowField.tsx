@@ -89,9 +89,15 @@ export function FlowField({
       canvas.height = height * dpr;
       ctx?.setTransform(dpr, 0, 0, dpr, 0, 0);
 
+      // Branch density on viewport — smaller phones get fewer particles
+      // so the canvas doesn't tank framerate on a mobile GPU.
+      const isSmall = width < 768;
+      const targetMax = isSmall ? 90 : 260;
+      const targetMin = isSmall ? 40 : 120;
+      const adjustedDensity = isSmall ? density * 0.5 : density;
       const count = Math.min(
-        260,
-        Math.max(120, Math.floor(width * height * density))
+        targetMax,
+        Math.max(targetMin, Math.floor(width * height * adjustedDensity))
       );
       particles = [];
       for (let i = 0; i < count; i++) {
