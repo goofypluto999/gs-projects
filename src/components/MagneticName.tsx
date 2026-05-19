@@ -12,7 +12,9 @@ import { useEffect, useRef } from "react";
  * sampled from an off-screen text raster — the canvas reads the text
  * pixels and turns each lit pixel into a particle with a "home" target.
  *
- * Desktop-only (lg+) — mobile uses the regular editorial wordmark.
+ * Works on desktop (cursor repulsion) and mobile (touch-and-drag does
+ * the same thing via pointer events). The canvas renders the same
+ * particle text regardless of input.
  */
 
 interface MagneticNameProps {
@@ -223,13 +225,16 @@ export function MagneticName({
       particles = built;
     }
 
-    function onMove(e: MouseEvent) {
+    // Pointer events handle BOTH mouse (desktop) and touch (mobile) with
+    // the same API. On touch, the "pointer" position is the finger; on
+    // mouse, it's the cursor. Repulsion physics works identically.
+    function onPointerMove(e: PointerEvent) {
       if (!canvas) return;
       const rect = canvas.getBoundingClientRect();
       mouseRef.current.x = e.clientX - rect.left;
       mouseRef.current.y = e.clientY - rect.top;
     }
-    function onLeave() {
+    function onPointerLeave() {
       mouseRef.current.x = -1000;
       mouseRef.current.y = -1000;
     }
@@ -237,8 +242,11 @@ export function MagneticName({
     build();
     const ro = new ResizeObserver(build);
     ro.observe(canvas);
-    window.addEventListener("mousemove", onMove, { passive: true });
-    window.addEventListener("mouseleave", onLeave);
+    // Use pointermove on the document for desktop hover; pointerdown +
+    // pointermove on the canvas itself for touch drag-to-scatter.
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    canvas.addEventListener("pointerleave", onPointerLeave);
+    canvas.addEventListener("pointercancel", onPointerLeave);
     // Rebuild after web fonts load so we measure Archivo not fallback
     if (document.fonts?.ready) {
       document.fonts.ready.then(build);
@@ -288,8 +296,9 @@ export function MagneticName({
     return () => {
       cancelAnimationFrame(raf);
       ro.disconnect();
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mouseleave", onLeave);
+      window.removeEventListener("pointermove", onPointerMove);
+      canvas.removeEventListener("pointerleave", onPointerLeave);
+      canvas.removeEventListener("pointercancel", onPointerLeave);
     };
     // We intentionally only re-run on mount; lines changing is rare here.
     // eslint-disable-next-line react-hooks/exhaustive-deps

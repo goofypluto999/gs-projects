@@ -49,7 +49,7 @@ function splitHeading(el: HTMLElement) {
 export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const eyebrowRef = useRef<HTMLDivElement>(null);
-  const nameRef = useRef<HTMLHeadingElement>(null);
+  const nameRef = useRef<HTMLDivElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const rotateRef = useRef<HTMLDivElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
@@ -206,43 +206,46 @@ export function Hero() {
         {/* Name — desktop gets the MagneticName particle canvas,
             mobile keeps the static editorial wordmark for readability. */}
 
-        {/* Mobile: static editorial — "Giovanni Sizino."
-            Soft accent halo behind the name so it reads as a "title card"
-            on the dark bg instead of generic heading text. */}
-        <h1
-          ref={nameRef}
-          className="lg:hidden relative font-heading leading-[0.92] tracking-[-0.025em] text-text-primary"
-          style={{
-            fontSize: "clamp(3rem, 11vw, 5.5rem)",
-            filter: "drop-shadow(0 0 28px rgba(37, 99, 235, 0.22))",
-          }}
-        >
-          <span data-word className="font-800">
-            Giovanni
-          </span>{" "}
-          <span data-word className="font-800">
-            Sizino
-          </span>
-          <span data-word className="font-800 text-accent">
-            .
-          </span>
-        </h1>
-
-        {/* Desktop: particle-cluster name that disperses on cursor.
-            Single line keeps it tight and less 'announcing myself'. */}
+        {/* Off-screen GSAP entrance-animation hook. The visible name is
+            the MagneticName canvas; this carries the per-word split spans
+            so the existing GSAP timeline animation has DOM targets to
+            stagger. aria-hidden because the canvas already declares the
+            accessible name and the sr-only h1 below covers SEO. */}
         <div
-          className="hidden lg:block w-full"
-          style={{ height: "clamp(160px, 18vh, 220px)" }}
+          ref={nameRef}
+          aria-hidden="true"
+          className="sr-only"
+        >
+          <span data-word>Giovanni</span>{" "}
+          <span data-word>Sizino</span>
+          <span data-word>.</span>
+        </div>
+
+        {/* Particle-cluster name on ALL viewports now. Touch finger or
+            cursor pushes the particles aside; they spring back to home.
+            On mobile the canvas auto-coarsens its sampling step so we
+            don't render 3000 particles on an iPhone GPU. */}
+        <div
+          className="w-full"
+          style={{
+            // Mobile gets a taller canvas so the wordmark wraps to two
+            // lines ("Giovanni" / "Sizino.") and reads big. Desktop keeps
+            // the tight single-line treatment.
+            height: "clamp(140px, 24vh, 220px)",
+          }}
         >
           <MagneticName
             lines={[
-              { text: "Giovanni Sizino.", weight: 800, color: "#FAFAFA" },
+              { text: "Giovanni", weight: 800, color: "#FAFAFA" },
+              { text: "Sizino.", weight: 800, color: "#FAFAFA" },
             ]}
             samplingStep={3}
           />
         </div>
 
-        {/* SR-only formal name for SEO + screen readers */}
+        {/* Accessible name for SEO + screen readers. The canvas itself
+            carries an aria-label of the same text, but a real h1 anchors
+            page hierarchy for crawlers and assistive tech. */}
         <h1 className="sr-only">Giovanni Sizino Ennes</h1>
 
         {/* Subtitle */}
