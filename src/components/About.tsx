@@ -16,24 +16,28 @@ const principles = [
     label: "Ship",
     body:
       "Working software, in production, with real users. Not pitch decks, not prototypes, not screenshots of a Figma file.",
+    accent: "#2563EB",
   },
   {
     n: "02",
     label: "Specific",
     body:
       "Every product solves one concrete problem for a defined person. Generalist tools die; specialist tools ship.",
+    accent: "#A855F7",
   },
   {
     n: "03",
     label: "End-to-end",
     body:
       "Idea, copy, design, frontend, backend, infra, billing, deploy. I own the whole stack — no hand-offs, no excuses.",
+    accent: "#10B981",
   },
   {
     n: "04",
     label: "Honest",
     body:
       "Beta is labelled beta. Free is actually free. Numbers in the marketing are numbers from the database.",
+    accent: "#F97316",
   },
 ];
 
@@ -151,10 +155,23 @@ export function About() {
             <div
               key={p.n}
               data-principle
-              className="p-6 md:p-7 bg-bg flex flex-col gap-3 hover:bg-surface transition-colors duration-200"
+              className="group relative p-6 md:p-7 bg-bg flex flex-col gap-3 hover:bg-surface transition-colors duration-200"
             >
+              {/* Accent stripe — visible always, glow on hover */}
+              <div
+                className="absolute top-0 left-0 w-10 h-px transition-all duration-300 group-hover:w-16"
+                style={{
+                  backgroundColor: p.accent,
+                  boxShadow: `0 0 12px ${p.accent}50`,
+                }}
+                aria-hidden="true"
+              />
+
               <div className="flex items-baseline gap-3">
-                <span className="font-heading text-xs text-text-tertiary tabular-nums">
+                <span
+                  className="font-heading text-sm md:text-base font-700 tabular-nums tracking-tight"
+                  style={{ color: p.accent }}
+                >
                   {p.n}
                 </span>
                 <span className="font-heading text-base md:text-lg font-700 text-text-primary tracking-tight">
