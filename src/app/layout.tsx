@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Archivo, Space_Grotesk } from "next/font/google";
 import { Preloader } from "@/components/Preloader";
 import { SmoothScroll } from "@/components/SmoothScroll";
@@ -51,10 +51,6 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
-  // iOS Safari status bar matches the page bg — no white slice at the top
-  // of the viewport when the page loads. PWA standalone mode uses the
-  // same colour from manifest.ts.
-  themeColor: "#0A0A0B",
   appleWebApp: {
     capable: true,
     title: "Sizino Ennes",
@@ -65,6 +61,20 @@ export const metadata: Metadata = {
     email: false,
     address: false,
   },
+};
+
+/**
+ * Viewport export — Next.js 13+ moved themeColor / colorScheme out of
+ * the Metadata object and into a separate Viewport export. Putting them
+ * in metadata silently no-ops in newer versions and triggers a build
+ * warning. iOS Safari status bar tints to this colour at load so the
+ * page never shows a white slice at the top.
+ */
+export const viewport: Viewport = {
+  themeColor: "#0A0A0B",
+  colorScheme: "dark",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
