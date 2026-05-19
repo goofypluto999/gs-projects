@@ -157,7 +157,7 @@ export function Hero() {
   // Compute days since last ship — gets baked at SSR time, updates on
   // each rebuild. Real signal: when did this page itself last deploy?
   // TODO: replace with NEXT_PUBLIC_VERCEL_GIT_COMMIT_DATE when next deploy.
-  const lastShipISO = "2026-05-18";
+  const lastShipISO = "2026-05-19";
   const daysAgo = Math.max(
     1,
     Math.floor(

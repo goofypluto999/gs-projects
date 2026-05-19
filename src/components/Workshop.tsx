@@ -182,14 +182,19 @@ export function Workshop() {
                   </div>
                 </div>
 
-                {/* Progress bar — bottom of the row */}
+                {/* Progress bar — bottom of the row. Track stays at 1px
+                    so the row reads cleanly when no progress is animated
+                    in yet; filled portion bumps to 2px with an accent
+                    glow so the fill itself is a real visual signal of
+                    how close to ship each project is, not invisible. */}
                 <div className="absolute left-0 right-0 bottom-0 h-px bg-border/30 overflow-hidden">
                   <div
                     data-progress
-                    className="h-full"
+                    className="h-[2px] -mt-px"
                     style={{
                       background: `linear-gradient(90deg, ${p.accent}, ${p.accent}40)`,
                       width: "0%",
+                      boxShadow: `0 0 8px ${p.accent}66`,
                     }}
                   />
                 </div>
