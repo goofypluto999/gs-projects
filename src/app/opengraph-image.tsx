@@ -130,7 +130,8 @@ export default async function Image() {
           </span>
         </div>
 
-        {/* Subtitle */}
+        {/* Subtitle — matches the Hero opener so the link preview reads
+            the same as the page it lands on. */}
         <span
           style={{
             marginTop: "32px",
@@ -138,9 +139,10 @@ export default async function Image() {
             color: "#A1A1AA",
             maxWidth: "880px",
             zIndex: 1,
+            lineHeight: 1.3,
           }}
         >
-          Five live digital products. Built end-to-end.
+          Specialist tools that ship. Five live products. Built solo, end-to-end.
         </span>
 
         {/* Bottom bar */}
