@@ -441,19 +441,6 @@
   }
 }
 
-/* Mobile menu backdrop — fade + pointer-events swap. Keyed on the
-   data-menu-open attribute set by Navigation.tsx, not Tailwind utility
-   classes (the JIT was missing them in template-literal interpolation). */
-.mobile-menu-backdrop {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 220ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-.mobile-menu-backdrop[data-menu-open="true"] {
-  opacity: 1;
-  pointer-events: auto;
-}
-
 /* Mobile menu item reveal — translate + fade. The transitionDelay
    ladder is set inline per item; this just holds the start/end states
    so the React state flip animates instead of snapping. */

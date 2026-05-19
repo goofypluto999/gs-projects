@@ -112,15 +112,20 @@ export function Navigation() {
       </nav>
 
       {/* Mobile menu — backdrop is always mounted but pointer-events
-          + opacity swap on `mobileOpen` so the fade is smooth (~200ms)
-          without the framer-motion unmount race that leaves a stale
-          0-opacity overlay blocking taps. CSS rule in globals keys on
-          data-menu-open so we don't depend on Tailwind JIT picking up
-          opacity-{100,0} from a template-literal-interpolated class. */}
+          + opacity swap on `mobileOpen` so the fade is smooth (~220ms).
+          Opacity + pointerEvents are set inline directly because both
+          framer-motion (v12 unmount race) and Tailwind JIT (missed the
+          opacity-{100,0} utility in template-literal interpolation) and
+          even custom CSS with !important data-attr selectors silently
+          failed to apply opacity in dev. Inline style always wins. */}
       <div
-        data-menu-open={mobileOpen ? "true" : "false"}
         aria-hidden={!mobileOpen}
-        className="mobile-menu-backdrop fixed inset-0 z-30 bg-bg/98 backdrop-blur-xl pt-20"
+        style={{
+          opacity: mobileOpen ? 1 : 0,
+          pointerEvents: mobileOpen ? "auto" : "none",
+          transition: "opacity 220ms cubic-bezier(0.16, 1, 0.3, 1)",
+        }}
+        className="fixed inset-0 z-30 bg-bg/98 backdrop-blur-xl pt-20"
       >
         <div className="flex flex-col items-start px-6 gap-7">
           {navLinks.map((link, i) => (
