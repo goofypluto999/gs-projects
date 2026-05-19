@@ -158,14 +158,16 @@ export function Process() {
               <div className="relative flex items-start gap-4">
                 <span
                   data-step-num
-                  className="font-heading text-3xl md:text-4xl font-300 text-text-tertiary tabular-nums tracking-wide leading-none"
+                  className="font-heading text-4xl md:text-5xl font-300 italic text-accent tabular-nums tracking-tight leading-none"
+                  style={{ textShadow: "0 0 18px rgba(37, 99, 235, 0.35)" }}
                 >
                   {step.n}
                 </span>
-                {/* Marker dot anchored on the rail */}
+                {/* Marker dot anchored on the rail — has its own glow ring */}
                 <span
                   data-step-marker
                   className="hidden md:block absolute -right-3 top-3 w-3 h-3 rounded-full border-2 border-bg bg-accent"
+                  style={{ boxShadow: "0 0 12px rgba(37, 99, 235, 0.55)" }}
                 />
               </div>
 
