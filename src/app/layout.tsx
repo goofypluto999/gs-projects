@@ -8,6 +8,7 @@ import { BackToTop } from "@/components/BackToTop";
 import { KeyboardHint } from "@/components/KeyboardHint";
 import { SectionRail } from "@/components/SectionRail";
 import { CursorTrail } from "@/components/CursorTrail";
+import { RevealFailsafe } from "@/components/RevealFailsafe";
 import "./globals.css";
 
 // next/font self-hosts the fonts and inlines the critical CSS — no FOUT,
@@ -70,6 +71,7 @@ export default function RootLayout({
         <BackToTop />
         <KeyboardHint />
         <CursorTrail />
+        <RevealFailsafe />
       </body>
     </html>
   );
