@@ -141,7 +141,10 @@ export function Workshop() {
                   {/* Mobile top row: number + name + ETA */}
                   <div className="flex md:contents items-center justify-between gap-4 mb-2 md:mb-0">
                     <div className="flex items-center gap-3 md:contents">
-                      <span className="font-heading text-xs text-text-tertiary tabular-nums tracking-wider">
+                      <span
+                        className="font-heading text-sm md:text-base font-700 tabular-nums tracking-wider"
+                        style={{ color: p.accent }}
+                      >
                         {String(i + 1).padStart(2, "0")}
                       </span>
                       <div className="flex items-center gap-3">

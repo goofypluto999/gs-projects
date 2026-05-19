@@ -84,14 +84,15 @@ export function AvailabilityStrip() {
           <span className="text-[11px] uppercase tracking-[0.3em] text-text-tertiary">
             Currently open for
           </span>
-          <span className="flex items-center gap-2">
+          <span className="flex items-center gap-2.5">
             <span
               ref={numberRef}
-              className="font-heading text-3xl md:text-4xl font-800 text-text-primary tabular-nums"
+              className="font-heading text-4xl md:text-5xl font-800 text-accent tabular-nums tracking-[-0.02em] leading-none"
+              style={{ textShadow: "0 0 22px rgba(37, 99, 235, 0.38)" }}
             >
               2
             </span>
-            <span className="text-[11px] uppercase tracking-[0.25em] text-text-secondary">
+            <span className="text-[11px] uppercase tracking-[0.25em] text-text-secondary leading-snug max-w-[100px] md:max-w-none">
               new engagements
             </span>
           </span>
