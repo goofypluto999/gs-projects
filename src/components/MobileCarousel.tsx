@@ -46,7 +46,7 @@ export function MobileCarousel() {
   }
 
   return (
-    <section className="lg:hidden py-12 -mx-6">
+    <section className="lg:hidden py-12 overflow-hidden">
       <div className="px-6 mb-6">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-2">
