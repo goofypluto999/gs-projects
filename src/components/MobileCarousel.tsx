@@ -75,15 +75,25 @@ export function MobileCarousel() {
           scrollbarWidth: "none",
         }}
       >
-        {projects.map((p, i) => (
+        {projects.map((p, i) => {
+          const isActive = i === active;
+          return (
           <a
             key={p.id}
             data-mc-card
             href={p.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="group shrink-0 w-[86%] rounded-xl overflow-hidden border border-border bg-surface relative"
-            style={{ scrollSnapAlign: "center" }}
+            className="group shrink-0 w-[86%] rounded-xl overflow-hidden border bg-surface relative transition-all duration-500 ease-out"
+            style={{
+              scrollSnapAlign: "center",
+              borderColor: isActive ? `${p.accent}55` : "var(--color-border)",
+              boxShadow: isActive
+                ? `0 18px 40px -16px ${p.accent}55, 0 0 0 1px ${p.accent}22`
+                : "0 4px 12px -6px rgba(0,0,0,0.3)",
+              transform: isActive ? "scale(1)" : "scale(0.96)",
+              opacity: isActive ? 1 : 0.72,
+            }}
           >
             <div className="relative w-full aspect-[16/10] bg-bg">
               <WindowChrome
@@ -158,7 +168,8 @@ export function MobileCarousel() {
               </span>
             </div>
           </a>
-        ))}
+          );
+        })}
       </div>
 
       {/* Dot pagination — invisible 44x44 hit zone wraps the visible pill so
