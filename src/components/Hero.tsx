@@ -129,6 +129,10 @@ export function Hero() {
       "-=0.3"
     );
 
+    // Skip the cursor-driven glow on touch devices — there's no mouse
+    // and the listener wastes battery
+    const hasMouse = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
     const onMove = (e: MouseEvent) => {
       if (!glowRef.current || !sectionRef.current) return;
       const rect = sectionRef.current.getBoundingClientRect();
@@ -140,10 +144,12 @@ export function Hero() {
         ease: "power2.out",
       });
     };
-    window.addEventListener("mousemove", onMove);
+    if (hasMouse) {
+      window.addEventListener("mousemove", onMove);
+    }
 
     return () => {
-      window.removeEventListener("mousemove", onMove);
+      if (hasMouse) window.removeEventListener("mousemove", onMove);
       tl.kill();
     };
   }, []);
