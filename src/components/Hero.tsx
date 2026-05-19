@@ -195,13 +195,12 @@ export function Hero() {
         {/* Mobile: static editorial — "Giovanni Sizino." */}
         <h1
           ref={nameRef}
-          className="lg:hidden font-heading leading-[0.9] tracking-tight text-text-primary"
-          style={{ fontSize: "clamp(2.75rem, 9vw, 5.5rem)" }}
+          className="lg:hidden font-heading leading-[0.95] tracking-tight text-text-primary"
+          style={{ fontSize: "clamp(2.5rem, 8vw, 4.5rem)" }}
         >
           <span data-word className="font-800">
             Giovanni
-          </span>
-          <br />
+          </span>{" "}
           <span data-word className="font-800">
             Sizino
           </span>
@@ -210,15 +209,15 @@ export function Hero() {
           </span>
         </h1>
 
-        {/* Desktop: particle-cluster name that disperses on cursor */}
+        {/* Desktop: particle-cluster name that disperses on cursor.
+            Single line keeps it tight and less 'announcing myself'. */}
         <div
           className="hidden lg:block w-full"
-          style={{ height: "clamp(240px, 28vh, 340px)" }}
+          style={{ height: "clamp(160px, 18vh, 220px)" }}
         >
           <MagneticName
             lines={[
-              { text: "Giovanni", weight: 800, color: "#FAFAFA" },
-              { text: "Sizino.", weight: 800, color: "#FAFAFA" },
+              { text: "Giovanni Sizino.", weight: 800, color: "#FAFAFA" },
             ]}
             samplingStep={3}
           />
