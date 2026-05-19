@@ -173,7 +173,7 @@ export default async function Image() {
               color: "#71717A",
             }}
           >
-            UK · Brazil
+            UK · Lisbon
           </span>
         </div>
       </div>

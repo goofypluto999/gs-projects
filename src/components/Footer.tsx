@@ -195,7 +195,7 @@ export function Footer() {
             <span>·</span>
             <span>Giovanni Sizino Ennes</span>
             <span>·</span>
-            <span className="hidden md:inline">UK / Brazil</span>
+            <span className="hidden md:inline">UK · Lisbon</span>
           </div>
           <Socials size="sm" />
         </div>

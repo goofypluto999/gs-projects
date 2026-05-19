@@ -56,7 +56,7 @@ export function NowPlaying() {
   const item = items[i];
 
   return (
-    <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-surface/40 backdrop-blur-sm text-[11px]">
+    <span className="hidden md:inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-surface/40 backdrop-blur-sm text-[11px]">
       <span className="flex items-center gap-1.5">
         <span className="relative flex h-1.5 w-1.5">
           <span
