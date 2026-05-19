@@ -206,11 +206,16 @@ export function Hero() {
         {/* Name — desktop gets the MagneticName particle canvas,
             mobile keeps the static editorial wordmark for readability. */}
 
-        {/* Mobile: static editorial — "Giovanni Sizino." */}
+        {/* Mobile: static editorial — "Giovanni Sizino."
+            Soft accent halo behind the name so it reads as a "title card"
+            on the dark bg instead of generic heading text. */}
         <h1
           ref={nameRef}
-          className="lg:hidden font-heading leading-[0.92] tracking-[-0.025em] text-text-primary"
-          style={{ fontSize: "clamp(3rem, 11vw, 5.5rem)" }}
+          className="lg:hidden relative font-heading leading-[0.92] tracking-[-0.025em] text-text-primary"
+          style={{
+            fontSize: "clamp(3rem, 11vw, 5.5rem)",
+            filter: "drop-shadow(0 0 28px rgba(37, 99, 235, 0.22))",
+          }}
         >
           <span data-word className="font-800">
             Giovanni
