@@ -67,17 +67,32 @@ export function SectionDivider({ label }: SectionDividerProps) {
       <div className="mx-auto max-w-[1280px] flex items-center gap-6">
         <div
           ref={lineRef}
-          className="flex-1 h-px bg-border"
+          className="flex-1 h-px"
+          style={{
+            // Subtle accent fade — line draws in via GSAP scaleX, gradient
+            // gives it a soft glow at the label-side end instead of a flat
+            // gray hairline.
+            background:
+              "linear-gradient(90deg, transparent 0%, rgba(35,35,38,1) 12%, rgba(35,35,38,1) 75%, rgba(37,99,235,0.55) 100%)",
+          }}
         />
         {label && (
           <span
             ref={labelRef}
-            className="text-[10px] uppercase tracking-[0.3em] text-text-tertiary whitespace-nowrap"
+            className="text-[10px] md:text-[11px] uppercase tracking-[0.3em] text-text-tertiary whitespace-nowrap"
           >
             <ScrambleText text={label} duration={800} />
           </span>
         )}
-        <div className="flex-1 h-px bg-border" style={{ transform: "scaleX(0)", transformOrigin: "right center" }} />
+        <div
+          className="flex-1 h-px"
+          style={{
+            transform: "scaleX(0)",
+            transformOrigin: "right center",
+            background:
+              "linear-gradient(90deg, rgba(37,99,235,0.55) 0%, rgba(35,35,38,1) 25%, rgba(35,35,38,1) 88%, transparent 100%)",
+          }}
+        />
       </div>
     </div>
   );
