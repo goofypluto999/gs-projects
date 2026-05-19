@@ -439,16 +439,9 @@ export function Preloader() {
       <div className="absolute bottom-8 md:bottom-10 left-1/2 -translate-x-1/2 z-10 text-center">
         <div className="font-mono text-[11px] md:text-[12px] tracking-[0.3em] uppercase text-text-primary tabular-nums">
           {nameplate}
-          <span className="inline-block w-[10px] ml-1 bg-accent" style={{ height: "1em", verticalAlign: "middle", animation: "cursor-blink 800ms steps(2) infinite" }} />
+          <span className="preloader-cursor inline-block w-[10px] ml-1 bg-accent" style={{ height: "1em", verticalAlign: "middle" }} />
         </div>
       </div>
-
-      <style jsx global>{`
-        @keyframes cursor-blink {
-          0%, 50% { opacity: 1; }
-          50.01%, 100% { opacity: 0; }
-        }
-      `}</style>
     </div>
   );
 }
