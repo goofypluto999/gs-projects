@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Giovanni Sizino Ennes — Five live products",
     description:
-      "Built end-to-end. Open for strategic partnerships and acquisitions.",
+      "Specialist tools that ship. Five live products, two open-source, all built solo — end-to-end. Open for strategic builds and acquisition conversations.",
     type: "website",
     locale: "en_GB",
     siteName: "Giovanni Sizino Ennes",
