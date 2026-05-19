@@ -19,18 +19,23 @@ import { MobileCarousel } from "@/components/MobileCarousel";
 import { MobileSpecCards } from "@/components/MobileSpecCards";
 
 /**
- * Page composition — tightened. Two SectionDividers max, redundant
- * sections cut (ActivityFeed merged into Workshop intent). Order
- * follows a prospect's mental model:
+ * Page composition — show-then-tell flow.
  *
- * 1. Hero — who and what
+ * Earlier versions led with the Manifesto right after the hero. For a
+ * cold prospect (Instagram-bio click, no prior trust) that meant
+ * 3+ screens of declarative philosophy before any product. Drop-off
+ * risk. Standard premium-portfolio pattern is: hook, prove, then tell
+ * — show the work first, earn the right to philosophy second.
+ *
+ * 1. Hero — hook (who, what, CTA)
  * 2. TechMarquee — quick credibility strip
- * 3. The Work (cinema + catalog + highlights + testimonials)
- * 4. The Workshop (what's next, with built-in activity signal)
- * 5. The Process — how a build actually runs
- * 6. AvailabilityStrip — open slots indicator
- * 7. About — who is Giovanni
- * 8. Contact — close the loop
+ * 3. The Work — products + highlights + testimonials (the proof)
+ * 4. The Workshop — what's next + process (forward motion)
+ * 5. The Person — Manifesto → About → Contact (close the loop)
+ *
+ * Manifesto now lives in section 3 *before* About so the philosophy
+ * lands as the visitor's invested-enough-to-care moment, not the
+ * gate they have to pass through.
  */
 export default function Home() {
   return (
@@ -38,8 +43,6 @@ export default function Home() {
       <Navigation />
       <main>
         <Hero />
-        <Manifesto />
-        <ManifestoMobile />
         <TechMarquee />
 
         <SectionDivider label="01 · The Work" />
@@ -58,6 +61,8 @@ export default function Home() {
         <AvailabilityStrip />
 
         <SectionDivider label="03 · The Person" />
+        <Manifesto />
+        <ManifestoMobile />
         <About />
         <Contact />
       </main>
