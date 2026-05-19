@@ -27,7 +27,7 @@ export function BackToTop() {
         bottom: "calc(env(safe-area-inset-bottom, 0px) + 1.5rem)",
         right: "calc(env(safe-area-inset-right, 0px) + 1.5rem)",
       }}
-      className={`fixed z-30 w-11 h-11 rounded-full border border-border bg-surface/80 backdrop-blur-md text-text-secondary hover:text-text-primary hover:border-border-hover hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer flex items-center justify-center ${
+      className={`hidden lg:flex fixed z-30 w-11 h-11 rounded-full border border-border bg-surface/80 backdrop-blur-md text-text-secondary hover:text-text-primary hover:border-border-hover hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer items-center justify-center ${
         visible
           ? "opacity-100 translate-y-0 pointer-events-auto"
           : "opacity-0 translate-y-3 pointer-events-none"

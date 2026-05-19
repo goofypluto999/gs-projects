@@ -17,49 +17,59 @@ interface Highlight {
   accent: string;
 }
 
+// These intentionally do NOT repeat the product-feature numbers shown in
+// the DragStack spec cards (500K agents, 228K games, etc.). Highlights
+// is about the *discipline behind the work* — solo build, no funding,
+// regression rigour, open-source intent — not another lap around the
+// same product facts.
 const highlights: Highlight[] = [
   {
-    number: "500K",
-    label: "AI-calibrated agents",
-    description: "Per Foresay simulation. Real census demographics.",
-    product: "Foresay Labs",
-    accent: "#6366F1",
+    number: "5 / 5",
+    label: "products live in production",
+    description:
+      "Not 4 of 5. Not 3 with two in beta. All five are paying-customer-grade and shipping.",
+    product: "Shipped",
+    accent: "#2563EB",
   },
   {
-    number: "228K+",
-    label: "games indexed",
-    description: "Wadda Play's full corpus, AI-scored against any brief.",
-    product: "Wadda Play",
-    accent: "#A855F7",
-  },
-  {
-    number: "90s",
-    label: "to a full job-prep pack",
-    description: "AimVantage. CV fit, cover letter, mock interview, intel.",
-    product: "AimVantage",
-    accent: "#F59E0B",
-  },
-  {
-    number: "5",
-    label: "ATS parsers simulated",
-    description: "CV Mirror. Workday · Greenhouse · Lever · Taleo · iCIMS.",
-    product: "CV Mirror",
+    number: "0",
+    label: "outside capital raised",
+    description:
+      "No VC, no angels, no advisors with cheques. Every line of code, every domain bill — self-funded.",
+    product: "Independent",
     accent: "#10B981",
   },
   {
-    number: "2/day",
-    label: "agent dispatches",
-    description: "AdsForge. Working MCP servers, prompts, real cost numbers.",
-    product: "AdsForge",
-    accent: "#EF4444",
+    number: "3 yrs",
+    label: "solo build span",
+    description:
+      "First commit to fifth-product launch. No team, no co-founder, no contractor hand-offs.",
+    product: "One operator",
+    accent: "#F97316",
   },
   {
-    number: "504",
-    label: "cross-seed test cases",
+    number: "100%",
+    label: "regression test pass rate",
     description:
-      "Foresay's regression vault. 100% pass rate at MAE 0.000.",
-    product: "Foresay Labs",
+      "Foresay's 504-case cross-seed vault. Pass at MAE 0.000 before any merge to main.",
+    product: "Quality gate",
     accent: "#6366F1",
+  },
+  {
+    number: "2",
+    label: "open-source releases",
+    description:
+      "CV Mirror + the AimVantage ATS scanner. MIT licensed, fully client-side, no telemetry.",
+    product: "Open source",
+    accent: "#10B981",
+  },
+  {
+    number: "yesterday",
+    label: "last production deploy",
+    description:
+      "Continuous shipping. Nothing on this site is older than this week — every product gets a touch every sprint.",
+    product: "Always shipping",
+    accent: "#A855F7",
   },
 ];
 
@@ -94,10 +104,10 @@ export function Highlights() {
     <section className="px-6 py-16 md:py-24">
       <div className="mx-auto max-w-[1280px]">
         <SectionHeader
-          eyebrow="Highlights"
-          title="The numbers behind the work,"
-          subtitle="pulled from each live database."
-          descriptor="Not marketing claims — these are what the products actually do."
+          eyebrow="The discipline"
+          title="What's true about the work,"
+          subtitle="not what the products do."
+          descriptor="Five live products, no team, no outside capital, three years. Numbers that are hard to fake."
         />
 
         <div

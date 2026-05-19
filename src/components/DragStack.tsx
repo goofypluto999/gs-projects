@@ -1,20 +1,23 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import NextImage from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { projects } from "@/data/projects";
-import { WindowChrome } from "./WindowChrome";
 
 /**
- * Draggable 3D card stack — Tinder-style, but for digital products.
+ * Draggable 3D spec-card stack — Tinder-style, but for digital products.
  * - 5 cards stacked in 3D depth using CSS perspective + translateZ
- * - Drag any card with cursor; release to either snap back or fly off
- * - Throwing past a velocity threshold reveals the next card
- * - The whole stack lives in a 16:10 window — feels like a real device
+ * - Drag the top card; release past a threshold to send it to the back
+ * - Each card is a TYPOGRAPHIC SPEC SHEET, not a screenshot, so this view
+ *   is visually distinct from HorizontalShowcase (cinema screenshots) and
+ *   ProjectGrid (thumbnail grid). Three takes on the same five products,
+ *   not three identical screenshot reels.
  *
- * Desktop-only addition between Highlights and Testimonials. Provides
- * a TACTILE interaction moment — the visitor physically touches the work.
+ * The redesign drops WindowChrome + previewImage in favour of:
+ *   - editorial project wordmark
+ *   - one standout metric (e.g. "500K agents simulated per run")
+ *   - three supporting stats
+ *   - tags + a dual-accent gradient background per product
  */
 
 interface DragStackProps {
@@ -31,7 +34,6 @@ export function DragStack({ className = "" }: DragStackProps) {
   const startRef = useRef<{ x: number; y: number } | null>(null);
   const lastMoveRef = useRef<{ x: number; y: number; t: number } | null>(null);
 
-  // Pointer handlers
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -54,7 +56,6 @@ export function DragStack({ className = "" }: DragStackProps) {
       const threshold = 180;
 
       if (dist > threshold) {
-        // Throw the top card off and rotate stack
         setStack((prev) => {
           const next = [...prev];
           next.shift();
@@ -75,7 +76,7 @@ export function DragStack({ className = "" }: DragStackProps) {
   }, [drag]);
 
   function onPointerDown(e: React.PointerEvent, id: number) {
-    if (stack[0] !== id) return; // only top card is draggable
+    if (stack[0] !== id) return;
     e.preventDefault();
     startRef.current = { x: e.clientX, y: e.clientY };
     setDrag({ id, x: 0, y: 0, rot: 0 });
@@ -99,13 +100,15 @@ export function DragStack({ className = "" }: DragStackProps) {
             <div className="flex items-center gap-2 mb-4">
               <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
               <span className="text-[11px] uppercase tracking-[0.3em] text-text-tertiary">
-                Hold-and-throw · Drag any card
+                Spec stack · Drag any card to flip through
               </span>
             </div>
             <h2 className="font-heading text-3xl md:text-5xl font-700 text-text-primary leading-[1.05] tracking-tight">
-              Touch the work,
+              Same five products,
               <br />
-              <span className="text-text-secondary italic font-300">throw it sideways.</span>
+              <span className="text-text-secondary italic font-300">
+                seen as data not screens.
+              </span>
             </h2>
           </div>
           <button
@@ -143,8 +146,13 @@ export function DragStack({ className = "" }: DragStackProps) {
               <div
                 key={projectIdx}
                 onPointerDown={(e) => onPointerDown(e, projectIdx)}
-                className="absolute inset-0 will-change-transform rounded-xl overflow-hidden border border-border bg-surface"
+                className="absolute inset-0 will-change-transform rounded-xl overflow-hidden border border-border"
                 style={{
+                  background: `
+                    radial-gradient(ellipse at 90% 0%, ${p.accent}28 0%, transparent 55%),
+                    radial-gradient(ellipse at 0% 100%, ${p.accent}14 0%, transparent 60%),
+                    linear-gradient(135deg, #141415 0%, #0E0E10 100%)
+                  `,
                   transform: `translateX(${tx}px) translateY(${ty + yOff}px) translateZ(${z}px) rotate(${rot}deg) scale(${scale})`,
                   transition: isDragging
                     ? "none"
@@ -155,63 +163,116 @@ export function DragStack({ className = "" }: DragStackProps) {
                   pointerEvents: stackPos > 2 ? "none" : "auto",
                   boxShadow:
                     stackPos === 0
-                      ? "0 30px 60px -20px rgba(0,0,0,0.5)"
+                      ? "0 30px 60px -20px rgba(0,0,0,0.55)"
                       : "0 10px 30px -10px rgba(0,0,0,0.4)",
                 }}
               >
-                <WindowChrome
-                  url={p.url
-                    .replace(/^https?:\/\//, "")
-                    .replace(/\/$/, "")}
+                {/* Subtle hairline accent at the top */}
+                <div
+                  className="absolute top-0 left-0 right-0 h-px"
+                  style={{
+                    background: `linear-gradient(90deg, transparent, ${p.accent}80, transparent)`,
+                  }}
                 />
-                <div className="absolute inset-0 pt-7">
-                  <NextImage
-                    src={p.previewImage}
-                    alt={`${p.name} preview`}
-                    fill
-                    sizes="(max-width: 1024px) 0vw, 720px"
-                    quality={85}
-                    draggable={false}
-                    className="object-cover object-top pointer-events-none"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-bg/90 via-bg/20 to-transparent pointer-events-none" />
 
-                  {/* Card content overlay */}
-                  <div className="absolute bottom-0 left-0 right-0 p-7">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span
-                        className="w-1.5 h-1.5 rounded-full"
-                        style={{ backgroundColor: p.accent }}
-                      />
-                      <span className="text-[10px] uppercase tracking-[0.25em] text-text-tertiary">
-                        {p.year} · {p.status}
-                      </span>
-                    </div>
-                    <div className="flex items-end justify-between gap-4">
-                      <div>
-                        <h3 className="font-heading text-2xl md:text-3xl font-700 text-text-primary leading-[1.05]">
-                          {p.name}
-                        </h3>
-                        <p className="text-sm text-text-secondary mt-1 max-w-[360px]">
-                          {p.tagline}
-                        </p>
-                      </div>
-                      <a
-                        href={p.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        onPointerDown={(e) => e.stopPropagation()}
-                        className="shrink-0 inline-flex items-center gap-1.5 px-3 py-2 text-xs font-body rounded-md backdrop-blur-md cursor-pointer"
+                {/* Top eyebrow strip */}
+                <div className="absolute top-0 left-0 right-0 px-6 py-4 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="w-1.5 h-1.5 rounded-full"
+                      style={{ backgroundColor: p.accent }}
+                    />
+                    <span className="text-[10px] uppercase tracking-[0.3em] text-text-tertiary tabular-nums">
+                      GS · 00{projectIdx + 1} · {p.year} · {p.status}
+                    </span>
+                  </div>
+                  <a
+                    href={p.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    onPointerDown={(e) => e.stopPropagation()}
+                    className="text-[10px] uppercase tracking-[0.3em] text-text-tertiary hover:text-text-primary transition-colors"
+                  >
+                    {p.url.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+                  </a>
+                </div>
+
+                {/* Main editorial layout */}
+                <div className="absolute inset-0 px-10 pt-16 pb-8 flex flex-col">
+                  {/* Wordmark */}
+                  <h3
+                    className="font-heading text-[44px] md:text-[56px] font-800 leading-[0.95] tracking-[-0.025em] text-text-primary"
+                    style={{
+                      textShadow: `0 0 24px ${p.accent}33`,
+                    }}
+                  >
+                    {p.name}
+                    <span
+                      className="ml-0.5"
+                      style={{ color: p.accent }}
+                    >
+                      .
+                    </span>
+                  </h3>
+
+                  <p className="mt-3 text-text-secondary text-[15px] max-w-[440px] leading-snug">
+                    {p.tagline}
+                  </p>
+
+                  {/* Big metric */}
+                  <div className="mt-auto mb-6 flex items-baseline gap-4">
+                    <span
+                      className="font-heading text-[88px] md:text-[112px] font-800 leading-none tabular-nums tracking-[-0.04em]"
+                      style={{ color: p.accent }}
+                    >
+                      {p.metric.value}
+                    </span>
+                    <span className="text-[12px] uppercase tracking-[0.25em] text-text-tertiary max-w-[120px] leading-snug">
+                      {p.metric.label}
+                    </span>
+                  </div>
+
+                  {/* Supporting stats row */}
+                  <div className="grid grid-cols-3 gap-4 border-t border-border pt-5">
+                    {p.detailStats.map((stat) => (
+                      <div
+                        key={stat.label}
+                        className="border-l pl-3 first:border-l-0 first:pl-0"
                         style={{
-                          backgroundColor: p.accent,
-                          color: "white",
+                          borderLeftColor: "var(--color-border)",
                         }}
                       >
-                        Open
-                        <ArrowUpRight size={12} />
-                      </a>
-                    </div>
+                        <span className="block text-[9.5px] uppercase tracking-[0.25em] text-text-tertiary leading-tight">
+                          {stat.label}
+                        </span>
+                        <span className="block mt-1.5 text-[13px] text-text-primary font-500 leading-snug">
+                          {stat.value}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* CTA */}
+                  <div className="mt-6 flex items-center gap-3">
+                    <a
+                      href={p.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      onPointerDown={(e) => e.stopPropagation()}
+                      className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-body rounded-md backdrop-blur-md cursor-pointer transition-transform duration-200 hover:scale-[1.02]"
+                      style={{
+                        backgroundColor: p.accent,
+                        color: "white",
+                      }}
+                    >
+                      Open live
+                      <ArrowUpRight size={14} />
+                    </a>
+                    <span className="text-[11px] uppercase tracking-[0.25em] text-text-tertiary">
+                      Drag to flip · {stack.length - 1} more behind
+                    </span>
                   </div>
                 </div>
               </div>
