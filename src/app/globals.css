@@ -30,6 +30,10 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    /* Anchor-link jumps land below the fixed nav AND any iOS notch
+       safe-area inset. Per-section `scroll-mt-16` (64px) only cleared
+       the nav itself, not the nav-plus-notch height in PWA mode. */
+    scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 4rem);
   }
 
   /* iPhone notch / dynamic island / home indicator awareness.

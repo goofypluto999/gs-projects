@@ -258,7 +258,16 @@ export function ManifestoMobile() {
       className="manifesto-mobile lg:hidden bg-bg relative"
     >
       {/* Eyebrow header — sticky at top of the section while beats scroll */}
-      <div className="sticky top-14 z-10 px-6 py-5 flex items-center justify-between bg-gradient-to-b from-bg via-bg/90 to-transparent">
+      <div
+        className="sticky z-10 px-6 py-5 flex items-center justify-between bg-gradient-to-b from-bg via-bg/90 to-transparent"
+        style={{
+          // Stick the chapter header just below the fixed nav. In iOS
+          // PWA the nav lives inside safe-area-inset-top so this offset
+          // has to follow — otherwise the sticky chapter mark lands at
+          // the notch instead of below the nav.
+          top: "calc(env(safe-area-inset-top, 0px) + 3.5rem)",
+        }}
+      >
         <div className="flex items-center gap-2">
           <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
           <span className="text-[10px] uppercase tracking-[0.3em] text-text-tertiary">
