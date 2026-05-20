@@ -75,7 +75,10 @@ export function MobileSpecCards() {
             </span>
           </div>
 
-          <h2 className="mt-3 font-heading text-2xl font-700 text-text-primary leading-snug tracking-tight">
+          <h2
+            className="mt-3 font-heading font-700 text-text-primary leading-[1.05] tracking-[-0.02em]"
+            style={{ fontSize: "clamp(2rem, 8vw, 2.75rem)" }}
+          >
             Same five products,
             <br />
             <span className="text-text-secondary italic font-300">
