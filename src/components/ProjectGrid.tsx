@@ -11,11 +11,13 @@ export function ProjectGrid() {
 
   return (
     <>
-      {/* Desktop-only full catalogue. */}
-      <section
-        id="projects"
-        className="hidden lg:block px-6 py-24 scroll-mt-16"
-      >
+      {/* Desktop-only full catalogue. The #projects anchor used to live
+          here, but that meant clicking nav "Work" jumped past the
+          HorizontalShowcase + MobileCarousel + BrandMarquee — straight
+          into the middle of the work block. The anchor now sits on the
+          "01 · The Work" SectionDivider so the jump lands at the work
+          section's actual start. */}
+      <section className="hidden lg:block px-6 py-24">
         <div className="mx-auto max-w-[1280px]">
           <SectionReveal>
             <div className="flex items-end justify-between gap-6 mb-10 border-b border-border pb-6">

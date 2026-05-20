@@ -45,7 +45,7 @@ export default function Home() {
         <Hero />
         <TechMarquee />
 
-        <SectionDivider label="01 · The Work" />
+        <SectionDivider id="projects" label="01 · The Work" />
         <HorizontalShowcase />
         <MobileCarousel />
         <BrandMarquee />

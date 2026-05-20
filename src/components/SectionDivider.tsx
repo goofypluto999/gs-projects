@@ -12,13 +12,18 @@ if (typeof window !== "undefined") {
 interface SectionDividerProps {
   /** Optional tiny label centred on the line */
   label?: string;
+  /** Anchor id — when set, this divider becomes the scroll target for
+   *  in-page links (e.g. nav "Work" → #projects). Without this the
+   *  "Work" anchor jumps to ProjectGrid in the middle of the work
+   *  section, skipping the HorizontalShowcase and MobileCarousel. */
+  id?: string;
 }
 
 /**
  * Thin horizontal accent line that draws across the page as you scroll past it.
  * Optional centred label (e.g. "002 · projects"). GSAP scrollTrigger scrub.
  */
-export function SectionDivider({ label }: SectionDividerProps) {
+export function SectionDivider({ label, id }: SectionDividerProps) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
   const labelRef = useRef<HTMLSpanElement>(null);
@@ -63,7 +68,11 @@ export function SectionDivider({ label }: SectionDividerProps) {
   }, []);
 
   return (
-    <div ref={wrapRef} className="relative px-6 py-10 md:py-16">
+    <div
+      ref={wrapRef}
+      id={id}
+      className="relative px-6 py-10 md:py-16 scroll-mt-16"
+    >
       <div className="mx-auto max-w-[1280px] flex items-center gap-6">
         <div
           ref={lineRef}
