@@ -133,8 +133,14 @@ export function Navigation() {
           opacity: mobileOpen ? 1 : 0,
           pointerEvents: mobileOpen ? "auto" : "none",
           transition: "opacity 220ms cubic-bezier(0.16, 1, 0.3, 1)",
+          // pt-20 (80px) was for nav + a 24px buffer. In iOS PWA the
+          // nav now lives inside safe-area-inset-top, so the mobile
+          // menu content needs the same offset or the first nav link
+          // sits behind the system clock. Adding safe-area on top of
+          // the existing 5rem keeps the desktop spacing unchanged.
+          paddingTop: "calc(env(safe-area-inset-top, 0px) + 5rem)",
         }}
-        className="fixed inset-0 z-30 bg-bg/98 backdrop-blur-xl pt-20"
+        className="fixed inset-0 z-30 bg-bg/98 backdrop-blur-xl"
       >
         <div className="flex flex-col items-start px-6 gap-7">
           {navLinks.map((link, i) => (
