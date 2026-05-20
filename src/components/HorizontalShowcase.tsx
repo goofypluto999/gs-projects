@@ -147,15 +147,17 @@ export function HorizontalShowcase() {
             rel="noopener noreferrer"
             className="group relative shrink-0 w-[80vw] max-w-[1100px] h-[70vh] rounded-xl overflow-hidden border border-border bg-surface cursor-pointer"
           >
-            {/* HD screenshot */}
+            {/* HD screenshot — all lazy. HorizontalShowcase lives below
+                the hero on desktop, so even the first card isn't above
+                the fold; eager-loading it just delays LCP without
+                helping anything paint sooner. */}
             <NextImage
               src={p.previewImage}
               alt={`${p.name} preview`}
               fill
               sizes="(max-width: 1024px) 0vw, 80vw"
               quality={85}
-              priority={i < 2}
-              loading={i < 2 ? "eager" : "lazy"}
+              loading="lazy"
               className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.02]"
             />
 
