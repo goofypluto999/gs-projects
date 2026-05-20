@@ -75,6 +75,11 @@ export const viewport: Viewport = {
   colorScheme: "dark",
   width: "device-width",
   initialScale: 1,
+  // viewport-fit: cover tells iOS Safari to extend the layout under
+  // the notch / dynamic island instead of letterboxing around it.
+  // Without this set, env(safe-area-inset-*) ALWAYS resolves to 0 and
+  // every notch/PWA fix on the rest of the page is a no-op.
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
