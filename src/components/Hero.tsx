@@ -12,12 +12,15 @@ import { NowPlaying } from "./NowPlaying";
 import { FlowField } from "./FlowField";
 import { MagneticName } from "./MagneticName";
 
+// Each rotating phrase tints to its product's accent so the Hero's
+// "Right now —" beat cycles through the five-colour brand palette
+// instead of all-blue. Matches BrandMarquee + per-card accents.
 const rotatingWords = [
-  "scenario intelligence",
-  "ATS-grade CV tooling",
-  "agent journalism",
-  "game discovery",
-  "career preparation",
+  { text: "scenario intelligence", color: "#6366F1" },  // Foresay indigo
+  { text: "ATS-grade CV tooling", color: "#10B981" },   // CV Mirror emerald
+  { text: "agent journalism", color: "#EF4444" },       // AdsForge red
+  { text: "game discovery", color: "#A855F7" },         // Wadda Play purple
+  { text: "career preparation", color: "#F59E0B" },     // AimVantage amber
 ];
 
 /**

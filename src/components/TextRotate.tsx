@@ -3,8 +3,13 @@
 import { useEffect, useState, useRef } from "react";
 import anime from "animejs";
 
+/** A rotating word — string for legacy use, or { text, color } for
+ *  per-item accent colours so the rotating phrase tints to match the
+ *  product it represents on each beat. */
+type RotateWord = string | { text: string; color: string };
+
 interface TextRotateProps {
-  words: string[];
+  words: RotateWord[];
   interval?: number;
   className?: string;
 }
@@ -55,12 +60,17 @@ export function TextRotate({
     return () => clearInterval(timer);
   }, [words, interval]);
 
+  const current = words[index];
+  const text = typeof current === "string" ? current : current.text;
+  const color = typeof current === "string" ? undefined : current.color;
+
   return (
     <span
       ref={containerRef}
       className={`inline-block ${className}`}
+      style={color ? { color } : undefined}
     >
-      {words[index]}
+      {text}
     </span>
   );
 }
