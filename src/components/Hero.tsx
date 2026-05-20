@@ -300,7 +300,7 @@ export function Hero() {
               className="font-heading text-4xl md:text-5xl font-800 text-text-primary block leading-none tracking-[-0.02em]"
               format={(n) => String(n).padStart(2, "0")}
             />
-            <span className="block mt-2 text-[10px] uppercase tracking-[0.18em] text-text-tertiary leading-snug">
+            <span className="block mt-2 text-[10.5px] uppercase tracking-[0.18em] text-text-tertiary leading-snug">
               live products
             </span>
           </div>
@@ -310,7 +310,7 @@ export function Hero() {
               className="font-heading text-4xl md:text-5xl font-800 text-text-primary block leading-none tracking-[-0.02em]"
               suffix="K+"
             />
-            <span className="block mt-2 text-[10px] uppercase tracking-[0.18em] text-text-tertiary leading-snug">
+            <span className="block mt-2 text-[10.5px] uppercase tracking-[0.18em] text-text-tertiary leading-snug">
               records indexed
             </span>
           </div>
@@ -320,7 +320,7 @@ export function Hero() {
               className="font-heading text-4xl md:text-5xl font-800 text-text-primary block leading-none tracking-[-0.02em]"
               suffix="K"
             />
-            <span className="block mt-2 text-[10px] uppercase tracking-[0.18em] text-text-tertiary leading-snug">
+            <span className="block mt-2 text-[10.5px] uppercase tracking-[0.18em] text-text-tertiary leading-snug">
               agent simulations
             </span>
           </div>
@@ -328,7 +328,7 @@ export function Hero() {
             <span className="font-heading text-4xl md:text-5xl font-800 text-text-primary block leading-none tracking-[-0.02em]">
               Free
             </span>
-            <span className="block mt-2 text-[10px] uppercase tracking-[0.18em] text-text-tertiary leading-snug">
+            <span className="block mt-2 text-[10.5px] uppercase tracking-[0.18em] text-text-tertiary leading-snug">
               open-source tools
             </span>
           </div>
