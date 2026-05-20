@@ -274,11 +274,18 @@ export function Hero() {
           />
         </div>
 
-        {/* Accent line */}
+        {/* Accent line — multi-product gradient, draws in via GSAP. Same
+            6-stop palette as ScrollProgress so the Hero's own divider
+            picks up the same chromatic language the page later uses. */}
         <div
           ref={lineRef}
-          className="mt-10 h-px bg-accent/50 opacity-0"
-          style={{ width: 0 }}
+          className="mt-10 h-px opacity-0"
+          style={{
+            width: 0,
+            background:
+              "linear-gradient(90deg, #6366F1 0%, #2563EB 22%, #A855F7 50%, #F59E0B 75%, #10B981 100%)",
+            boxShadow: "0 0 8px rgba(37, 99, 235, 0.35)",
+          }}
         />
 
         {/* Stats grid */}
