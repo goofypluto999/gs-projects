@@ -179,7 +179,15 @@ export function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative flex flex-col justify-center min-h-[92svh] md:min-h-[92vh] px-6 pt-14 overflow-hidden"
+      className="relative flex flex-col justify-center min-h-[92svh] md:min-h-[92vh] px-6 overflow-hidden"
+      style={{
+        // pt-14 (56px) accounts for the fixed nav height. Adding the iOS
+        // safe-area-inset-top on top means the Hero content clears both
+        // the nav AND the iPhone notch / dynamic island when launched
+        // as a PWA from the home screen. env() falls back to 0 in
+        // browsers without notch awareness.
+        paddingTop: "calc(env(safe-area-inset-top, 0px) + 3.5rem)",
+      }}
     >
       <Aurora className="opacity-70" />
       <GridPattern className="opacity-20" />

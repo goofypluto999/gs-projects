@@ -55,6 +55,15 @@ export function Navigation() {
             ? "bg-bg/85 backdrop-blur-xl border-b border-border shadow-[0_8px_24px_-12px_rgba(0,0,0,0.5)]"
             : "bg-transparent"
         }`}
+        style={{
+          // iOS PWA standalone + iPhone notch / dynamic island: the
+          // status bar overlaps `top: 0`. Padding the nav by the safe
+          // area inset keeps the logo + menu button clear of the
+          // notch and below the system clock when launched from home
+          // screen. Falls back to 0px on browsers that don't expose
+          // env() (everything desktop).
+          paddingTop: "env(safe-area-inset-top, 0px)",
+        }}
       >
         <div className="mx-auto max-w-[1280px] px-6 h-14 flex items-center justify-between">
           <a
